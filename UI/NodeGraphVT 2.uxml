@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Modules/NodeGraph/UI/NodeGraphStyle.uss?fileID=7433441132597879392&amp;guid=0ce6a25c0bef52642bfb84c18768bad4&amp;type=3#NodeGraphStyle" />
+    <ui:VisualElement name="Root" style="width: 100%; height: 100%; justify-content: space-around; align-self: stretch; min-width: 500px; min-height: 200px;">
+        <uie:Toolbar>
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Assets" />
+        </uie:Toolbar>
+        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); justify-content: space-around; align-items: stretch; align-self: stretch; flex-direction: row; width: 100%; height: 100%;">
+            <Z3.UIBuilder.Editor.SplitView fixed-pane-initial-dimension="350">
+                <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" horizontal-scroller-visibility="Hidden">
+                    <ui:VisualElement name="InspectorPanel" class="panel">
+                        <ui:Label tabindex="-1" text="Variables" display-tooltip-when-elided="true" style="font-size: 16px; color: rgb(255, 255, 255); -unity-text-align: middle-center; margin-top: 8px; margin-bottom: 8px;" />
+                        <Z3.NodeGraph.Editor.NodeVariablesPanel name="node-variables-panel" style="overflow: hidden;" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+                <Z3.UIBuilder.Editor.SplitView fixed-pane-initial-dimension="350" fixed-pane-index="1" style="max-width: 100%;">
+                    <ui:VisualElement name="GraphPanel" style="width: 80%; height: 100%; max-width: 100%; min-width: 150px;">
+                        <Z3.UIBuilder.BreadcrumbView name="breadcrumb-view" />
+                        <Z3.NodeGraph.Editor.NodeGraphPanel focusable="true" name="nodeGraphPanel" style="width: 100%; max-width: 100%;" />
+                    </ui:VisualElement>
+                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" horizontal-scroller-visibility="Hidden" name="ScrollView" style="background-color: rgb(56, 56, 56); min-width: 200px; width: 20%; max-width: 100%;">
+                        <ui:VisualElement name="InspectorPanel" class="panel">
+                            <ui:Label tabindex="-1" text="Inspector" display-tooltip-when-elided="true" style="font-size: 16px; color: rgb(255, 255, 255); -unity-text-align: middle-center; margin-top: 8px; margin-bottom: 8px;" />
+                            <ui:VisualElement name="node-inspector-panel" />
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                </Z3.UIBuilder.Editor.SplitView>
+            </Z3.UIBuilder.Editor.SplitView>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

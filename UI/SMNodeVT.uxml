@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Modules/NodeGraph/UI/SMNodeStyle.uss?fileID=7433441132597879392&amp;guid=88e5c1de2ce49394d95c54d7df814868&amp;type=3#SMNodeStyle" />
+    <Style src="project://database/Assets/Modules/NodeGraph/UI/BaseNodeStyle.uss?fileID=7433441132597879392&amp;guid=8ae7079840d280f4a9730679d64ad2ca&amp;type=3#BaseNodeStyle" />
+    <ui:VisualElement name="node-state" class="running" />
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; width: 100%; max-width: 100%; min-width: 100%; right: 50%;">
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; max-width: 100%; min-width: 100%;">
+            <ui:VisualElement name="node-border">
+                <ui:VisualElement name="IO" style="overflow: hidden; left: 0; top: 0; right: 0; bottom: 0; position: absolute;">
+                    <ui:VisualElement name="input" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
+                    <ui:VisualElement name="output" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="contents">
+                    <ui:VisualElement name="top">
+                        <ui:VisualElement name="title">
+                            <ui:Label name="title-label" text="Node Name" class="unity-text-element unity-label" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="icon" />
+                        <ui:VisualElement name="title-button-container">
+                            <ui:VisualElement name="ignore----collapse-button" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Info &lt;b&gt;$variable&lt;/b&gt;" display-tooltip-when-elided="true" name="info" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="start">
+                <ui:Label tabindex="-1" text="START" display-tooltip-when-elided="true" name="start-label" style="position: absolute; top: 0; right: 0; left: 0; bottom: 0;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label tabindex="-1" text="Description&#10;Description" name="description" />
+    </ui:VisualElement>
+    <ui:VisualElement name="selection-border" picking-mode="Ignore" focusable="true" />
+</ui:UXML>

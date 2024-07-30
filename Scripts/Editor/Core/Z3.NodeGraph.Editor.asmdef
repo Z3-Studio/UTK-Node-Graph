@@ -1,0 +1,21 @@
+{
+    "name": "Z3.NodeGraph.Editor",
+    "rootNamespace": "Z3.NodeGraph.Editor",
+    "references": [
+        "GUID:0d23aca60b335b84db18b2e213b18747",
+        "GUID:9db0baad62b458342923bdaf951c3d5e",
+        "GUID:65cb82271f3f0dd4eaad6e68e59b42a4",
+        "GUID:9c94cf3ae2c3f0f40bd86a2d1066d5f9"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

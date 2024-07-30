@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.z3.node-graph/UI/Popup/PopupStyle.uss?fileID=7433441132597879392&amp;guid=519209f5d2c884d478cce89a97dc02ba&amp;type=3#PopupStyle" />
+    <ui:VisualElement name="root">
+        <ui:Label tabindex="-1" text="Title" display-tooltip-when-elided="true" name="title" />
+        <uie:Toolbar name="tool-bar">
+            <uie:ToolbarSearchField focusable="true" name="search-field" />
+        </uie:Toolbar>
+        <ui:ScrollView horizontal-scroller-visibility="Hidden">
+            <ui:VisualElement name="buttons-container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:ScrollView>
+        <uie:ToolbarButton display-tooltip-when-elided="true" name="back-button" style="-unity-slice-right: 4;" />
+    </ui:VisualElement>
+</ui:UXML>

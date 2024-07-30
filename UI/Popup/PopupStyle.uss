@@ -1,0 +1,55 @@
+#root {
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+#title {
+    align-self: center;
+    font-size: 16px;
+    background-color: rgb(40, 40, 40);
+    min-width: 100%;
+    -unity-text-align: upper-center;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    -unity-font-style: bold;
+}
+
+#tool-bar {
+    padding-right: 8px;
+}
+
+#search-field {
+    min-width: 100%;
+    max-width: 100%;
+}
+
+#list-view {
+    -unity-text-align: middle-left;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#buttons-container {
+}
+
+#back-button {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    min-width: 20px;
+    min-height: 20px;
+    background-image: url("project://database/Assets/UI%20Toolkit/UnityDefaultRuntimeTheme%201.tss?fileID=-2236324273849735119&guid=20f9262c5d89e9c49ab04d1cfc6f2bab&type=3#arrow-left@2x");
+    -unity-background-scale-mode: scale-to-fit;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}

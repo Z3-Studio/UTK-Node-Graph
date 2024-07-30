@@ -1,0 +1,191 @@
+#input {
+    align-items: center;
+}
+
+#output {
+    align-items: center;
+}
+
+#title {
+    font-size: 16px;
+    -unity-text-align: upper-center;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    -unity-font-style: bold;
+}
+
+#info {
+    font-size: 12px;
+    -unity-text-align: upper-left;
+    background-color: rgb(37, 37, 37);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: normal;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#divider {
+    min-height: 1px;
+    background-color: rgb(20, 20, 20);
+}
+
+#description {
+    height: 0;
+    width: 0;
+    max-width: 0;
+    min-width: 0;
+    min-height: 0;
+    max-height: 0;
+}
+
+#icon {
+    background-image: url('project://database/Assets/Modules/NodeGraph/Art/Explicit/Action.png?fileID=2800000&guid=98228ed3b93435a41b08fe8558176c75&type=3#Action');
+    min-height: 25px;
+    min-width: 100%;
+    align-self: center;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+#node-border {
+    background-color: rgb(56, 56, 56);
+    border-left-color: rgb(88, 88, 88);
+    border-right-color: rgb(88, 88, 88);
+    border-top-color: rgb(88, 88, 88);
+    border-bottom-color: rgb(88, 88, 88);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+#selection-border {
+    border-left-color: rgb(0, 255, 255);
+    border-right-color: rgb(0, 255, 255);
+    border-top-color: rgb(0, 255, 255);
+    border-bottom-color: rgb(0, 255, 255);
+    position: absolute;
+    left: -50%;
+    top: 0;
+    right: 50%;
+    bottom: 0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+:selected > #selection-border {
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+:hover > #selection-border {
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+:hover:selected > #selection-border {
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+}
+
+.running #node-state {
+    background-color: rgb(229, 229, 0);
+    transition-duration: 0s;
+    margin-left: -1px;
+    margin-right: -1px;
+    margin-top: -1px;
+    margin-bottom: -1px;
+}
+
+.failure #node-state {
+    background-color: rgb(255, 0, 0);
+    transition-duration: 0s;
+}
+
+.success #node-state {
+    background-color: rgb(0, 255, 0);
+    transition-duration: 0s;
+}
+
+#node-state {
+    position: absolute;
+    left: -50%;
+    top: 0;
+    right: 50%;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    margin-left: -2.5px;
+    margin-right: -2.5px;
+    margin-top: -2.5px;
+    margin-bottom: -2.5px;
+    transition-duration: 0.35s;
+    transition-timing-function: ease-out;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    transition-property: background-color;
+}
+
+#start {
+    background-color: rgb(37, 37, 37);
+    min-width: 80%;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    border-left-color: rgb(13, 13, 13);
+    border-right-color: rgb(13, 13, 13);
+    border-top-color: rgb(13, 13, 13);
+    border-bottom-color: rgba(13, 13, 13, 0);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    font-size: 12px;
+    -unity-font-style: bold;
+    min-height: 30px;
+    align-self: center;
+    justify-content: flex-start;
+    align-items: auto;
+    max-width: 80%;
+    position: absolute;
+    top: -30px;
+}

@@ -1,0 +1,84 @@
+#container {
+    position: absolute;
+    min-width: 100%;
+    min-height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#label {
+    background-color: rgb(52, 52, 52);
+    position: absolute;
+    padding-top: 6px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+    padding-left: 6px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+#state-border {
+    transition-property: background-color;
+    transition-duration: 0.35s;
+    position: absolute;
+    top: -2.5px;
+    left: -2.5px;
+    right: -2.5px;
+    bottom: -2.5px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.failure #state-border {
+    background-color: rgb(255, 0, 0);
+}
+
+.success #state-border {
+    background-color: rgb(0, 255, 0);
+}
+
+.running #state-border {
+    background-color: rgb(255, 255, 0);
+}
+
+#selection-border {
+    flex: 0 0 auto;
+    border-left-color: rgb(0, 210, 255);
+    border-right-color: rgb(0, 210, 255);
+    border-top-color: rgb(0, 210, 255);
+    border-bottom-color: rgb(0, 210, 255);
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+#selection-border:hover {
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+#selection-border:focus {
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+#selection-border:hover:focus {
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+}

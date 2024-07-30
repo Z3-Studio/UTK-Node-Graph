@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Z3.NodeGraph.StateMachine.StateMachineNode" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAgAAAAAAAEAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\StateMachineNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.TransitableStateNode" Collapsed="true">
+    <Position X="3.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAAAAAAgAAAABAAIAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\TransitableStateNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.AnyState" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAQgAAAEAAAEAAAACAAAAAAA4AAACAAAAAg=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\With Transitions\AnyState.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.ParallelSubGraph" Collapsed="true">
+    <Position X="9.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQQAAAEAAAAAAAAAABAAAAAYgAIAAAACAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\Without Transitions\ParallelSubGraph.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.ParallelTaskList" Collapsed="true">
+    <Position X="11.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQgAAAEAAAEAAAAIABAACAA4AAAAAAEAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\Without Transitions\ParallelTaskList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.ActionState" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAACAAAAAAAAAAAAAAIAKABAAgAAgAAADEAMAAg=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\With Transitions\ActionState.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.FinishState" Collapsed="true">
+    <Position X="2.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACABAAAIAAAAABAAAAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\With Transitions\FinishState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.Pass" Collapsed="true">
+    <Position X="5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAACAAAAAAAAAAAAAAAACAAAAAAAgAAADAAIAAg=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\With Transitions\Pass.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.SubGraphDataSM" Collapsed="true">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAACAAAQAAAAAAAAAAIACABAAgAAgAAIDEAICAg=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\With Transitions\SubGraphDataSM.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.125" />
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.Transition" Collapsed="true">
+    <Position X="3.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAECAAAEAEAABABAAAAAAAIAAAAgACABEAAAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\Transition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.TransitionList" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAgBJBIABAAAAAAAAAEAAAkgAAAAAAAAAg=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\TransitionList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="transitions" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.EnterState" Collapsed="true">
+    <Position X="9.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAYAAACAAAAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\Without Transitions\EnterState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.ExitState" Collapsed="true">
+    <Position X="11.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAYAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\Without Transitions\ExitState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.UpdateState" Collapsed="true">
+    <Position X="14" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYgAAAAAAAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\Entites\Without Transitions\UpdateState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.StateMachineController" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAYAAAACEADQAIAAAAAAUAAAAAAEAIAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\StateMachineController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Z3.NodeGraph.StateMachine.StateMachineData" Collapsed="true">
+    <Position X="0.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAEAAAAAAAAAIAAIAAAAAAAAQAAA=</HashCode>
+      <FileName>Assets\Modules\NodeGraph\Scripts\Modules\StateMachine\StateMachineData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

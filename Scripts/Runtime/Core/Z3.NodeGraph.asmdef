@@ -1,0 +1,17 @@
+{
+    "name": "Z3.NodeGraph",
+    "rootNamespace": "Z3.NodeGraph",
+    "references": [
+        "GUID:0d23aca60b335b84db18b2e213b18747",
+        "GUID:9c94cf3ae2c3f0f40bd86a2d1066d5f9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

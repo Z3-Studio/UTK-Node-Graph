@@ -1,23 +1,25 @@
 {
   "name": "com.z3.node-graph",
   "displayName": "Z3 Node Graph",
-  "author": {
-    "name": "Z3",
-    "url": "https://github.com/Z3-Studio"
-  },
   "version": "0.1.0-beta",
-  "unity": "2021.3",
   "description": "Provides solutions to Unity.",
+  "unity": "2021.3",
+  "documentationUrl": "https://z3-studio.com/docs",
+  "changelogUrl": "https://z3-studio.com/docs/changelog/",
+  "licensesUrl": "https://github.com/Z3-Studio/UTK-Node-Graph/blob/master/LICENSE.md",
+  "license": "Proprietary License",
+  "dependencies": {
+    "com.z3.ui-builder": "0.1.0-beta",
+    "com.z3.utils": "1.0.0"
+  },
   "keywords": [
-    "Z3",
+    "Node Graph",
     "Behavior Tree",
     "State Machine",
-    "NodeGraph"
+    "Unity"
   ],
-  "license": "Proprietary License",
-  "category": "Tool",
-  "dependencies": {
-    "com.z3.ui-builder": "0.1.0",
-    "com.z3.utils": "1.0.0"
+  "author": {
+    "name": "Z3 Studio",
+    "url": "https://z3-studio.com/"
   }
 }

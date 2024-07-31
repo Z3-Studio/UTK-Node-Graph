@@ -14,6 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     /// <summary>
     /// Stores a list of graph owners
     /// </summary>
+    //[AddComponentMenu(GraphPath.ComponentMenu + "Graph References")]
     public class GraphReferences : MonoBehaviour 
     {
         [Header("GraphReferences")]

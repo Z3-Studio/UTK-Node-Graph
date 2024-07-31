@@ -1,7 +1,7 @@
 {
   "name": "com.z3.node-graph",
   "displayName": "Z3 Node Graph",
-  "version": "0.1.0-beta",
+  "version": "0.1.1-beta",
   "description": "Provides solutions to Unity.",
   "unity": "2021.3",
   "documentationUrl": "https://z3-studio.com/docs",
@@ -21,5 +21,13 @@
   "author": {
     "name": "Z3 Studio",
     "url": "https://z3-studio.com/"
-  }
+  },
+  "samples": 
+  [
+    {
+      "displayName": "Toggling Box",
+      "description": "Documentation tutorial result",
+      "path": "Samples~/TogglingBox"
+    }
+  ]
 }

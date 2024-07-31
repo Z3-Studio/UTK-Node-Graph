@@ -13,6 +13,7 @@ namespace Z3.NodeGraph.Core
     /// <summary>
     /// Implementatio to run any GraphData
     /// </summary>
+    [AddComponentMenu(GraphPath.ComponentMenu + "Graph Runner")]
     public sealed class GraphRunner : MonoBehaviour, IGraphRunner
     {
         [SerializeField] private GraphData graphData;

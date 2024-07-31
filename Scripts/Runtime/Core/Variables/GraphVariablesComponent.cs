@@ -5,6 +5,7 @@ using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.Core
 {
+    [AddComponentMenu(GraphPath.ComponentMenu + "Graph Variables Component")]
     public class GraphVariablesComponent : MonoBehaviour
     {
         [SerializeField] private VariablesAsset baseVariablesAsset;

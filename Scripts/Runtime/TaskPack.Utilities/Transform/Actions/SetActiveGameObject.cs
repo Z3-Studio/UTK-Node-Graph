@@ -6,14 +6,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Transform)]
     [NodeDescription("GameObject.SetActive(active)")]
-    public class SetActiveGameObject : ActionTask<Component> 
+    public class SetActiveGameObject : ActionTask
     {
-        public Parameter<bool> active;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<GameObject> gameObject;
+        [SerializeField] private Parameter<bool> active;
 
-        public override string Info => $"{AgentInfo}.GameObject.Active = {active}";
+        public override string Info => $"{gameObject}.Active = {active}";
 
-        protected override void StartAction() {
-            Agent.gameObject.SetActive(active.Value);
+        protected override void StartAction() 
+        {
+            gameObject.Value.SetActive(active.Value);
             EndAction(true);
         }
     }

@@ -1,0 +1,182 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8463572296315282463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e48502d95ee5e4e89a1299cd31aa9a, type: 3}
+  m_Name: 'ActionState [76712e86294aba24880c9d75e7735fec]/Wait [d02173281af9b7341ae13115939c1c1e]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: d02173281af9b7341ae13115939c1c1e
+  waitTime:
+    guid: 
+    value: 1
+--- !u!114 &-2040496267855372123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb4fd9f679a4ee4fb68331da2db0573, type: 3}
+  m_Name: 'ActionState [e530b9b3679a80a4791c7479133653b5]/Transition [4cf9faabddccb1f4789ab3e4c1ee9882]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 4cf9faabddccb1f4789ab3e4c1ee9882
+  connection: {fileID: 6777205242019454710}
+  conditions:
+    taskList: []
+--- !u!114 &-1475842842664843852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af8295c7e11e1444b9a81b37e7812ad2, type: 3}
+  m_Name: 'ActionState [e530b9b3679a80a4791c7479133653b5]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: e530b9b3679a80a4791c7479133653b5
+  position: {x: 751, y: 269}
+  transitionCheck: 2
+  repeat: 0
+  transitions:
+    transitions:
+    - {fileID: -2040496267855372123}
+  executionPolicy: 0
+  taskList:
+    taskList:
+    - {fileID: 7514399315802842449}
+    - {fileID: -1171051935273997643}
+--- !u!114 &-1412297671510155473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a583efc17bc3d2544806f2d045566e49, type: 3}
+  m_Name: 'ActionState [76712e86294aba24880c9d75e7735fec]/SetBoolean [69f59a66170c69e4990c7834b507c8ca]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 69f59a66170c69e4990c7834b507c8ca
+  value:
+    guid: 30a8c378ae68d0440847993ef9ad33e6
+    value: 0
+  operation: 2
+--- !u!114 &-1171051935273997643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68a4f1d0aa648868104a306651930fe, type: 3}
+  m_Name: 'ActionState [e530b9b3679a80a4791c7479133653b5]/SetActiveGameObject [66a33c0a08f8cfd46bcfdb1697e5da1d]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 66a33c0a08f8cfd46bcfdb1697e5da1d
+  gameObject:
+    guid: f5ad0a85e4208674b93be9def659f0e2
+    value: {fileID: 0}
+  active:
+    guid: 30a8c378ae68d0440847993ef9ad33e6
+    value: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679e7903e013c2144af81ecd0b8c19e4, type: 3}
+  m_Name: SM_GameObjectToggler
+  m_EditorClassIdentifier: 
+  referenceVariables: {fileID: 11400000, guid: 828acaa75a25f3f468ac64b6bb4cd6da, type: 2}
+  localVariables: []
+  startNode: {fileID: -1475842842664843852}
+  subAssets:
+  - {fileID: -1475842842664843852}
+  - {fileID: -1171051935273997643}
+  - {fileID: 6777205242019454710}
+  - {fileID: -1412297671510155473}
+  - {fileID: -8463572296315282463}
+  - {fileID: 7514399315802842449}
+  - {fileID: -2040496267855372123}
+  - {fileID: 8826868754493173347}
+--- !u!114 &6777205242019454710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af8295c7e11e1444b9a81b37e7812ad2, type: 3}
+  m_Name: 'ActionState [76712e86294aba24880c9d75e7735fec]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 76712e86294aba24880c9d75e7735fec
+  position: {x: 1240, y: 269}
+  transitionCheck: 2
+  repeat: 0
+  transitions:
+    transitions:
+    - {fileID: 8826868754493173347}
+  executionPolicy: 0
+  taskList:
+    taskList:
+    - {fileID: -8463572296315282463}
+    - {fileID: -1412297671510155473}
+--- !u!114 &7514399315802842449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e48502d95ee5e4e89a1299cd31aa9a, type: 3}
+  m_Name: 'ActionState [e530b9b3679a80a4791c7479133653b5]/Wait [b4f62537459083842814ae804ecf7a38]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: b4f62537459083842814ae804ecf7a38
+  waitTime:
+    guid: 
+    value: 1
+--- !u!114 &8826868754493173347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb4fd9f679a4ee4fb68331da2db0573, type: 3}
+  m_Name: 'ActionState [76712e86294aba24880c9d75e7735fec]/Transition [cefe597c22a0e1744bd595ae5f70be77]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: cefe597c22a0e1744bd595ae5f70be77
+  connection: {fileID: -1475842842664843852}
+  conditions:
+    taskList: []

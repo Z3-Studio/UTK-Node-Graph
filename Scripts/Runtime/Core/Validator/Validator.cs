@@ -23,15 +23,21 @@ namespace Z3.NodeGraph.Core
             List<GraphData> allGraphData = EditorUtils.GetAllAssets<GraphData>();
             foreach (GraphData graphData in allGraphData)
             {
-                GraphDataAnalyzer graphDataDiagnostic = new GraphDataAnalyzer(graphData);
-                GraphDataAnalyzers.Add(graphData, graphDataDiagnostic);
+                GraphDataAnalyzer analyzer = new GraphDataAnalyzer(graphData);
+                GraphDataAnalyzers[graphData] = analyzer;
             }
         }
 
         /// <returns> Return true if is valid </returns>
         public static bool Validate(GraphData graphData)
         {
-            return !GraphDataAnalyzers[graphData].HasErrors;
+            if (!GraphDataAnalyzers.TryGetValue(graphData, out GraphDataAnalyzer analyzer))
+            {
+                analyzer = new GraphDataAnalyzer(graphData);
+                GraphDataAnalyzers[graphData] = analyzer;
+            }
+
+            return !analyzer.HasErrors;
         }
 
 

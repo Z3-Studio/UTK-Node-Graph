@@ -5,7 +5,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Miscellaneous)]
     [NodeDescription("Wait a time and return successful")]
-    public class Wait : ActionTask
+    public class WaitDelay : ActionTask
     {
         public Parameter<float> waitTime = 1f;
 

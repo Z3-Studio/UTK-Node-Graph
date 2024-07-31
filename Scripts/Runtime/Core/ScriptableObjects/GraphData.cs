@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Z3.UIBuilder.Core;
-using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Core
 {
@@ -10,12 +9,11 @@ namespace Z3.NodeGraph.Core
     public abstract class GraphData : ScriptableObject// TODO? : GraphData<T> where T : Node or Transition
     {
         [SerializeField] protected GraphVariables referenceVariables;
-        [HideInGraphInspector, ReadOnly]
+        [Hide]
         [SerializeField] protected List<Variable> localVariables;
-        // TODO: Create BlackBoard reference field, but it you be used only in the GraphData root, and SubGraph 
-        [ReadOnly, HideInGraphInspector] // TEMP
+        [Hide]
         [SerializeField] protected Node startNode;
-        [ReadOnly, HideInGraphInspector] // TEMP
+        [Hide]
         [SerializeField] protected List<GraphSubAsset> subAssets = new List<GraphSubAsset>();
 
         public const string ReferenceVariablesField = nameof(referenceVariables);

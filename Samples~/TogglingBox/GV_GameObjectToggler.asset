@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93fc43bbb82ae6b4c89b625ef1b4ec40, type: 3}
+  m_Name: GV_GameObjectToggler
+  m_EditorClassIdentifier: 
+  variables:
+  - name: MyObject
+    guid: f5ad0a85e4208674b93be9def659f0e2
+    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    serializedObject: {fileID: 0}
+    serializedValue: null
+  - name: MyBool
+    guid: 30a8c378ae68d0440847993ef9ad33e6
+    type: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    serializedObject: {fileID: 0}
+    serializedValue: false

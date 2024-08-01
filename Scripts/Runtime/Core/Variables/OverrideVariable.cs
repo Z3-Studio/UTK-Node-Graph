@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Z3.UIBuilder.Core;
+using Z3.Utils;
 using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Core

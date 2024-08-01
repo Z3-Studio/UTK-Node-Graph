@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Z3.UIBuilder.Core;
+using Z3.Utils;
 using Z3.Utils.ExtensionMethods;
 using Object = UnityEngine.Object;
 

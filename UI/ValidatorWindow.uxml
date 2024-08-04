@@ -1,6 +1,7 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <editor:Toolbar>
-        <editor:ToolbarButton text="Validate All&#10;" name="validate-all-button" />
+        <editor:ToolbarButton text="Validate All" name="validate-all-button" />
+        <editor:ToolbarButton text="Fix All" name="fix-all-button" />
         <editor:ToolbarSpacer style="flex-grow: 1;" />
         <editor:ToolbarButton text="Warnings" name="warning-button" />
         <editor:ToolbarButton text="Errors" name="error-button" />
@@ -10,7 +11,7 @@
             <engine:VisualElement name="content" style="flex-grow: 1;" />
         </engine:ScrollView>
         <engine:ScrollView style="min-height: 50px;">
-            <engine:Label name="error-details" style="margin-top: 8px;" />
+            <engine:Label name="error-details" selectable="true" style="padding-top: 4px; padding-left: 4px; padding-right: 4px; white-space: normal;" />
         </engine:ScrollView>
     </Z3.UIBuilder.Editor.SplitView>
 </engine:UXML>

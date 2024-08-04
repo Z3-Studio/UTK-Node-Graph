@@ -53,7 +53,7 @@ namespace Z3.NodeGraph.Core
         {
             subAssets.Add(newNode);
 
-            if (startNode == null && newNode is Node node)
+            if (startNode == null && newNode is Node node && node.StartableNode)
             {
                 startNode = node;
             }

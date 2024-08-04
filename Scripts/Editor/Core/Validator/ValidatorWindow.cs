@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Core;
 using Z3.UIBuilder.ExtensionMethods;
-using Object = UnityEngine.Object;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -15,6 +14,7 @@ namespace Z3.NodeGraph.Editor
     public class ValidatorWindow : EditorWindow
     {
         [UIElement] private ToolbarButton validateAllButton;
+        [UIElement] private ToolbarButton fixAllButton;
         [UIElement] private ToolbarButton warningButton;
         [UIElement] private ToolbarButton errorButton;
         [UIElement] private VisualElement content;
@@ -22,7 +22,7 @@ namespace Z3.NodeGraph.Editor
 
         private const string WindowName = "Validator";
 
-        private GraphData graph;
+        private readonly List<ValidatorLog> validatorLog = new();
 
         [MenuItem(GraphPath.MenuPath + WindowName)]
         public static void OpenWindow()
@@ -32,28 +32,15 @@ namespace Z3.NodeGraph.Editor
 
         private void CreateGUI()
         {
-            NodeGraphResources.ValidatorVT.CloneTree(rootVisualElement);
+            NodeGraphResources.ValidatorWindowVT.CloneTree(rootVisualElement);
             rootVisualElement.BindUIElements(this);
 
             validateAllButton.clicked += OnValidateAll;
+            fixAllButton.clicked += OnFixAll;
 
             PopulateErrors();
 
-            // Populate automaticly
-            OnSelectionChange();
-        }
-
-        private void OnSelectionChange()
-        {
-
-            if (Selection.activeGameObject && Selection.activeGameObject.TryGetComponent(out GraphRunner runner))
-            {
-                graph = runner.GraphData;
-            }
-            else if (Selection.activeObject is GraphData)
-            {
-                graph = Selection.activeObject as GraphData;
-            }
+            // TODO: Scroll and highlight to object when selection
         }
 
         private void OnValidateAll()
@@ -62,15 +49,30 @@ namespace Z3.NodeGraph.Editor
             PopulateErrors();
         }
 
+        private void OnFixAll()
+        {
+            foreach (ValidatorLog log in validatorLog)
+            {
+                log.OnFixAll();
+            }
+        }
+
         private void PopulateErrors()
         {
             content.Clear();
+            validatorLog.Clear();
 
             foreach (GraphDataAnalyzer analyzer in Validator.GraphDataAnalyzers.Select(p => p.Value).Where(d => d.HasErrors))
             {
-                ValidatorLog newLog = new ValidatorLog(analyzer);
+                ValidatorLog newLog = new ValidatorLog(analyzer, OnSelectIssue);
+                validatorLog.Add(newLog);
                 content.Add(newLog);
             }
+        }
+
+        private void OnSelectIssue(IssueDetail issue)
+        {
+            errorDetails.text = issue.ToString();
         }
     }
 }

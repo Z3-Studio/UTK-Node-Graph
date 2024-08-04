@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cadb26af87225fd4fbb3782f6819c40e, type: 3}
   m_Name: NodeGraphResources
   m_EditorClassIdentifier: 
-  validatorVT: {fileID: 9197481963319205126, guid: 99937efe4750a094cade068d7b330931, type: 3}
+  analyzerWindowVT: {fileID: 9197481963319205126, guid: d0e5728bb725af4468ccdf28db5fa159, type: 3}
+  analizerSubAssetInfoVT: {fileID: 9197481963319205126, guid: 8885bcf81b3ce274f907027da6de4ce7, type: 3}
+  validatorWindowVT: {fileID: 9197481963319205126, guid: 99937efe4750a094cade068d7b330931, type: 3}
   validatorLogVT: {fileID: 9197481963319205126, guid: 831d9d6eebf2e444bb850c828bb0395b, type: 3}
   popupVT: {fileID: 9197481963319205126, guid: 30534a504cef4a54c9f1448c7ae209da, type: 3}
   nodeGraphVT: {fileID: 9197481963319205126, guid: 84b74240952552f4cbe44378f19e6fe2, type: 3}

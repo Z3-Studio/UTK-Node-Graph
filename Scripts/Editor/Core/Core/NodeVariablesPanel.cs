@@ -17,10 +17,15 @@ namespace Z3.NodeGraph.Editor
         {
             references = nodeGraphReferences;
             references.OnChangeGraph += OnChangeGraph;
+
+            NodeGraphWindow.ForceRedrawGraph += ForceRedraw;
         }
 
-        internal void ForceRedraw()
+        internal void ForceRedraw(GraphData graphData)
         {
+            if (graphData != references.Data)
+                return;
+
             OnChangeGraph(references.Data);
         }
 

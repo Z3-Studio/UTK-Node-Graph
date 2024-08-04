@@ -13,8 +13,6 @@ namespace Z3.NodeGraph.StateMachine
         [SerializeField] protected ActionTaskList taskList = new();
 
         public int Priority => priority;
-        public List<ActionTask> TaskList => taskList;
-
         public override string SubInfo => taskList.GetInfo();
         public abstract ParallelExecution ParallelExecution { get; }
 

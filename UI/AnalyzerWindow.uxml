@@ -1,0 +1,96 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.z3.node-graph/UI/AnalyzeStyle.uss?fileID=7433441132597879392&amp;guid=8eaf824a3e2adef458462edf1dbac5be&amp;type=3#AnalyzeStyle" />
+    <editor:Toolbar>
+        <editor:ToolbarButton text="Refresh" name="refresh-button" />
+        <editor:ToolbarButton text="Fix Errors" name="fix-errors-button" />
+        <editor:ToolbarSpacer style="flex-grow: 1;" />
+        <editor:ToolbarButton display-tooltip-when-elided="true" name="ping-object-button" style="min-width: 30px; -unity-background-image-tint-color: rgb(154, 154, 154); background-image: url(&quot;project://database/Packages/com.z3.ui-builder/Art/Eye.png?fileID=2800000&amp;guid=dc6a23adb0fa15347b725ced4160a967&amp;type=3#Eye&quot;); -unity-background-scale-mode: scale-to-fit;" />
+    </editor:Toolbar>
+    <engine:VisualElement style="flex-direction: row; padding-right: 6px; padding-left: 6px; background-color: rgb(37, 37, 37); padding-bottom: 6px; padding-top: 6px; font-size: 18px;">
+        <engine:Label text="Asset:" />
+        <engine:Label text="Graph Data Label" name="graph-data-label" style="margin-left: 0;" />
+    </engine:VisualElement>
+    <engine:TabView>
+        <engine:Tab label="Overview" name="overview-tab">
+            <Z3.UIBuilder.Editor.SplitView fixed-pane-index="1" fixed-pane-initial-dimension="400">
+                <engine:ScrollView>
+                    <engine:VisualElement name="overview-left-container" style="flex-grow: 1; padding-top: 4px; padding-left: 4px;">
+                        <engine:Label text="Geral" style="font-size: 18px;" />
+                        <engine:VisualElement name="overview-item-assets-count" style="flex-direction: row;">
+                            <engine:Label text="Sub Assets: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="assets-count" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-start-node" style="flex-direction: row;">
+                            <engine:Label text="Start Node: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="start-node" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-reference-variables" style="flex-direction: row;">
+                            <engine:Label text="Reference Variables: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="reference-variables-count" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-local-variables" style="flex-direction: row;">
+                            <engine:Label text="Local Variables: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="local-variables-count" />
+                        </engine:VisualElement>
+                        <engine:VisualElement style="min-height: 8px;" />
+                        <engine:Label text="Issues" style="font-size: 18px;" />
+                        <engine:VisualElement name="overview-item-corrupted-assets" style="flex-direction: row;">
+                            <engine:Label text="Corrupted Assets: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="corrupted-assets" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-null-sub-assets" style="flex-direction: row;">
+                            <engine:Label text="Null Sub Assets: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="null-sub-assets" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-missing-nodes" style="flex-direction: row;">
+                            <engine:Label text="Missing Nodes: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="missing-nodes" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-missing-sub-assets" style="flex-direction: row;">
+                            <engine:Label text="Missing Sub Assets: " style="-unity-font-style: bold;" />
+                            <engine:Label name="missing-sub-assets" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-missing-parameters" style="flex-direction: row;">
+                            <engine:Label text="Missing Parameters: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="missing-parameters" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-missing-parameters" style="flex-direction: row;">
+                            <engine:Label text="Others: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="other-issues" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-issues" style="flex-direction: row;">
+                            <engine:Label text="Total Issues: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="issues-count" />
+                        </engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:ScrollView>
+                <engine:ScrollView style="min-width: 60px;">
+                    <engine:VisualElement name="graph-inspector-container" style="flex-grow: 1;" />
+                </engine:ScrollView>
+            </Z3.UIBuilder.Editor.SplitView>
+        </engine:Tab>
+        <engine:Tab label="Sub Assets" name="sub-assets-tab">
+            <Z3.UIBuilder.Editor.SplitView fixed-pane-initial-dimension="400" fixed-pane-index="1" name="SplitView">
+                <engine:VisualElement name="sub-asset-tree-container" />
+                <engine:ScrollView name="ScrollView" style="min-width: 60px;">
+                    <engine:VisualElement name="sub-asset-inspector-container" style="flex-grow: 1; min-width: 100px;" />
+                </engine:ScrollView>
+            </Z3.UIBuilder.Editor.SplitView>
+        </engine:Tab>
+        <engine:Tab label="Variable and Parameters" name="variables-and-parameters-tab">
+            <engine:ScrollView mode="VerticalAndHorizontal">
+                <engine:VisualElement name="variable-depedency-container" style="flex-grow: 1;" />
+            </engine:ScrollView>
+        </engine:Tab>
+        <engine:Tab label="Issues" name="issues-tab">
+            <Z3.UIBuilder.Editor.SplitView orientation="Vertical" fixed-pane-index="1">
+                <engine:ScrollView>
+                    <engine:VisualElement name="issues-container" style="flex-grow: 1;" />
+                </engine:ScrollView>
+                <engine:ScrollView style="min-height: 50px;">
+                    <engine:Label name="issue-details" selectable="true" style="padding-top: 4px; padding-right: 4px; padding-left: 4px; white-space: normal;" />
+                </engine:ScrollView>
+            </Z3.UIBuilder.Editor.SplitView>
+        </engine:Tab>
+    </engine:TabView>
+</engine:UXML>

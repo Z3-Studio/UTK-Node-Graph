@@ -1,7 +1,6 @@
 ﻿using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-
 namespace Z3.NodeGraph.Editor
 {
     /// <summary>

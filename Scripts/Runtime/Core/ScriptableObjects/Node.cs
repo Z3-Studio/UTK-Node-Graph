@@ -10,6 +10,7 @@ namespace Z3.NodeGraph.Core
 
         public virtual string SubInfo => string.Empty;
 
+        public virtual bool StartableNode => true;
         public float NodeActivationTime { get; protected set; }
         public float NodeRunningTime => Time.time - NodeActivationTime;
 
@@ -20,7 +21,5 @@ namespace Z3.NodeGraph.Core
 
         /// <summary> NodeView Color </summary>
         public virtual string ClassStyle => string.Empty;
-
-
     }
 }

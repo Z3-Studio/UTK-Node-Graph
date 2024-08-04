@@ -1,0 +1,16 @@
+.unity-tab__content-container {
+    flex-grow: 1;
+}
+
+.unity-tab-view__content-container {
+    flex-grow: 1;
+    margin-top: 4px;
+}
+
+.unity-tab-view {
+    flex-grow: 1;
+}
+
+.unity-tab {
+    flex-grow: 1;
+}

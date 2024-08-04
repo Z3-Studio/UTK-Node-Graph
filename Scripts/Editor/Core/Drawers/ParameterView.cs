@@ -28,13 +28,11 @@ namespace Z3.NodeGraph.Editor
 
         private readonly PropertyField propertyField;
         private readonly IParameter parameterT;
-        private readonly UnityEngine.Object targetObject;
-        private readonly NodeGraphReferences references;
+        private readonly GraphData data;
+        private readonly GraphSubAsset targetObject;
         private readonly string displayName;
 
         private Type GenericType => parameterT.GenericType;
-        private GraphData Data => references.Data;
-        private NodeVariablesPanel Variables => references.Variables;
 
         private const string SelfBind = "☆ Self Bind";
         private const string NewReferenceVariable = "☆ Promote Reference Variable";
@@ -42,6 +40,9 @@ namespace Z3.NodeGraph.Editor
 
         public ParameterView(SerializedProperty property, FieldInfo fieldInfo)
         {
+            targetObject = NodeGraphUtils.GetTarget<GraphSubAsset>(property);
+            data = NodeGraphUtils.GetGraphData(targetObject);
+
             // TODO: Validate
             NodeGraphResources.ParameterVT.CloneTree(this);
             this.BindUIElements();
@@ -50,10 +51,6 @@ namespace Z3.NodeGraph.Editor
             parameterSlot.Clear();
 
             parameterT = property.GetValue<IParameter>();
-            targetObject = property.serializedObject.targetObject;
-
-            // TODO: Find a better way to call this method. Before it, I was adding by using InspectorListView.cs
-            references = NodeGraphWindow.References;
 
             SerializedProperty serializedProp = property.FindPropertyRelative(Parameter<object>.ValueField);
 
@@ -65,7 +62,7 @@ namespace Z3.NodeGraph.Editor
                 parameterSlot.Add(propertyField);
 
                 // Applies the attributes of the generic class to the generic argument
-                FieldInfo relativeField = fieldInfo.FieldType.GetField(Parameter<object>.ValueField, ReflectionUtils.PublicAndPrivate);
+                FieldInfo relativeField = fieldInfo.FieldType.GetField(Parameter<object>.ValueField, ReflectionUtils.InstanceAccess);
                 ApplyAttributes(serializedProp, propertyField, relativeField, fieldInfo);
             }
 
@@ -125,24 +122,18 @@ namespace Z3.NodeGraph.Editor
 
         private void OpenVariablesSelection(MouseDownEvent _)
         {
-            if (references == null)
-            {
-                Debug.LogError("References is null");
-                return;
-            }
-
             // Build variable list
             List<(string, Variable)> variables = new();
 
-            variables.AddRange(CreatePath("Local Variables", Data.LocalVariables));
+            variables.AddRange(CreatePath("Local Variables", data.LocalVariables));
 
-            if (Data.ReferenceVariables != null)
+            if (data.ReferenceVariables != null)
             {
-                variables.AddRange(CreatePath("Reference Variables", Data.ReferenceVariables.GetOriginalVariables()));
+                variables.AddRange(CreatePath("Reference Variables", data.ReferenceVariables.GetOriginalVariables()));
             }
 
             // Include Promote variable
-            if (Data.ReferenceVariables != null)
+            if (data.ReferenceVariables != null)
             {
                 variables.Add((NewReferenceVariable, null));
             }
@@ -172,14 +163,13 @@ namespace Z3.NodeGraph.Editor
                 }
                 else if (name == NewLocalVariable)
                 {
-                    variable = Variable.CreateVariable(GenericType, Data.LocalVariables, displayName.Replace(" ", string.Empty));
-                    Variables.ForceRedraw();
-
+                    variable = Variable.CreateVariable(GenericType, data.LocalVariables, displayName.Replace(" ", string.Empty));
+                    NodeGraphWindow.ForceRedrawVariables(data);
                 }
-                else if (name == NewReferenceVariable && Data.ReferenceVariables != null)
+                else if (name == NewReferenceVariable && data.ReferenceVariables != null)
                 {
-                    variable = Variable.CreateVariable(GenericType, Data.ReferenceVariables.GetOriginalVariables(), displayName.Replace(" ", string.Empty));
-                    Variables.ForceRedraw();
+                    variable = Variable.CreateVariable(GenericType, data.ReferenceVariables.GetOriginalVariables(), displayName.Replace(" ", string.Empty));
+                    NodeGraphWindow.ForceRedrawVariables(data);
                 }
                 else
                 {

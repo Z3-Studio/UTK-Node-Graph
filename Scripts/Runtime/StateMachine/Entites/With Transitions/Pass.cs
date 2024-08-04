@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Core;

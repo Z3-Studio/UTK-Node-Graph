@@ -53,7 +53,7 @@ namespace Z3.NodeGraph.Core
         private Action<object> Set { get; set; }
 
         public const string ValueField = nameof(value);
-        private const string SelfBind = "SelfBind";
+        public const string SelfBind = "SelfBind";
 
         void IParameter.SetupDependencies(GraphController graphController)
         {
@@ -100,7 +100,11 @@ namespace Z3.NodeGraph.Core
             {
                 Get = graphController.CachedComponents.CreateGetter(GenericType);
                 Set = (newValue) => throw new InvalidOperationException("You cannot set a component using SelfBind, is only get. Consider using GameObject.AddComponent<T>() or Destroy()");
+                return;
             }
+
+            if (!IsBinding)
+                return;
 
             if (graphController.LocalVariables.TryGetValue(guid, out VariableInstance localVariable))
             {

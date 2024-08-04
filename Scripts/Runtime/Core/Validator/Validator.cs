@@ -31,21 +31,32 @@ namespace Z3.NodeGraph.Core
         /// <returns> Return true if is valid </returns>
         public static bool Validate(GraphData graphData)
         {
+            return GetErrorCount(graphData) == 0;
+        }
+
+        public static int GetErrorCount(GraphData graphData)
+        {
+            GraphDataAnalyzer analyzer = GetAnalyzer(graphData);
+            return analyzer.Issues.Count;
+        }
+
+        /// <returns> Return true if is valid </returns>
+        public static bool Refresh(GraphData graphData)
+        {
+            GraphDataAnalyzers[graphData].Refresh();
+            return !GraphDataAnalyzers[graphData].HasErrors;
+        }
+
+        public static GraphDataAnalyzer GetAnalyzer(GraphData graphData)
+        {
+            // If is new asset, it may not have been analyzed yet
             if (!GraphDataAnalyzers.TryGetValue(graphData, out GraphDataAnalyzer analyzer))
             {
                 analyzer = new GraphDataAnalyzer(graphData);
                 GraphDataAnalyzers[graphData] = analyzer;
             }
 
-            return !analyzer.HasErrors;
-        }
-
-
-        /// <returns> Return true if is valid </returns>
-        public static bool Reevaluate(GraphData graphData)
-        {
-            GraphDataAnalyzers[graphData].Reevaluate();
-            return !GraphDataAnalyzers[graphData].HasErrors;
+            return analyzer;
         }
     }
 }

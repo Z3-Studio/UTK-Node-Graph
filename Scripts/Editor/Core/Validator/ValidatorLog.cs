@@ -1,8 +1,10 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Core;
+using Z3.UIBuilder.Editor;
 using Z3.UIBuilder.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
@@ -11,48 +13,59 @@ namespace Z3.NodeGraph.Editor
     {
         [UIElement] private Label contextLabel;
         [UIElement] private Button revealButton;
+        [UIElement] private Button fixAllButton;
         [UIElement] private VisualElement errorsContainer;
         [UIElement] private Foldout foldout;
 
-        private GraphDataAnalyzer logger;
+        private GraphDataAnalyzer analyzer;
+        private Action<IssueDetail> onSelectIssue;
 
-        // Link error color #3D89D4
+        /// <summary> Link error color #3D89D4 </summary>
+        private readonly Color selectErrorColor = new Color(0.172549f, 0.3647059f, 0.5294118f);
 
-        public ValidatorLog(GraphDataAnalyzer logger)
+        public ValidatorLog(GraphDataAnalyzer analyzer, Action<IssueDetail> onSelectIssue)
         {
             NodeGraphResources.ValidatorLogVT.CloneTree(this);
             this.BindUIElements();
 
-            contextLabel.text = logger.GraphData.name;
-            this.logger = logger;
+            this.analyzer = analyzer;
+            this.onSelectIssue = onSelectIssue;
+            contextLabel.text = analyzer.GraphData.name;
 
-            revealButton.clicked += OnReveal;
-
-            foldout.text = $"Errors: {logger.Errors.Count}";
-
-            foreach (var error in logger.Errors)
-            {
-                Label newError = new Label(error.Value);
-                newError.style.marginBottom = 8;
-                newError.style.paddingLeft = 16;
-
-                newError.RegisterCallback<MouseEnterEvent>(e =>
-                {
-                    newError.style.backgroundColor = new Color(0.172549f, 0.3647059f, 0.5294118f);
-                });
-
-                newError.RegisterCallback<MouseLeaveEvent>(e =>
-                {
-                    newError.style.backgroundColor = Color.clear;
-                });
-
-                errorsContainer.Add(newError);
-            }
+            Populate();
         }
 
+        [UIElement("open-in-analyzer-button")]
+        private void OnOpenInAnalyzer()
+        {
+            AnalyzerWindow.DisplayAsset(analyzer.GraphData);
+        }
+
+        [UIElement("reveal-button")]
         private void OnReveal()
         {
-            EditorGUIUtility.PingObject(logger.GraphData);
+            EditorGUIUtility.PingObject(analyzer.GraphData);
+        }
+
+        [UIElement("fix-all-button")]
+        public void OnFixAll()
+        {
+            analyzer.FixErrors();
+            errorsContainer.Clear();
+            Populate();
+        }
+
+        private void Populate()
+        {
+            errorsContainer.Clear();
+            foldout.text = $"Errors: {analyzer.Issues.Count}";
+
+            Z3ListViewConfig listConfig = Z3ListViewConfig.SimpleTemplate<IssueItemView>();
+            listConfig.fixedItemHeight = 52;
+
+            ListViewBuilder<IssueDetail, IssueItemView> customListView = new ListViewBuilder<IssueDetail, IssueItemView>(analyzer.Issues, listConfig);
+            customListView.OnSelectChange += onSelectIssue;
+            errorsContainer.Add(customListView);
         }
     }
 }

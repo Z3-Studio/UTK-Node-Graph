@@ -13,6 +13,7 @@ namespace Z3.NodeGraph.StateMachine
         [SerializeField] private ParallelUpdateMode updateMode;
         [SerializeField] private GraphData subGraph;
 
+        public override bool StartableNode => false;
         public int Priority => priority;
         public ParallelExecution ParallelExecution => updateMode == ParallelUpdateMode.BeforeUpdate ? ParallelExecution.BeforeUpdate : ParallelExecution.AfterUpdate;
         public GraphData SubGraph => subGraph;

@@ -8,7 +8,9 @@ namespace Z3.NodeGraph.Editor
     public class NodeGraphResources : ScriptableObject // TODO: Dictionary attribute
     {
         [Title("Visual Tree")]
-        [SerializeField] private VisualTreeAsset validatorVT;
+        [SerializeField] private VisualTreeAsset analyzerWindowVT;
+        [SerializeField] private VisualTreeAsset analizerSubAssetInfoVT;
+        [SerializeField] private VisualTreeAsset validatorWindowVT;
         [SerializeField] private VisualTreeAsset validatorLogVT;
         [SerializeField] private VisualTreeAsset popupVT;
         [SerializeField] private VisualTreeAsset nodeGraphVT;
@@ -46,7 +48,9 @@ namespace Z3.NodeGraph.Editor
 
         public static Texture2D ArrowTransition => Instance.arrowTransition;
         public static Texture2D MultipleArrowTransition => Instance.multipleArrowTransition;
-        public static VisualTreeAsset ValidatorVT => Instance.validatorVT;
+        public static VisualTreeAsset AnalizerWindowVT => Instance.analyzerWindowVT;
+        public static VisualTreeAsset AnalizerSubAssetInfoVT => Instance.analizerSubAssetInfoVT;
+        public static VisualTreeAsset ValidatorWindowVT => Instance.validatorWindowVT;
         public static VisualTreeAsset ValidatorLogVT => Instance.validatorLogVT;
         public static VisualTreeAsset ParameterVT => Instance.parameterVT;
         public static VisualTreeAsset NodeGraphVT => Instance.nodeGraphVT;

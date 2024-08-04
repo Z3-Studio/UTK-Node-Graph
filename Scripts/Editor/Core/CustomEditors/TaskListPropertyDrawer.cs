@@ -16,10 +16,8 @@ namespace Z3.NodeGraph.Editor
                 return base.CreateVisualElement();
 
             // Build list
-            NodeGraphReferences references = NodeGraphWindow.References;
             Z3ListViewConfig listConfig = new Z3ListViewConfig(SerializedProperty.displayName);
-
-            return new GraphSubAssetListView<TTask>(references, assetParent, ResolvedValue, listConfig);
+            return new GraphSubAssetListView<TTask>(assetParent, ResolvedValue, listConfig);
         }
     }
 

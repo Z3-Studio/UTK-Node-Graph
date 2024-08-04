@@ -16,12 +16,8 @@ namespace Z3.NodeGraph.Editor
         [UIElement] private BreadcrumbView breadcrumbView;
         [UIElement(optional: true)] private VisualElement nodeInspectorPanel;
         [UIElement(optional: true)] private NodeVariablesPanel nodeVariablesPanel;
-        // TODO: Mini map
 
-        [Obsolete]
-        private static NodeGraphWindow Instance;
-        [Obsolete("TEMP")]
-        public static NodeGraphReferences References => Instance.nodeGraphReferences;
+        public static event Action<GraphData> ForceRedrawGraph;
 
         private GraphData GraphData => nodeGraphReferences.Data;
         private NodeGraphReferences nodeGraphReferences;
@@ -52,7 +48,6 @@ namespace Z3.NodeGraph.Editor
 
         private void OnEnable()
         {
-            Instance = this;
             EditorApplication.playModeStateChanged -= OnPlayModeStageChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStageChanged;
             minSize = new Vector2(500, 200);
@@ -64,11 +59,6 @@ namespace Z3.NodeGraph.Editor
 
             nodeGraphReferences.DisposeModule();
             nodeGraphReferences = null;
-        }
-
-        private void OnGUI()
-        {
-            lockButtonStyle = "IN LockButton";
         }
 
         private void OnPlayModeStageChanged(PlayModeStateChange state)
@@ -133,14 +123,17 @@ namespace Z3.NodeGraph.Editor
             if (graph && graph != GraphData)
             {
                 // RootNodeBug? After create a soon as possible
-                if (checkId && !AssetDatabase.CanOpenAssetInEditor(graph.GetInstanceID()))
-                {
-                    Debug.LogError("Is necessary");
+                // TODO: Understand why and when this is necessary and document it
+                if (checkId && !AssetDatabase.CanOpenAssetInEditor(graph.GetInstanceID())) 
                     return;
-                }
 
                 nodeGraphReferences.OpenGraphData(graph, controller);
             }
+        }
+
+        private void OnGUI()
+        {
+            lockButtonStyle = "IN LockButton";
         }
 
         /// <summary> Menu Context </summary>
@@ -156,6 +149,11 @@ namespace Z3.NodeGraph.Editor
         private void ShowButton(Rect position)
         {
             locked = GUI.Toggle(position, locked, GUIContent.none, lockButtonStyle);
+        }
+
+        public static void ForceRedrawVariables(GraphData data)
+        {
+            ForceRedrawGraph?.Invoke(data);
         }
     }
 }

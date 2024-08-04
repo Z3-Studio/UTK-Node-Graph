@@ -1,0 +1,21 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <engine:VisualElement style="margin-left: 4px;">
+        <engine:Label text="Title" name="title" style="font-size: 18px; margin-bottom: 4px;" />
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Type: " style="-unity-font-style: bold;" />
+            <engine:Label text="Label" name="type" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Guid: " style="-unity-font-style: bold;" />
+            <engine:Label text="Label" name="guid" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Binded Parameters: " style="-unity-font-style: bold;" />
+            <engine:Label text="Label" name="binded-parameters" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Issues: " style="-unity-font-style: bold;" />
+            <engine:Label text="Label" name="issues" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

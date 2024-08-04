@@ -61,7 +61,7 @@ namespace Z3.NodeGraph.Editor
                 showRemoveButton = false, // TODO: Review it
             };
 
-            GraphSubAssetListView<Transition> transitionListElement = new(References, OutputNode, transitions, transition);
+            GraphSubAssetListView<Transition> transitionListElement = new(References.Data, OutputNode, transitions, transition);
             VisualElement transitionContainer = new();
             transitionListElement.Add(transitionContainer);
 
@@ -81,7 +81,7 @@ namespace Z3.NodeGraph.Editor
                     transitions.Remove(transition);
                 }
 
-                References.Module.DeleteAssets(itemsToRemove);
+                NodeGraphUtils.DeleteAssets(References.Data, itemsToRemove);
             }
         }
     }

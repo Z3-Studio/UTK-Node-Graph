@@ -144,7 +144,7 @@ namespace Z3.NodeGraph.Editor
             };
 
             // TODO: Move Transition Check type to inside the Transition Tab
-            GraphSubAssetListView<Transition> transitionListElement = new(References, Node, transitions, transitionConfig);
+            GraphSubAssetListView<Transition> transitionListElement = new(References.Data, Node, transitions, transitionConfig);
             tabTransitions.Add(transitionListElement);
 
             VisualElement transitionContainer = new();

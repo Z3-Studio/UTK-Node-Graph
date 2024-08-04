@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -48,7 +49,7 @@ namespace Z3.NodeGraph.Editor
 
         public void DeleteElement()
         {
-            References.Module.DeleteAsset(NodeView.Node);
+            NodeGraphUtils.DeleteAsset(References.Data, NodeView.Node);
         }
 
         public VisualElement GetInspector() => NodeView.GetInspector();

@@ -21,10 +21,9 @@ namespace Z3.NodeGraph.Editor
         [Obsolete("TEMP")]
         public event Action<T> onDelete;
 
-        private GraphData GraphData => references.Data;
 
         // Core
-        private readonly NodeGraphReferences references;
+        private readonly GraphData graphData;
         private readonly GraphSubAsset assetParent;
         private readonly List<T> source;
 
@@ -33,12 +32,17 @@ namespace Z3.NodeGraph.Editor
         private readonly Label inspectorTitle;
         private InspectorElement inspector;
 
-        public GraphSubAssetListView(NodeGraphReferences references, GraphSubAsset owner, List<T> taskList, Z3ListViewConfig listConfig) // editable == remove and reorder
+        public GraphSubAssetListView(GraphSubAsset owner, List<T> taskList, Z3ListViewConfig listConfig) : this(NodeGraphUtils.GetGraphData(owner), owner, taskList, listConfig)
+        {
+
+        }
+
+        public GraphSubAssetListView(GraphData graphData, GraphSubAsset owner, List<T> taskList, Z3ListViewConfig listConfig) // editable == remove and reorder
         {
             style.backgroundColor = Color.black.SetAlpha(0.15f); // TEMP: Create a way to define the draw order
 
             // Add dependency
-            this.references = references;
+            this.graphData = graphData;
             assetParent = owner;
             source = taskList;
 
@@ -103,13 +107,13 @@ namespace Z3.NodeGraph.Editor
 
             source.Add(newActionTask);
 
-            GraphData.AddSubAsset(newActionTask);
+            graphData.AddSubAsset(newActionTask);
 
             // After creation, the list must rebuild
             customListView.Rebuild();
 
             // Before to add and remember
-            AssetDatabase.AddObjectToAsset(newActionTask, GraphData);
+            AssetDatabase.AddObjectToAsset(newActionTask, graphData);
             AssetDatabase.SaveAssets();
         }
 
@@ -142,7 +146,7 @@ namespace Z3.NodeGraph.Editor
 
         protected virtual void OnDeleteActionTask(T task)
         {
-            references.Module.DeleteAsset(task);
+            NodeGraphUtils.DeleteAsset(graphData, task);
             onDelete?.Invoke(task);
         }
     }

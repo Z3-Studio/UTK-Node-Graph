@@ -1,7 +1,7 @@
 {
   "name": "com.z3.node-graph",
   "displayName": "Z3 Node Graph",
-  "version": "0.1.1-beta",
+  "version": "0.2.0-beta",
   "description": "Provides solutions to Unity.",
   "unity": "2021.3",
   "documentationUrl": "https://z3-studio.com/docs",
@@ -9,8 +9,8 @@
   "licensesUrl": "https://github.com/Z3-Studio/UTK-Node-Graph/blob/master/LICENSE.md",
   "license": "Proprietary License",
   "dependencies": {
-    "com.z3.ui-builder": "0.1.0-beta",
-    "com.z3.utils": "1.0.0"
+    "com.z3.ui-builder": "0.1.2-beta",
+    "com.z3.utils": "1.0.2"
   },
   "keywords": [
     "Node Graph",

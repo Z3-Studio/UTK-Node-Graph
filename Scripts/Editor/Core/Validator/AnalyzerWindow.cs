@@ -8,7 +8,6 @@ using Z3.Utils.ExtensionMethods;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Core;
 using Z3.UIBuilder.ExtensionMethods;
-using Z3.UIBuilder.TreeViewer;
 using Z3.UIBuilder.Editor;
 
 namespace Z3.NodeGraph.Editor
@@ -182,12 +181,12 @@ namespace Z3.NodeGraph.Editor
             IEnumerable<Node> nodes = GraphData.SubAssets.OfType<Node>();
 
             TreeContainer<GraphSubAsset> tree = new TreeContainer<GraphSubAsset>(nodes, analyzer.GetDirectyDependencies);
-            TreeConfig<GraphSubAsset, GraphSubAssetAnalyzerView> treeConfig = new TreeConfig<GraphSubAsset, GraphSubAssetAnalyzerView>()
+            TreeViewConfig<GraphSubAsset, GraphSubAssetAnalyzerView> treeConfig = new TreeViewConfig<GraphSubAsset, GraphSubAssetAnalyzerView>()
             {
                 FixedItemHeight = TreeItemHeight
             };
 
-            TreeContainerView<GraphSubAsset, GraphSubAssetAnalyzerView> subGraphTree = new TreeContainerView<GraphSubAsset, GraphSubAssetAnalyzerView>(tree, treeConfig);
+            TreeViewContainer<GraphSubAsset, GraphSubAssetAnalyzerView> subGraphTree = new TreeViewContainer<GraphSubAsset, GraphSubAssetAnalyzerView>(tree, treeConfig);
             subGraphTree.OnChangeSelection += OnChangeSelection;
             subGraphTree.OnMakeItem += (newItem) => newItem.Init(analyzer);
 

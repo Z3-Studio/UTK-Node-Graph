@@ -10,17 +10,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class LookAt : ActionTask
     {
         [ParameterDefinition(AutoBindType.SelfBind)]
-        public Parameter<Transform> transform;
+        [SerializeField] private Parameter<Transform> transform;
 
         public bool useSpeed = true;
-        public Parameter<Axis3Flags> modifiedAxis = Axis3Flags.Y;
-        public Parameter<Vector3> target;
+        [SerializeField] private Parameter<Axis3Flags> modifiedAxis = Axis3Flags.Y;
+        [SerializeField] private Parameter<Vector3> target;
 
         //[ShowIf(nameof(useSpeed), 1)]
-        public Parameter<float> speed;
+        [SerializeField] private Parameter<float> speed;
         //[ShowIf(nameof(useSpeed), 1)]
         [Slider(0, 180)]
-        public Parameter<float> angleDifference = 10f;
+        [SerializeField] private Parameter<float> angleDifference = 10f;
 
         public override string Info => $"Look At {modifiedAxis}" + (useSpeed ? $" Speed {speed}" : string.Empty);
 

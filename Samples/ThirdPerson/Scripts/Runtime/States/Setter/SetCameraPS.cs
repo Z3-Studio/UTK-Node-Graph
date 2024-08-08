@@ -5,7 +5,7 @@ namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
 {
     public class SetCameraPS : CharacterAction
     {
-        public Parameter<GameObject> newCamera;
+        [SerializeField] private Parameter<GameObject> newCamera;
 
         public override string Info => $"{base.Info}: {newCamera}";
 

@@ -6,17 +6,19 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Rigidbody)]
     [NodeDescription("Set the torque of a Rigidbody.")]
-    public class AddTorque : ActionTask<Rigidbody>
+    public class AddTorque : ActionTask
     {
-        public Parameter<Vector3> torque;
-        public Parameter<ForceMode> forceMode;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Rigidbody> data;
+        [SerializeField] private Parameter<Vector3> torque;
+        [SerializeField] private Parameter<ForceMode> forceMode;
 
         public override string Info => $"Add Torque = {torque}";
 
         protected override void StartAction()
         {
-            Agent.AddTorque(torque.Value, forceMode.Value);
-            EndAction(true);
+            data.Value.AddTorque(torque.Value, forceMode.Value);
+            EndAction();
         }        
     }
 }

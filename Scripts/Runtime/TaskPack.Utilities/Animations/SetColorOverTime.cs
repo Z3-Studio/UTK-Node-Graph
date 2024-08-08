@@ -2,18 +2,20 @@ using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 using UnityEngine;
 
-
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Animations)]
     [NodeDescription("Change Sprite Renderer Color Over Time")]
-    public class SetColorOverTime : ActionTask<SpriteRenderer>
+    public class SetColorOverTime : ActionTask
     {
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<SpriteRenderer> data;
+
         [Header("Input")]
-        public Parameter<float> duration;
+        [SerializeField] private Parameter<float> duration;
 
         [Header("Output")]
-        public Parameter<Color> endColor;
+        [SerializeField] private Parameter<Color> endColor;
 
         private Color startColor;
         private float timeStep;
@@ -21,20 +23,20 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void StartAction()
         {
-            startColor = Agent.color;
+            startColor = data.Value.color;
             timeStep = 0f;
         }
 
         protected override void UpdateAction()
         {
-            if (Agent.color != endColor.Value && duration.Value != 0f)
+            if (data.Value.color != endColor.Value && duration.Value != 0f)
             {
                 timeStep += Time.fixedDeltaTime / duration.Value;
-                Agent.color = Color.Lerp(startColor, endColor.Value, timeStep);
+                data.Value.color = Color.Lerp(startColor, endColor.Value, timeStep);
             }
             else
             {
-                EndAction(true);
+                EndAction();
             }
         }
     }

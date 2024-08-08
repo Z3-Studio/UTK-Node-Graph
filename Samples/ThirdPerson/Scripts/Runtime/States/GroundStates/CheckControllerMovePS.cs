@@ -16,7 +16,7 @@ namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
             Right = 8,
         }
 
-        public Parameter<Axis2D> moveController;
+        [SerializeField] private Parameter<Axis2D> moveController;
 
         public override string Info => $"CheckControllerMove: {moveController}";
 

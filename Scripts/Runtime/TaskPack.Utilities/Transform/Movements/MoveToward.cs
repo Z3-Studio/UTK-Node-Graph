@@ -6,10 +6,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
 
     [NodeCategory(Categories.Movement)]
     [NodeDescription("Move a GameObject to the target position.")]
-    public class MoveToward : ActionTask<Transform> 
+    public class MoveToward : ActionTask
     {
-        public Parameter<Vector3> targetPosition;
-        public Parameter<float> speed;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+
+        [SerializeField] private Parameter<Vector3> targetPosition;
+        [SerializeField] private Parameter<float> speed;
 
         public override string Info => $"Move To {targetPosition}";
 
@@ -17,9 +20,9 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
 
         protected override void UpdateAction() 
         {
-            Agent.position = Vector3.MoveTowards(Agent.position, targetPosition.Value, Time.fixedDeltaTime * speed.Value);
+            data.Value.position = Vector3.MoveTowards(data.Value.position, targetPosition.Value, Time.fixedDeltaTime * speed.Value);
 
-            if (Vector3.Distance(Agent.position, targetPosition.Value) < ThresholdDistance) 
+            if (Vector3.Distance(data.Value.position, targetPosition.Value) < ThresholdDistance) 
             {
                 EndAction();
             }

@@ -1,12 +1,13 @@
-    using Z3.NodeGraph.Core;
+using UnityEngine;
+using Z3.NodeGraph.Core;
 using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
 {
     public class IdlePS : CharacterAction
     {
-        public Parameter<string> idleState;
-        public Parameter<string> overrideIdleState;
+        [SerializeField] private Parameter<string> idleState;
+        [SerializeField] private Parameter<string> overrideIdleState;
 
         protected override void StartAction()
         {

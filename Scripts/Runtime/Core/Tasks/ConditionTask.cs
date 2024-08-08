@@ -35,6 +35,7 @@ namespace Z3.NodeGraph.Tasks
 
         public sealed override void StartCondition()
         {
+            actionCalled = false;
             Subscribe();
         }
 
@@ -43,15 +44,10 @@ namespace Z3.NodeGraph.Tasks
             Unsubscribe();
         }
 
+        public sealed override bool CheckCondition() => actionCalled;
+
         protected abstract void Subscribe();
         protected abstract void Unsubscribe();
         protected void EndEventCondition() => actionCalled = true;
-
-        public sealed override bool CheckCondition()
-        {
-            bool value = actionCalled;
-            actionCalled = false;
-            return value;
-        }
     }
 }

@@ -9,12 +9,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class CheckInversePointAxis : ConditionTask
     {
         [ParameterDefinition(AutoBindType.SelfBind)]
-        public Parameter<Transform> transform;
+        [SerializeField] private Parameter<Transform> transform;
 
-        public Parameter<Axis3> axis;
-        public Parameter<Vector3> target;
-        public Parameter<float> offset;
-        public Parameter<float> value;
+        [SerializeField] private Parameter<Axis3> axis;
+        [SerializeField] private Parameter<Vector3> target;
+        [SerializeField] private Parameter<float> offset;
+        [SerializeField] private Parameter<float> value;
         public CompareMethod checkType = CompareMethod.EqualTo;
 
         public override string Info => $"Inverse Point {axis} {target} {checkType.GetString()} {value}";

@@ -7,7 +7,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeCategory(Categories.Operations)]
     public class CheckTime : ConditionTask
     {
-        public Parameter<float> parameter;
+        [SerializeField] private Parameter<float> parameter;
         public CompareMethod compare = CompareMethod.EqualTo;
 
         public override string Info => $"{parameter} {compare.GetString()} Time.time";

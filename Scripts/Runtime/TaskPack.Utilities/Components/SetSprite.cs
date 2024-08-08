@@ -6,14 +6,16 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Components)]
     [NodeDescription("Sets a Sprite Renderer Sprite")]
-    public class SetSprite : ActionTask<SpriteRenderer> 
+    public class SetSprite : ActionTask
     {
-        public Parameter<Sprite> sprite;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<SpriteRenderer> data;
+        [SerializeField] private Parameter<Sprite> sprite;
 
         protected override void StartAction()
         {
-            Agent.sprite = sprite.Value;
-            EndAction(true);
+            data.Value.sprite = sprite.Value;
+            EndAction();
         }
     }
 }

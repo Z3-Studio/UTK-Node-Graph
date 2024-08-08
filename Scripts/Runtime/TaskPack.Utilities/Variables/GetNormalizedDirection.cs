@@ -9,17 +9,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
     public class GetNormalizedDirection : ActionTask
     {
         [Header("In")]
-        public Parameter<Vector3> from;
-        public Parameter<Vector3> target;
+        [SerializeField] private Parameter<Vector3> from;
+        [SerializeField] private Parameter<Vector3> target;
 
         [Header("Out")]
-        public Parameter<Vector3> direction;
+        [SerializeField] private Parameter<Vector3> direction;
 
         public override string Info => $"Get Direction {from} to {target}";
         protected override void StartAction()
         {
             direction.Value = (target.Value - from.Value).normalized;
-            EndAction(true);
+            EndAction();
         }
     }
 }

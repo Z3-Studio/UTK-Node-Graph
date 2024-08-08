@@ -9,13 +9,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities.AI
     [NodeDescription("Draws a straight line between two local positions, it requires a LineRenderer.")]
     public class DrawLine : ActionTask
     {
-        /*[RequiredField]*/ public Parameter<Vector3> startPosition;
-        /*[RequiredField]*/ public Parameter<Vector3> endPosition;
-        /*[RequiredField]*/ public Parameter<LineRenderer> line;
+        [SerializeField] private Parameter<Vector3> startPosition;
+        [SerializeField] private Parameter<Vector3> endPosition;
+        [SerializeField] private Parameter<LineRenderer> line;
 
         protected override void StartAction() {
             Draw();
-            EndAction(true);
+            EndAction();
         }
 
         private void Draw()

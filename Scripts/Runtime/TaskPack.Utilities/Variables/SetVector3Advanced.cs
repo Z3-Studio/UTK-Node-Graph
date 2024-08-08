@@ -10,17 +10,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class SetVector3Advanced : ActionTask 
     {
         [Header("In")]
-        public Parameter<Vector3> initialVector;
-        public Parameter<Vector3> otherVector;
+        [SerializeField] private Parameter<Vector3> initialVector;
+        [SerializeField] private Parameter<Vector3> otherVector;
 
         [Header("Config")]
         public OperationMethod operation = OperationMethod.Set;
-        public Parameter<bool> setX;
-        public Parameter<bool> setY;
-        public Parameter<bool> setZ;
+        [SerializeField] private Parameter<bool> setX;
+        [SerializeField] private Parameter<bool> setY;
+        [SerializeField] private Parameter<bool> setZ;
 
         [Header("Out")]
-        public Parameter<Vector3> returnedVector;
+        [SerializeField] private Parameter<Vector3> returnedVector;
 
         public override string Info
         {
@@ -81,7 +81,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             }
 
             returnedVector.Value = finalVector;
-            EndAction(true);
+            EndAction();
         }
     }
 }

@@ -10,11 +10,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class GetAnglePositionByDistance : ActionTask 
     {
         [Header("In")]
-        public Parameter<Vector3> origin;
-        public Parameter<float> angle;
-        public Parameter<float> distance;
+        [SerializeField] private Parameter<Vector3> origin;
+        [SerializeField] private Parameter<float> angle;
+        [SerializeField] private Parameter<float> distance;
         [Header("Out")]
-        public Parameter<Vector3> returnedPosition;
+        [SerializeField] private Parameter<Vector3> returnedPosition;
 
         public override string Info => $"{origin} to {returnedPosition} through angle";
 
@@ -22,7 +22,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             Vector3 newPosition = MathUtils.AngleToDirection(angle.Value, distance.Value);
             returnedPosition.Value = newPosition + origin.Value;
-            EndAction(true);
+            EndAction();
         }
     }
 }

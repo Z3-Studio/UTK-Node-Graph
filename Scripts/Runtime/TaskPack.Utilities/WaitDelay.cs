@@ -1,4 +1,5 @@
-﻿using Z3.NodeGraph.Core;
+﻿using UnityEngine;
+using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
@@ -7,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Wait a time and return successful")]
     public class WaitDelay : ActionTask
     {
-        public Parameter<float> waitTime = 1f;
+        [SerializeField] private Parameter<float> waitTime = 1f;
 
         public override string Info => $"Wait {waitTime} seconds";
 

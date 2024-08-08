@@ -6,16 +6,19 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Set Transform.rotation using Euler")]
-    public class SetEulerRotation : ActionTask<Transform>
+    public class SetEulerRotation : ActionTask
     {
-        public Parameter<Vector3> rotation;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+
+        [SerializeField] private Parameter<Vector3> rotation;
 
         public override string Info => $"Euler Rotation = {rotation}";
 
         protected override void StartAction()
         {
-            Agent.rotation = Quaternion.Euler(rotation.Value);
-            EndAction(true);
+            data.Value.rotation = Quaternion.Euler(rotation.Value);
+            EndAction();
         }
     }
 }

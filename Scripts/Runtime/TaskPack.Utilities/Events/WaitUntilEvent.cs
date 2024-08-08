@@ -7,7 +7,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     [NodeDescription("You should not use it condition BT task")]
     public class CheckEvent : EventConditionTask
     {
-        public Parameter<string> eventName;
+        [SerializeField] private Parameter<string> eventName;
 
         public override string Info => $"{name}: {eventName}";
 
@@ -34,7 +34,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     [NodeDescription("Waits for a graph event")]
     public class WaitUntilEvent : ActionTask
     {
-        public Parameter<string> eventName;
+        [SerializeField] private Parameter<string> eventName;
 
         public override string Info => $"Wait until [{eventName}]";
 
@@ -52,7 +52,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
         {
             if (sentEventName.Equals(eventName.Value, System.StringComparison.OrdinalIgnoreCase))
             {
-                EndAction(true);
+                EndAction();
             }
         }
     }
@@ -61,8 +61,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     [NodeDescription("Waits for a graph event")]
     public class WaitUntilEvent<T> : ActionTask
     {
-        public Parameter<string> eventName;
-        public Parameter<T> outValue;
+        [SerializeField] private Parameter<string> eventName;
+        [SerializeField] private Parameter<T> outValue;
 
         //public override string Info => $"Wait until <<b>{outValue.varType.Name}</b>> [{eventName}]";
 
@@ -81,7 +81,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
         //    if (sentEventName.Equals(eventName.Value, System.StringComparison.OrdinalIgnoreCase) && data is EventData<T> eventData)
         //    {
         //        outValue.Value = eventData.Value;
-        //        EndAction(true);
+        //        EndAction();
         //    }
         //}
     }

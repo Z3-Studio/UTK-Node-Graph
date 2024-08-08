@@ -7,16 +7,18 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
     [NodeCategory(Categories.Components)]
     [NodeDescription("Stop a particle system.")]
-    public class StopParticleSystem : ActionTask<ParticleSystem>
+    public class StopParticleSystem : ActionTask
     {
-        public override string Info => $"Stop {AgentInfo}";
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<ParticleSystem> data;
+        public override string Info => $"Stop {data}";
 
-        public Parameter<bool> stopChildren;
+        [SerializeField] private Parameter<bool> stopChildren;
 
         protected override void StartAction()
         {
-            Agent.Stop(stopChildren.Value);
-            EndAction(true);
+            data.Value.Stop(stopChildren.Value);
+            EndAction();
         }
     }
 }

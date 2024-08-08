@@ -6,22 +6,25 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
 {
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Correct a body based on current slope")]
-    public class CorrectSlope : ActionTask<Transform>
+    public class CorrectSlope : ActionTask
     {
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+
         [Header("Inputs")]
-        public Parameter<Vector3> slopeCheckPoint;
-        public Parameter<LayerMask> groundLayer;
-        public Parameter<float> speed;
-        public Parameter<float> maxSlopeAngle = 45f;
-        public Parameter<float> slopeCheckDistance = 0.5f;
+        [SerializeField] private Parameter<Vector3> slopeCheckPoint;
+        [SerializeField] private Parameter<LayerMask> groundLayer;
+        [SerializeField] private Parameter<float> speed;
+        [SerializeField] private Parameter<float> maxSlopeAngle = 45f;
+        [SerializeField] private Parameter<float> slopeCheckDistance = 0.5f;
 
         protected override void StartAction()
         {
             float slopeDownAngle = CheckSlope();
-            float currentDegrees = Mathf.MoveTowardsAngle(Agent.eulerAngles.z, slopeDownAngle, Time.fixedDeltaTime * speed.Value);
-            Agent.rotation = Quaternion.Euler(Agent.eulerAngles.x, Agent.eulerAngles.y, currentDegrees);
+            float currentDegrees = Mathf.MoveTowardsAngle(data.Value.eulerAngles.z, slopeDownAngle, Time.fixedDeltaTime * speed.Value);
+            data.Value.rotation = Quaternion.Euler(data.Value.eulerAngles.x, data.Value.eulerAngles.y, currentDegrees);
             
-            EndAction(true);
+            EndAction();
         }
 
 
@@ -35,7 +38,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
 
                 if (Mathf.Abs(slopeAngle) <= maxSlopeAngle.Value)
                 {
-                    return Agent.right.x > 0 ? slopeAngle : -slopeAngle;
+                    return data.Value.right.x > 0 ? slopeAngle : -slopeAngle;
                 }
             }
 

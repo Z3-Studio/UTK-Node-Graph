@@ -11,12 +11,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class GetRotationWithinOpeningAngle : ActionTask
     {
         [Header("In")]
-        public Parameter<Transform> directedTransform;
-        public Parameter<float> desiredAngle;
-        public Parameter<float> openingAngle;
+        [SerializeField] private Parameter<Transform> directedTransform;
+        [SerializeField] private Parameter<float> desiredAngle;
+        [SerializeField] private Parameter<float> openingAngle;
 
         [Header("Out")]
-        public Parameter<Quaternion> rotation;
+        [SerializeField] private Parameter<Quaternion> rotation;
 
         public override string Info => $"{name} = {openingAngle}";
 
@@ -39,7 +39,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             }
 
             rotation.Value = Quaternion.Euler(0f,0f, eulerZ);
-            EndAction(true);
+            EndAction();
         }
     }
 }

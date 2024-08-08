@@ -1,3 +1,4 @@
+using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.Utils.ExtensionMethods;
 
@@ -5,9 +6,9 @@ namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
 {
     public class AirSPS : CharacterAction
     {
-        public Parameter<bool> jumping;
-        public Parameter<string> jumpState = "Jump";
-        public Parameter<string> fallingState = "Falling";
+        [SerializeField] private Parameter<bool> jumping;
+        [SerializeField] private Parameter<string> jumpState = "Jump";
+        [SerializeField] private Parameter<string> fallingState = "Falling";
 
         private bool MinJumpApplied => NodeRunningTime > Data.JumpRangeDuration.x;
         private bool MaxJumpApplied => NodeRunningTime >= Data.JumpRangeDuration.y;

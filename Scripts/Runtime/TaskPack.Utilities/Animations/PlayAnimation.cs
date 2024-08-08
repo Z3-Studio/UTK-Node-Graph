@@ -1,7 +1,8 @@
-﻿using Z3.NodeGraph.Core;
+﻿using UnityEngine;
+using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
-using UnityEngine;
 using Z3.UIBuilder.Core;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
@@ -12,11 +13,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [ParameterDefinition(AutoBindType.SelfBind)]
         [SerializeField] protected Parameter<Animator> animator;
 
-        public Parameter<string> stateName;
+        [SerializeField] private Parameter<string> stateName;
         [Slider(0, 1)]
-        public Parameter<float> transition = 0.25f;
-        public Parameter<bool> waitUntilFinish;
-        public Parameter<int> layer;
+        [SerializeField] private Parameter<float> transition = 0.25f;
+        [SerializeField] private Parameter<bool> waitUntilFinish;
+        [SerializeField] private Parameter<int> layer;
 
         public override string Info => waitUntilFinish.Value ?
             $"► Playing {stateName}" :
@@ -29,12 +30,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             played = false;
 
-            AnimatorStateInfo current = animator.Value.GetCurrentAnimatorStateInfo(layer.Value);
-            animator.Value.CrossFade(stateName.Value, transition.Value / current.length, layer.Value);
+            animator.Value.PlayState(stateName.Value, transition.Value, layer.Value);
 
             if (!waitUntilFinish.Value)
             {
-                EndAction(true);
+                EndAction();
             }
         }
 
@@ -44,16 +44,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
             if (stateInfo.IsName(stateName.Value))
             {
-
                 played = true;
                 if (NodeRunningTime >= (stateInfo.length / animator.Value.speed))
                 {
-                    EndAction(true);
+                    EndAction();
                 }
             }
             else if (played)
             {
-                EndAction(true);
+                EndAction();
             }
         }
     }

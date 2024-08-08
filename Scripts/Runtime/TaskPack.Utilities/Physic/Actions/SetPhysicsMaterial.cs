@@ -6,16 +6,18 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Physics)]
     [NodeDescription("Change the PhysicsMaterial of a Rigidbody.")]
-    public class SetPhysicsMaterial : ActionTask<Collider>
+    public class SetPhysicsMaterial : ActionTask
     {
-        /*[RequiredField]*/ public Parameter<PhysicMaterial> physicsMaterial;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Collider> data;
+        [SerializeField] private Parameter<PhysicMaterial> physicsMaterial;
 
         public override string Info => $"Set PhysicsMaterial to {physicsMaterial}";
 
         protected override void StartAction()
         {
-            Agent.sharedMaterial = physicsMaterial.Value;
-            EndAction(true);
+            data.Value.sharedMaterial = physicsMaterial.Value;
+            EndAction();
         }
     }
 }

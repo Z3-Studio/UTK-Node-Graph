@@ -9,8 +9,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Useful to check if the object went to the pool or was destroyed")]
     public class RemoveNullOrDisableList<T> : ActionTask where T : Component
     {
-        //[BlackboardOnly]
-        public Parameter<List<T>> list;
+        //[MustBind]
+        [SerializeField] private Parameter<List<T>> list;
 
         public override string Info => $"Remove Null or Disabled from {list}";
         
@@ -23,7 +23,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                     list.Value.Remove(item);
             }
 
-            EndAction(true);
+            EndAction();
         }
     }
 }

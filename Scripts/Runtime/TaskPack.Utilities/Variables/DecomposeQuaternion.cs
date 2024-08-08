@@ -9,25 +9,25 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
     public class DecomposeQuaternion : ActionTask
     {
         [Header("Input")]
-        public Parameter<Quaternion> quaternionInput;
+        [SerializeField] private Parameter<Quaternion> quaternionInput;
         
         [Header("Full Rotation")]
-        public Parameter<Vector3> euler;
+        [SerializeField] private Parameter<Vector3> euler;
 
         [Header("Decomposed Euler")]
-        public Parameter<float> eulerX;
-        public Parameter<float> eulerY;
-        public Parameter<float> eulerZ;
+        [SerializeField] private Parameter<float> eulerX;
+        [SerializeField] private Parameter<float> eulerY;
+        [SerializeField] private Parameter<float> eulerZ;
         
         [Header("Decomposed Quaternion")]
-        public Parameter<float> quaternionX;
-        public Parameter<float> quaternionY;
-        public Parameter<float> quaternionZ;
-        public Parameter<float> quaternionW;
+        [SerializeField] private Parameter<float> quaternionX;
+        [SerializeField] private Parameter<float> quaternionY;
+        [SerializeField] private Parameter<float> quaternionZ;
+        [SerializeField] private Parameter<float> quaternionW;
 
         [Header("Parameters")]
         [Tooltip("Returns a negative angle equivalent if it's greater than 180 degrees")]
-        public Parameter<bool> useSignedEuler;
+        [SerializeField] private Parameter<bool> useSignedEuler;
 
         public override string Info => $"Decompose {quaternionInput}";
 
@@ -47,7 +47,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
             quaternionZ.Value = quaternion.z;
             quaternionW.Value = quaternion.w;
             
-            EndAction(true);
+            EndAction();
         }
 
         /// <summary>

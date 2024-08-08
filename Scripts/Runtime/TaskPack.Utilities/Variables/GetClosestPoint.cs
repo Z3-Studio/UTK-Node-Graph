@@ -8,14 +8,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities.NodeGraph.Unity
 {
     [NodeCategory(Categories.Variables)]
     [NodeDescription("Gets the closest point from a transform inside a list")]
-    public class GetClosestPoint<T> : ActionTask<Transform> where T : Component
+    public class GetClosestPoint<T> : ActionTask where T : Component
     {
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+
         [Header("In")]
-        public Parameter<List<T>> points;
+        [SerializeField] private Parameter<List<T>> points;
         
         [Header("Out")]
-        public Parameter<int> outIndex;
-        public Parameter<T> outPoint;
+        [SerializeField] private Parameter<int> outIndex;
+        [SerializeField] private Parameter<T> outPoint;
 
         protected override void StartAction()
         {
@@ -35,13 +38,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities.NodeGraph.Unity
 
             outIndex.Value = closestIndex;
             outPoint.Value = points.Value[closestIndex];
-            EndAction(true);
+            EndAction();
         }
 
         private float GetSqrDistance(int index)
         {
             Vector3 point = points.Value[index].transform.position;
-            return (point - Agent.position).sqrMagnitude;
+            return (point - data.Value.position).sqrMagnitude;
         }
     }
 }

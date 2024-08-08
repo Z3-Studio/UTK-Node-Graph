@@ -6,15 +6,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Animations)]
     [NodeDescription("Play animation by state name in all layers")]
-    public class PlayAnimationAllLayers : ActionTask<Animator>
+    public class PlayAnimationAllLayers : ActionTask
     {
-        public Parameter<string> stateName;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Animator> data;
+        [SerializeField] private Parameter<string> stateName;
         //[Range(0, 1)]
-        public Parameter<float> transition = 0.25f;
+        [SerializeField] private Parameter<float> transition = 0.25f;
 
-        public Parameter<bool> waitUntilFinish;
+        [SerializeField] private Parameter<bool> waitUntilFinish;
         //[ShowIf(nameof(waitUntilFinish), 1)]
-        public Parameter<int> waitLayer;
+        [SerializeField] private Parameter<int> waitLayer;
 
         public override string Info => $"► Play All: {stateName}";
 
@@ -25,34 +27,34 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             played = false;
 
-            for (int i = 0; i <= Agent.layerCount; i++)
+            for (int i = 0; i <= data.Value.layerCount; i++)
             {
-                AnimatorStateInfo current = Agent.GetCurrentAnimatorStateInfo(i);
-                Agent.CrossFade(stateName.Value, transition.Value / current.length, i);
+                AnimatorStateInfo current = data.Value.GetCurrentAnimatorStateInfo(i);
+                data.Value.CrossFade(stateName.Value, transition.Value / current.length, i);
             }
 
             if (!waitUntilFinish.Value)
             {
-                EndAction(true);
+                EndAction();
             }
         }
 
         protected override void UpdateAction()
         {
-            stateInfo = Agent.GetCurrentAnimatorStateInfo(waitLayer.Value);
+            stateInfo = data.Value.GetCurrentAnimatorStateInfo(waitLayer.Value);
 
             if (stateInfo.IsName(stateName.Value))
             {
 
                 played = true;
-                if (NodeRunningTime >= (stateInfo.length / Agent.speed))
+                if (NodeRunningTime >= (stateInfo.length / data.Value.speed))
                 {
-                    EndAction(true);
+                    EndAction();
                 }
             }
             else if (played)
             {
-                EndAction(true);
+                EndAction();
             }
         }
     }

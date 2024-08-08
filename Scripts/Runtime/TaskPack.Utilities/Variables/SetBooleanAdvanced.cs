@@ -21,12 +21,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities.NodeGraph.Unity.Variables
         }
 
         [Header("Input")]
-        public Parameter<bool> booleanA;
-        public Parameter<bool> booleanB;
+        [SerializeField] private Parameter<bool> booleanA;
+        [SerializeField] private Parameter<bool> booleanB;
         public BooleanOperations operation = BooleanOperations.Or;
         
         [Header("Output")]
-        public Parameter<bool> output;
+        [SerializeField] private Parameter<bool> output;
 
         public override string Info => operation switch
         {
@@ -54,7 +54,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.NodeGraph.Unity.Variables
                 _ => throw new NotImplementedException()
             };
             
-            EndAction(true);
+            EndAction();
         }
     }
 }

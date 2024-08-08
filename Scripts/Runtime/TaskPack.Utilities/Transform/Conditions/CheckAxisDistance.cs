@@ -8,10 +8,10 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Check the distance beetwen the reference to the target comparing the selected axis.")]
     public class CheckAxisDistance : ConditionTask
     {
-        public Parameter<Vector3> reference;
-        public Parameter<Vector3> target;
-        public Parameter<float> distance;
-        public Parameter<Axis3Flags> axis;
+        [SerializeField] private Parameter<Vector3> reference;
+        [SerializeField] private Parameter<Vector3> target;
+        [SerializeField] private Parameter<float> distance;
+        [SerializeField] private Parameter<Axis3Flags> axis;
         public CompareMethod checkType = CompareMethod.LessOrEqualTo;
 
         public override string Info

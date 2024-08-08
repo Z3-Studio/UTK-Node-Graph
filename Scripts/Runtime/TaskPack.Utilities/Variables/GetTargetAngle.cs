@@ -10,17 +10,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class GetTargetAngle : ActionTask {
 
         [Header("In")]
-        public Parameter<Vector3> center;
-        public Parameter<Vector3> target;
+        [SerializeField] private Parameter<Vector3> center;
+        [SerializeField] private Parameter<Vector3> target;
 
         [Header("Out")]
-        public Parameter<float> angle;
+        [SerializeField] private Parameter<float> angle;
 
         public override string Info => $"{angle} = Between {center} to {target}";
 
         protected override void StartAction() {
             angle.Value = MathUtils.TargetAngle(center.Value, target.Value);
-            EndAction(true);
+            EndAction();
         }
     }
 }

@@ -8,15 +8,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Gets the sign of a number (-1 if negative and 1 if positive)")]
     public class GetSign : ActionTask
     {
-        public Parameter<float> inNumber;
-        public Parameter<float> outSign;
+        [SerializeField] private Parameter<float> inNumber;
+        [SerializeField] private Parameter<float> outSign;
 
         public override string Info => $"{outSign} = Sign of {inNumber}";
 
         protected override void StartAction()
         {
             outSign.Value = Mathf.Sign(inNumber.Value);
-            EndAction(true);
+            EndAction();
         }
     }
 }

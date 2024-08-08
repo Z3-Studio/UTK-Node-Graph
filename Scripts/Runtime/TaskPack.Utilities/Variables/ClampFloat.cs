@@ -8,13 +8,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Clamp a float between two values.")]
     public class ClampFloat : ActionTask
     {
-        public Parameter<float> value;
-        public Parameter<float> min;
-        public Parameter<float> max;
+        [SerializeField] private Parameter<float> value;
+        [SerializeField] private Parameter<float> min;
+        [SerializeField] private Parameter<float> max;
 
         protected override void StartAction() {
             value.Value = Mathf.Clamp(value.Value, min.Value, max.Value);
-            EndAction(true);
+            EndAction();
         }
     }
 }

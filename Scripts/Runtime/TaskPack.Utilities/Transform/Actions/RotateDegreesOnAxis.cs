@@ -7,13 +7,16 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Rotate axis of a GameObject")]
-    public class RotateDegreesOnAxis : ActionTask<Transform>
+    public class RotateDegreesOnAxis : ActionTask
     {
-        public Parameter<float> degrees;
-        public Parameter<float> speed;
-        public Parameter<Axis3> axis;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
 
-        public override string Info => $"Rotate {AgentInfo} {axis} {degrees} degrees";
+        [SerializeField] private Parameter<float> degrees;
+        [SerializeField] private Parameter<float> speed;
+        [SerializeField] private Parameter<Axis3> axis;
+
+        public override string Info => $"Rotate {data} {axis} {degrees} degrees";
 
         private float currentDegrees;
         private Vector3 initialAngle;
@@ -22,13 +25,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         protected override void StartAction()
         {
             currentDegrees = 0;
-            initialAngle = Agent.eulerAngles;
+            initialAngle = data.Value.eulerAngles;
 
             updateRotation = () => axis.Value switch
             {
-                Axis3.X => Quaternion.Euler(currentDegrees + initialAngle.x, Agent.eulerAngles.y, Agent.eulerAngles.z),
-                Axis3.Y => Quaternion.Euler(Agent.eulerAngles.x, currentDegrees + initialAngle.y, Agent.eulerAngles.z),
-                Axis3.Z => Quaternion.Euler(Agent.eulerAngles.x, Agent.eulerAngles.y, currentDegrees + initialAngle.z),
+                Axis3.X => Quaternion.Euler(currentDegrees + initialAngle.x, data.Value.eulerAngles.y, data.Value.eulerAngles.z),
+                Axis3.Y => Quaternion.Euler(data.Value.eulerAngles.x, currentDegrees + initialAngle.y, data.Value.eulerAngles.z),
+                Axis3.Z => Quaternion.Euler(data.Value.eulerAngles.x, data.Value.eulerAngles.y, currentDegrees + initialAngle.z),
                 _ => throw new NotImplementedException(),
             };
         }
@@ -36,11 +39,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         protected override void UpdateAction()
         {
             currentDegrees = Mathf.MoveTowards(currentDegrees, degrees.Value, Time.fixedDeltaTime * speed.Value);
-            Agent.rotation = updateRotation();
+            data.Value.rotation = updateRotation();
 
             if (currentDegrees == degrees.Value)
             {
-                EndAction(true);
+                EndAction();
             }
         }
     }

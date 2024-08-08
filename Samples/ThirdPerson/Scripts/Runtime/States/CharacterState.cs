@@ -6,20 +6,26 @@ using Z3.NodeGraph.Tasks;
 namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
 {
     [NodeCategory(Categories.Samples + "/Third Person")]
-    public abstract class CharacterCondition : ConditionTask<CharacterPawn>
+    public abstract class CharacterCondition : ConditionTask
     {
-        protected CharacterPhysics Physics => Agent.Physics;
-        protected PawnController Controller => Agent.Controller;
-        protected CharacterData Data => Agent.Data;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] protected Parameter<CharacterPawn> data;
+
+        protected CharacterPhysics Physics => data.Value.Physics;
+        protected PawnController Controller => data.Value.Controller;
+        protected CharacterData Data => data.Value.Data;
     }
 
     [NodeCategory(Categories.Samples + "/Third Person")]
-    public abstract class CharacterAction : ActionTask<CharacterPawn>
+    public abstract class CharacterAction : ActionTask
     {
-        protected CharacterCamera Camera => Agent.Camera;
-        protected CharacterPhysics Physics => Agent.Physics;
-        protected Animator Animator => Agent.Animator;
-        protected PawnController Controller => Agent.Controller;
-        protected CharacterData Data => Agent.Data;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] protected Parameter<CharacterPawn> data;
+
+        protected CharacterCamera Camera => data.Value.Camera;
+        protected CharacterPhysics Physics => data.Value.Physics;
+        protected Animator Animator => data.Value.Animator;
+        protected PawnController Controller => data.Value.Controller;
+        protected CharacterData Data => data.Value.Data;
     }
 }

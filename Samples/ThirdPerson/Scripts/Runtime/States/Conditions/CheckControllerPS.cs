@@ -1,5 +1,6 @@
 ﻿using Z3.NodeGraph.Core;
 using System;
+using UnityEngine;
 
 namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
 {
@@ -13,7 +14,7 @@ namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
             Sprint
         }
 
-        public Parameter<ControllerAction> controllerAction;
+        [SerializeField] private Parameter<ControllerAction> controllerAction;
 
         private Func<bool> getValue;
 

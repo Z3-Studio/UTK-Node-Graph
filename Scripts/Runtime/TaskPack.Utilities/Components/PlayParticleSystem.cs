@@ -4,19 +4,20 @@ using UnityEngine;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
-
     [NodeCategory(Categories.Components)]
     [NodeDescription("Play a particle system.")]
-    public class PlayParticleSystem : ActionTask<ParticleSystem>
+    public class PlayParticleSystem : ActionTask
     {
-        public override string Info => $"Play {AgentInfo}";
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<ParticleSystem> data;
+        public override string Info => $"Play {data}";
 
-        public Parameter<bool> playChildren;
+        [SerializeField] private Parameter<bool> playChildren;
 
         protected override void StartAction()
         {
-            Agent.Play(playChildren.Value);
-            EndAction(true);
+            data.Value.Play(playChildren.Value);
+            EndAction();
         }
     }
 }

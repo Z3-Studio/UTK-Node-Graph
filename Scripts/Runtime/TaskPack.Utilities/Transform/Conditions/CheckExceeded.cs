@@ -6,11 +6,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Compare the agent passed the target + offset.")]
-    public class CheckExceed : ConditionTask<Transform> 
+    public class CheckExceed : ConditionTask
     {
-        public Parameter<Axis3> axis;
-        public Parameter<Vector3> target;
-        public Parameter<float> offset;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+        [SerializeField] private Parameter<Axis3> axis;
+        [SerializeField] private Parameter<Vector3> target;
+        [SerializeField] private Parameter<float> offset;
 
         public override string Info => offset.Value == 0 ?
             $"Exceeded {axis} {target}":
@@ -18,7 +20,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         public override bool CheckCondition() 
         {
-            Vector3 inverse = Agent.InverseTransformPoint(target.Value);
+            Vector3 inverse = data.Value.InverseTransformPoint(target.Value);
             
             return offset.Value > axis.Value switch
             {

@@ -7,15 +7,19 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Set Transform.position")]
-    public class SetRotation : ActionTask<Transform> {
+    public class SetRotation : ActionTask
+    {
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
 
-        public Parameter<Quaternion> rotation = Quaternion.identity;
+        [SerializeField] private Parameter<Quaternion> rotation = Quaternion.identity;
 
         public override string Info => $"Rotation = {rotation}";
 
-        protected override void StartAction() {
-            Agent.rotation = rotation.Value;
-            EndAction(true);
+        protected override void StartAction()
+        {
+            data.Value.rotation = rotation.Value;
+            EndAction();
         }
     }
 }

@@ -12,8 +12,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [ParameterDefinition(AutoBindType.SelfBind)]
         [SerializeField] protected Parameter<Renderer> renderer;
 
-        public Parameter<string> property = "_Color"; // You can see properties in inspector by debug like "_UnlitColor"
-        public Parameter<Color> color;
+        [SerializeField] private Parameter<string> property = "_Color"; // You can see properties in inspector by debug like "_UnlitColor"
+        [SerializeField] private Parameter<Color> color;
 
         public override string Info => $"Set Color {renderer} = {GetColorInfo(color)}";
 
@@ -21,7 +21,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             renderer.Value.material.SetColor(property.Value, color.Value);
 
-            EndAction(true);
+            EndAction();
         }
 
         private string GetColorInfo(Parameter<Color> parameter)

@@ -17,8 +17,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Remove GameObjects disabled, null or enabled. Useful to remove object references that have returned to the object pool for example.")]
     public class UpdateList<T> : ActionTask where T : Component
     {
-        /*[RequiredField]*/ public Parameter<List<T>> list;
-        public Parameter<ItemListState> itemState = ItemListState.Disabled | ItemListState.Null;
+        [SerializeField] private Parameter<List<T>> list;
+        [SerializeField] private Parameter<ItemListState> itemState = ItemListState.Disabled | ItemListState.Null;
 
         protected override void StartAction()
         {
@@ -35,7 +35,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 list.Value.RemoveAll(i => i == null);
             }
 
-            EndAction(true);
+            EndAction();
         }
     }
 }

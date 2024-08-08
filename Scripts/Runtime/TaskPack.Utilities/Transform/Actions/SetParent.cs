@@ -6,14 +6,18 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Set the Transform Parent")]
-    public class SetParent : ActionTask<Component>
+    public class SetParent : ActionTask
     {
-        public Parameter<Transform> parent;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> target;
+        [SerializeField] private Parameter<Transform> parent;
+
         public override string Info => $"Parent = {parent}";
+
         protected override void StartAction()
         {
-            Agent.transform.SetParent(parent.Value);
-            EndAction(true);
+            target.Value.SetParent(parent.Value);
+            EndAction();
         }
     }
 }

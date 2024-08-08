@@ -8,12 +8,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities.AI.Pathfinding
     public class RandomPointInCircle : ActionTask
     {
         [Header("In")]
-        //public Parameter<Axis> axis = Axis.Y;
-        public Parameter<Vector3> center;
-        public Parameter<float> radius;
+        //[SerializeField] private Parameter<Axis> axis = Axis.Y;
+        [SerializeField] private Parameter<Vector3> center;
+        [SerializeField] private Parameter<float> radius;
 
         [Header("Out")]
-        public Parameter<Vector3> targetPoint;
+        [SerializeField] private Parameter<Vector3> targetPoint;
 
         protected override void StartAction()
         {

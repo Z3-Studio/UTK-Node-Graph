@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         protected override void StartAction() 
         {
             agent.Value.enabled = active.Value;
-            EndAction(true);
+            EndAction();
         }
     }
 }

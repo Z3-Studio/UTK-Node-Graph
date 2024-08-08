@@ -6,15 +6,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Physics)]
     [NodeDescription("Get Character Controller Velocity")]
-    public class GetCharacterControllerVelocity : ActionTask<CharacterController>
+    public class GetCharacterControllerVelocity : ActionTask
     {
-        public Parameter<Vector3> velocity;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<CharacterController> characterController;
+        [SerializeField] private Parameter<Vector3> velocity;
 
-        public override string Info => $"Get {AgentInfo} Velocity";
+        public override string Info => $"Get {characterController} Velocity";
 
         protected override void StartAction()
         {
-            velocity.Value = Agent.velocity;
+            velocity.Value = characterController.Value.velocity;
             EndAction();
         }
     }

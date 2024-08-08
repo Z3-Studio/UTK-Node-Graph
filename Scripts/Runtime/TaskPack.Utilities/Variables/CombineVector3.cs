@@ -9,16 +9,16 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class CombineVector3 : ActionTask
     {
         [Header("In")]
-        public Parameter<Vector3> initialVector;
-        public Parameter<Vector3> otherVector;
+        [SerializeField] private Parameter<Vector3> initialVector;
+        [SerializeField] private Parameter<Vector3> otherVector;
 
         [Header("Config")]
-        public Parameter<bool> useOtherX;
-        public Parameter<bool> useOtherY;
-        public Parameter<bool> useOtherZ;
+        [SerializeField] private Parameter<bool> useOtherX;
+        [SerializeField] private Parameter<bool> useOtherY;
+        [SerializeField] private Parameter<bool> useOtherZ;
 
         [Header("Out")]
-        public Parameter<Vector3> returnedVector;
+        [SerializeField] private Parameter<Vector3> returnedVector;
 
         public override string Info
         {
@@ -76,7 +76,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
             returnedVector.Value = finalVector;
 
-            EndAction(true);
+            EndAction();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 
@@ -8,9 +9,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Please describe what this ActionTask does.")]
     public class SetBoolean : ActionTask
     {
-        [ParameterDefinition(get: false)]
-        public Parameter<bool> value;
-        public BoolOperation operation = BoolOperation.Toggle;
+        [SerializeField] private Parameter<bool> value;
+        [SerializeField] private BoolOperation operation = BoolOperation.Toggle;
 
         public override string Info => operation == BoolOperation.Toggle ? $"{value} = !{value}" : $"{value} = {operation}";
 
@@ -23,7 +23,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 BoolOperation.Toggle => !value.Value,
                 _ => throw new NotImplementedException()
             };
-            EndAction(true);
+
+            EndAction();
         }
     }
 }

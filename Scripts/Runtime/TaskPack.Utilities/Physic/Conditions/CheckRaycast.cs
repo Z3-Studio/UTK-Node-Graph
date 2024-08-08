@@ -9,13 +9,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class CheckRaycast : ConditionTask
     {
         [Header("Out")]
-        public Parameter<Vector3> rayOrigin;
-        public Parameter<Vector3> direction;
-        public Parameter<LayerMask> layerMask;
-        public Parameter<float> distance;
+        [SerializeField] private Parameter<Vector3> rayOrigin;
+        [SerializeField] private Parameter<Vector3> direction;
+        [SerializeField] private Parameter<LayerMask> layerMask;
+        [SerializeField] private Parameter<float> distance;
         
         [Header("Out")]
-        public Parameter<Vector2> positionHit;
+        [SerializeField] private Parameter<Vector2> positionHit;
 
         public override bool CheckCondition()
         {

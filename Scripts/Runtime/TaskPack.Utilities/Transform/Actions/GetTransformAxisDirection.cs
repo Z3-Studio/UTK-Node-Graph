@@ -2,18 +2,20 @@ using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 using UnityEngine;
 
-
 namespace Z3.NodeGraph.TaskPack.Utilities.Physic
 {
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Get transform.axis")]
-    public class GetTransformAxisDirection : ActionTask<Transform>
+    public class GetTransformAxisDirection : ActionTask
     {
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+
         [Header("In")]
-        public Parameter<Direction> axisDirecition = Direction.Right;
+        [SerializeField] private Parameter<Direction> axisDirecition = Direction.Right;
 
         [Header("Out")]
-        public Parameter<Vector3> returnedValue;
+        [SerializeField] private Parameter<Vector3> returnedValue;
 
         public override string Info => $"Get Transform.{axisDirecition}";
 
@@ -21,16 +23,16 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
         {
             returnedValue.Value = axisDirecition.Value switch
             {
-                Direction.Left => -Agent.transform.right,
-                Direction.Right => Agent.transform.right,
-                Direction.Up => Agent.transform.up,
-                Direction.Down => -Agent.transform.up,
-                Direction.Forward => Agent.transform.forward,
-                Direction.Back => -Agent.transform.forward,
+                Direction.Left => -data.Value.transform.right,
+                Direction.Right => data.Value.transform.right,
+                Direction.Up => data.Value.transform.up,
+                Direction.Down => -data.Value.transform.up,
+                Direction.Forward => data.Value.transform.forward,
+                Direction.Back => -data.Value.transform.forward,
                 _ => throw new System.NotImplementedException(),
             };
 
-            EndAction(true);
+            EndAction();
         }
     }
 }

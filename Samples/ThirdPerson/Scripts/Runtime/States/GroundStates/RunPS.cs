@@ -1,4 +1,5 @@
-﻿using Z3.NodeGraph.Core;
+﻿using UnityEngine;
+using Z3.NodeGraph.Core;
 
 namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
 {
@@ -7,9 +8,9 @@ namespace Z3.NodeGraph.Sample.ThirdPerson.Character.States
     /// </summary>
     public class RunPS : CharacterAction
     {
-        public Parameter<float> moveSpeed;
-        public Parameter<float> timeToFullRunning = 0.5f;
-        public Parameter<bool> fullRunning;
+        [SerializeField] private Parameter<float> moveSpeed;
+        [SerializeField] private Parameter<float> timeToFullRunning = 0.5f;
+        [SerializeField] private Parameter<bool> fullRunning;
 
         private float timer;
 

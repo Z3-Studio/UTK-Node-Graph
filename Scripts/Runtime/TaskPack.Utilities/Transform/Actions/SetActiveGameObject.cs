@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         protected override void StartAction() 
         {
             gameObject.Value.SetActive(active.Value);
-            EndAction(true);
+            EndAction();
         }
     }
 }

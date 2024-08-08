@@ -10,16 +10,16 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class CombineVector2Float : ActionTask
     {
         [Header("In")]
-        public Parameter<Vector2> initialVector;
-        public Parameter<float> xPosition;
-        public Parameter<float> yPosition;
+        [SerializeField] private Parameter<Vector2> initialVector;
+        [SerializeField] private Parameter<float> xPosition;
+        [SerializeField] private Parameter<float> yPosition;
 
         [Header("Config")]
-        public Parameter<bool> useFloatX;
-        public Parameter<bool> useFloatY;
+        [SerializeField] private Parameter<bool> useFloatX;
+        [SerializeField] private Parameter<bool> useFloatY;
 
         [Header("Out")]
-        public Parameter<Vector2> returnedVector;
+        [SerializeField] private Parameter<Vector2> returnedVector;
 
         public override string Info
         {
@@ -60,7 +60,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             }
 
             returnedVector.Value = newVector;
-            EndAction(true);
+            EndAction();
         }
     }
 }

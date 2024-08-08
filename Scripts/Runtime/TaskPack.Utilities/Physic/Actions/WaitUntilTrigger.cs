@@ -6,10 +6,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Rigidbody)]
     [NodeDescription("Wait until anything is inside the Trigger area and return the Transform.")]
-    public class WaitUntilTrigger : ActionTask<Collider>
+    public class WaitUntilTrigger : ActionTask
     {
-        public Parameter<bool> triggerExit;
-        public Parameter<Collider> returnedCollider;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+
+        [SerializeField] private Parameter<bool> triggerExit;
+        [SerializeField] private Parameter<Collider> returnedCollider;
 
         public override string Info => $"Wait Until Trigger {(triggerExit.Value ? "Exit" : "Enter")} 'AgentInfo'";
 

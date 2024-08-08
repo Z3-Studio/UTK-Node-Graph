@@ -11,10 +11,10 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class RandomRange : ActionTask {
 
         [Header("In")]
-        public Parameter<Vector2> range;
+        [SerializeField] private Parameter<Vector2> range;
 
         [Header("Out")]
-        public Parameter<float> result;
+        [SerializeField] private Parameter<float> result;
 
         public override string Info => range.IsBinding ?
             $"Random Range {range}" :
@@ -22,7 +22,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void StartAction() {
             result.Value = range.Value.RandomRange();
-            EndAction(true);
+            EndAction();
         }
     }
 }

@@ -7,11 +7,14 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Movement
 
     [NodeCategory(Categories.Movement)]
     [NodeDescription("Move a GameObject to the target position, through an animationCurve.")]
-    public class LerpPositionWithCurve : ActionTask<Transform>
+    public class LerpPositionWithCurve : ActionTask
     {
-        public Parameter<Vector3> targetPosition;
-        public Parameter<float> time;
-        public Parameter<AnimationCurve> animationCurve;
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
+
+        [SerializeField] private Parameter<Vector3> targetPosition;
+        [SerializeField] private Parameter<float> time;
+        [SerializeField] private Parameter<AnimationCurve> animationCurve;
 
         private Vector2 initPosition;
         private Vector2 finalPosition;
@@ -21,7 +24,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Movement
 
         protected override void StartAction()
         {
-            initPosition = Agent.position;
+            initPosition = data.Value.position;
             finalPosition = targetPosition.Value;
             t = 0f;
         }
@@ -29,10 +32,10 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Movement
         protected override void UpdateAction()
         {
             t += Time.deltaTime / time.Value;
-            Agent.position = Vector2.Lerp(initPosition, finalPosition, animationCurve.Value.Evaluate(t));
+            data.Value.position = Vector2.Lerp(initPosition, finalPosition, animationCurve.Value.Evaluate(t));
 
             if (t >= 1)
-                EndAction(true);
+                EndAction();
         }
     }
 }

@@ -7,10 +7,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Compares how many children a transform has")]
-    public class CheckChildCount : ConditionTask<Transform> {
+    public class CheckChildCount : ConditionTask
+    {
 
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Transform> data;
         public CompareMethod checkType = CompareMethod.EqualTo;
-        public Parameter<int> value;
+        [SerializeField] private Parameter<int> value;
 
         public override string Info
         {
@@ -19,7 +22,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         public override bool CheckCondition()
         {
-            return checkType.Compare(Agent.childCount, value.Value);
+            return checkType.Compare(data.Value.childCount, value.Value);
         }
     }
 }

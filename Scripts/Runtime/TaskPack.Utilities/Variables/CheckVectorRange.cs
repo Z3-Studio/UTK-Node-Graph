@@ -16,9 +16,9 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             Above
         }
 
-        public Parameter<float> variable;
-        public Parameter<Vector2> range;
-        public Parameter<RangeCompareMethod> checkType = RangeCompareMethod.Inside;
+        [SerializeField] private Parameter<float> variable;
+        [SerializeField] private Parameter<Vector2> range;
+        [SerializeField] private Parameter<RangeCompareMethod> checkType = RangeCompareMethod.Inside;
 
         public override string Info
         {

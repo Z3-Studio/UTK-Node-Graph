@@ -6,19 +6,21 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {    
     [NodeCategory(Categories.Rigidbody)]
     [NodeDescription("Set Rigidbody velocity based on Transform direction")]
-    public class SetReferencedVelocity : ActionTask<Rigidbody> 
-    {        
-        /*[RequiredField]*/ public Parameter<Vector3> velocity;
+    public class SetReferencedVelocity : ActionTask
+    {
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<Rigidbody> data;
+        [SerializeField] private Parameter<Vector3> velocity;
         public override string Info => $"Referenced velocity = {velocity}";
         protected override void StartAction() 
         {
-            Agent.velocity = new Vector3()
+            data.Value.velocity = new Vector3()
             {
-                x = Agent.transform.right.x * velocity.Value.x,
-                y = Agent.transform.up.y * velocity.Value.y,
-                z = Agent.transform.forward.z * velocity.Value.z
+                x = data.Value.transform.right.x * velocity.Value.x,
+                y = data.Value.transform.up.y * velocity.Value.y,
+                z = data.Value.transform.forward.z * velocity.Value.z
             };
-            EndAction(true);
+            EndAction();
         }
     }
 }

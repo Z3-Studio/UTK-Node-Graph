@@ -9,7 +9,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Useful to check if the object went to the pool or was destroyed")]
     public class CheckNullOrDisable : ConditionTask
     {
-        public Parameter<GameObject> variable;
+        [SerializeField] private Parameter<GameObject> variable;
 
         public override string Info => $"{variable} is Null or Disabled";
 

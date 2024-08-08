@@ -10,11 +10,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class CheckTargetAngle : ConditionTask
     {
         [ParameterDefinition(AutoBindType.SelfBind)]
-        public Parameter<Transform> transform;
+        [SerializeField] private Parameter<Transform> transform;
 
-        public Parameter<Vector3> target;
+        [SerializeField] private Parameter<Vector3> target;
         [Slider(0f, 180f)]
-        public Parameter<float> angle;
+        [SerializeField] private Parameter<float> angle;
         public CompareMethod checkType = CompareMethod.LessThan;
 
         public override string Info => $"{target} Angle {checkType.GetString()} {angle}";

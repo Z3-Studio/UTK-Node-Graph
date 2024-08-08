@@ -9,7 +9,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Best way to check if some object is null")]
     public class CheckNull : ConditionTask 
     {
-        public Parameter<object> variable;
+        [SerializeField] private Parameter<object> variable;
 
         public override string Info  => $"{variable} == null";
 

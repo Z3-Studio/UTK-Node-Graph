@@ -10,10 +10,10 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     {
         [Header("In")]
         [ParameterDefinition(AutoBindType.SelfBind)]
-        public Parameter<Transform> transform;
+        [SerializeField] private Parameter<Transform> transform;
 
         [Header("Out")]
-        public Parameter<Vector3> position;
+        [SerializeField] private Parameter<Vector3> position;
 
         public override string Info => $"Get {transform} Position";
 

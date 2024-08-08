@@ -1,4 +1,5 @@
-﻿using Z3.NodeGraph.Core;
+﻿using UnityEngine;
+using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
@@ -7,15 +8,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Please describe what this ActionTask does.")]
     public class SetString : ActionTask
     {
-        public Parameter<string> valueA;
-        public Parameter<string> valueB;
+        [SerializeField] private Parameter<string> valueA;
+        [SerializeField] private Parameter<string> valueB;
 
         public override string Info => $"{valueA} = {valueB}";
 
         protected override void StartAction()
         {
             valueA.Value = valueB.Value;
-            EndAction(true);
+            EndAction();
         }
     }
 }

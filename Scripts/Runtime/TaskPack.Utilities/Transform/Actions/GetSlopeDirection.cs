@@ -2,30 +2,27 @@ using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 using UnityEngine;
 
-
 namespace Z3.NodeGraph.TaskPack.Utilities.Physic
 {
-
     [NodeCategory(Categories.Transform)]
     [NodeDescription("Returns Slope Direction Vector, Angle and boolean. Input Layer and the max angle that's considered a slope")]
-    public class GetSlopeDirection : ActionTask<Transform>
+    public class GetSlopeDirection : ActionTask
     {
         [Header("Inputs")]
         [Tooltip("Slope Check Point")]
-        public Parameter<Transform> slopeCheckPoint;
+        [SerializeField] private Parameter<Transform> slopeCheckPoint;
         [Tooltip("Collision layer to check for")]
-        public Parameter<LayerMask> groundLayer;
+        [SerializeField] private Parameter<LayerMask> groundLayer;
         [Tooltip("Max angle to be considered a slope")]
-        public Parameter<float> maxSlopeAngle;
+        [SerializeField] private Parameter<float> maxSlopeAngle;
 
         [Header("OutPuts")]
-        //[BlackboardOnly]
-        public Parameter<Vector2> slopeDirection;
-        //[BlackboardOnly]
-        public Parameter<float> slopeAngle;
-        //[BlackboardOnly]
-        public Parameter<bool> isCurrentlyOnSlope;
-
+        //[MustBind]
+        [SerializeField] private Parameter<Vector2> slopeDirection;
+        //[MustBind]
+        [SerializeField] private Parameter<float> slopeAngle;
+        //[MustBind]
+        [SerializeField] private Parameter<bool> isCurrentlyOnSlope;
 
         public override string Info => "Get Slope Direction";
 

@@ -12,11 +12,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class WithinOpeningAngle : ActionTask {
 
         [Header("Config")]
-        public Parameter<float> angleDirection;
-        public Parameter<float> openingAngle;
+        [SerializeField] private Parameter<float> angleDirection;
+        [SerializeField] private Parameter<float> openingAngle;
 
         [Header("Set")]
-        public Parameter<float> currentAngle;
+        [SerializeField] private Parameter<float> currentAngle;
 
         public override string Info => $"Filter {currentAngle} into {openingAngle}";
 
@@ -39,7 +39,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 }
             }
 
-            EndAction(true);
+            EndAction();
         }
 
         private void RecalculateAngle(Vector2 range) {

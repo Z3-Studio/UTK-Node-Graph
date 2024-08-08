@@ -6,14 +6,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Animations)]
     [NodeDescription("Sets the sprite layer")]
-    public class SetSpriteSortingLayer : ActionTask<SpriteRenderer>
+    public class SetSpriteSortingLayer : ActionTask
     {
+        [ParameterDefinition(AutoBindType.SelfBind)]
+        [SerializeField] private Parameter<SpriteRenderer> data;
+
         [Header("Layer")]
-        public Parameter<int> sortingLayerIndex;
-        public Parameter<string> sortingLayerName;
+        [SerializeField] private Parameter<int> sortingLayerIndex;
+        [SerializeField] private Parameter<string> sortingLayerName;
 
         [Header("Parameters")]
-        public Parameter<bool> useName;
+        [SerializeField] private Parameter<bool> useName;
 
         public override string Info => $"Set sprite layer to {(useName.Value ? sortingLayerName.Value : SortingLayer.layers[sortingLayerIndex.Value].name)}";
 
@@ -28,8 +31,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             if(!SortingLayer.IsValid(layerID))
                 EndAction(false);
             
-            Agent.sortingLayerID = layerID;
-            EndAction(true);
+            data.Value.sortingLayerID = layerID;
+            EndAction();
         }
     }
 }

@@ -21,13 +21,5 @@
   "author": {
     "name": "Z3 Studio",
     "url": "https://z3-studio.com/"
-  },
-  "samples": 
-  [
-    {
-      "displayName": "Toggling Box",
-      "description": "Documentation tutorial result",
-      "path": "Samples~/TogglingBox"
-    }
-  ]
+  }
 }

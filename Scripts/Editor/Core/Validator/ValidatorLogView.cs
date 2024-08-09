@@ -9,7 +9,7 @@ using Z3.UIBuilder.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
-    public class ValidatorLog : VisualElement
+    public class ValidatorLogView : VisualElement
     {
         [UIElement] private Label contextLabel;
         [UIElement] private Button revealButton;
@@ -23,7 +23,7 @@ namespace Z3.NodeGraph.Editor
         /// <summary> Link error color #3D89D4 </summary>
         private readonly Color selectErrorColor = new Color(0.172549f, 0.3647059f, 0.5294118f);
 
-        public ValidatorLog(GraphDataAnalyzer analyzer, Action<IssueDetail> onSelectIssue)
+        public ValidatorLogView(GraphDataAnalyzer analyzer, Action<IssueDetail> onSelectIssue)
         {
             NodeGraphResources.ValidatorLogVT.CloneTree(this);
             this.BindUIElements();

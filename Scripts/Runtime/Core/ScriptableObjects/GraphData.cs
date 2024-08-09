@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,13 +23,9 @@ namespace Z3.NodeGraph.Core
         public VariablesAsset ReferenceVariables => referenceVariables;
         public List<Variable> LocalVariables => localVariables;
 
-        protected virtual void OnValidate()
-        {
-            if (!Validator.Initalized)
-                return;
+        public event Action OnValidateRequested;
 
-            Validator.Validate(this);
-        }
+        protected virtual void OnValidate() => OnValidateRequested?.Invoke();
 
         public List<Variable> GetVariables()
         {

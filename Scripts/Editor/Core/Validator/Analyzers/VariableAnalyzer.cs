@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Z3.NodeGraph.Core;
 
-namespace Z3.NodeGraph.Core
+namespace Z3.NodeGraph.Editor
 {
     public enum VariableScope
     {

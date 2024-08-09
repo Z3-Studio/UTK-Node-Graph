@@ -1,25 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Z3.Utils.Editor;
+using Z3.NodeGraph.Core;
 
-namespace Z3.NodeGraph.Core
+namespace Z3.NodeGraph.Editor
 {
     public static class Validator
     {
         public static Dictionary<GraphData, GraphDataAnalyzer> GraphDataAnalyzers { get; } = new();
-        public static bool Initalized { get; private set; }
 
         public static void Init()
         {
             if (Application.isPlaying)
                 return;
 
-            Initalized = true;
             ValidateAll();
         }
 
         public static void ValidateAll()
         {
+            foreach (GraphDataAnalyzer analyzer in GraphDataAnalyzers.Values)
+            {
+                analyzer.Dispose();
+            }
+
             GraphDataAnalyzers.Clear();
 
             List<GraphData> allGraphData = EditorUtils.GetAllAssets<GraphData>();

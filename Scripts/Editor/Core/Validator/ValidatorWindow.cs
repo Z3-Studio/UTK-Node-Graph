@@ -23,7 +23,7 @@ namespace Z3.NodeGraph.Editor
 
         private const string WindowName = "Validator";
 
-        private readonly List<ValidatorLog> validatorLog = new();
+        private readonly List<ValidatorLogView> validatorLog = new();
 
         [MenuItem(GraphPath.MenuPath + WindowName)]
         public static void OpenWindow()
@@ -52,7 +52,7 @@ namespace Z3.NodeGraph.Editor
 
         private void OnFixAll()
         {
-            foreach (ValidatorLog log in validatorLog)
+            foreach (ValidatorLogView log in validatorLog)
             {
                 log.OnFixAll();
             }
@@ -65,7 +65,7 @@ namespace Z3.NodeGraph.Editor
 
             foreach (GraphDataAnalyzer analyzer in Validator.GraphDataAnalyzers.Select(p => p.Value).Where(d => d.HasErrors))
             {
-                ValidatorLog newLog = new ValidatorLog(analyzer, OnSelectIssue);
+                ValidatorLogView newLog = new ValidatorLogView(analyzer, OnSelectIssue);
                 validatorLog.Add(newLog);
                 content.Add(newLog);
             }

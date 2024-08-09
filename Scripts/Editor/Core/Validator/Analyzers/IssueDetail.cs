@@ -1,6 +1,7 @@
-﻿using Z3.Utils.ExtensionMethods;
+﻿using Z3.NodeGraph.Core;
+using Z3.Utils.ExtensionMethods;
 
-namespace Z3.NodeGraph.Core
+namespace Z3.NodeGraph.Editor
 {
     public enum AnalysisType
     {

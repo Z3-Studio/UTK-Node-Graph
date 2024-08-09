@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Z3.NodeGraph.Core;
 using Z3.Utils;
 using Z3.Utils.Editor;
 using Z3.Utils.ExtensionMethods;
 
-namespace Z3.NodeGraph.Core // TODO: It should be editor class
+namespace Z3.NodeGraph.Editor // TODO: It should be editor class
 {
     /// <summary> Used to diagnose errors and anomalies </summary>
     public class GraphDataAnalyzer : IDisposable
@@ -26,6 +27,8 @@ namespace Z3.NodeGraph.Core // TODO: It should be editor class
         public GraphDataAnalyzer(GraphData graphData)
         {
             GraphData = graphData;
+            graphData.OnValidateRequested += Validate;
+
             Validate();
 
             if (Issues.Count == 0)
@@ -39,6 +42,8 @@ namespace Z3.NodeGraph.Core // TODO: It should be editor class
         {
             Issues.Clear();
             VariableDependencies.Clear();
+
+            GraphData.OnValidateRequested -= Validate;
         }
 
         public void Refresh()

@@ -28,8 +28,10 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
             int layerID = SortingLayer.NameToID(layerName);
             
-            if(!SortingLayer.IsValid(layerID))
+            if (!SortingLayer.IsValid(layerID))
+            {
                 EndAction(false);
+            }
             
             data.Value.sortingLayerID = layerID;
             EndAction();

@@ -67,7 +67,9 @@ namespace Z3.NodeGraph.Tasks
             State = State.Resting;
         }
 
-        protected void EndAction(bool success = true)
+        protected void EndAction() => EndAction(true);
+
+        protected void EndAction(bool success)
         {
             State = success ? State.Success : State.Failure;
         }

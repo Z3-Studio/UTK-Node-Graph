@@ -118,7 +118,7 @@ namespace Z3.NodeGraph.Editor
             SetupAttributes();
 
             // Define color
-            string classStyle = Node.GetType().GetCustomAttribute<ClassStyleAttribute>()?.ClassStyles ?? string.Empty;
+            string[] classStyle = Node.GetType().GetCustomAttribute<ClassStyleAttribute>()?.ClassStyles ?? new string[0];
             NGNode.AddToClassList(classStyle);
         }
 

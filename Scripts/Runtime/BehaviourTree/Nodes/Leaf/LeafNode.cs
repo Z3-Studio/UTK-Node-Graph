@@ -1,7 +1,7 @@
-﻿namespace Z3.NodeGraph.BehaviourTree
+﻿using Z3.UIBuilder.Core;
+
+namespace Z3.NodeGraph.BehaviourTree
 {
-    public abstract class LeafNode : BehaviourTreeNode 
-    {
-        public override string ClassStyle => "action";
-    }
+    [ClassStyle("action")]
+    public abstract class LeafNode : BehaviourTreeNode { }
 }

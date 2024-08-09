@@ -18,6 +18,12 @@ namespace Z3.NodeGraph.Editor
     // Click in error and show in Graph
     // Analyze by AnalysisCriticality and give logic insights, such unused nodes and variables
     // Create in user preferences, option of not automatically validate (giving performance)
+    // Auto fix missing reference script by using sub asset name
+    // Fix TaskList by auto fill using sub asset Name
+    // Validate Sub Asset Name by checking Type. Warning
+    // Fix Error display popup with Check box list by categories. Ex: Null assets, Missing parameters, etc...
+    // Issue item has button to fix
+    // Create automated test to build a graph with error 
     public class AnalyzerWindow : EditorWindow, IHasCustomMenu
     {
         [UIElement] private Label graphDataLabel;
@@ -36,10 +42,11 @@ namespace Z3.NodeGraph.Editor
         [UIElement] private Label localVariablesCount;
 
         [UIElement] private Label corruptedAssets;
-        [UIElement] private Label nullSubAssets;
-        [UIElement] private Label missingNodes;
-        [UIElement] private Label missingSubAssets;
-        [UIElement] private Label missingParameters;
+        [UIElement] private Label nullAssets;
+        [UIElement] private Label notIncludedAssets;
+        [UIElement] private Label invalidAssetGuids;
+        [UIElement] private Label unreferencedAssets;
+        [UIElement] private Label missingBindings;
         [UIElement] private Label otherIssues;
         [UIElement] private Label issuesCount;
 
@@ -50,7 +57,6 @@ namespace Z3.NodeGraph.Editor
 
         // Analyzer
         private GraphData GraphData => analyzer.GraphData;
-        private bool HasAnalyzer => analyzer != null;
 
         private GraphDataAnalyzer analyzer;
 
@@ -108,14 +114,17 @@ namespace Z3.NodeGraph.Editor
                 selectedGraphData = Selection.activeObject as GraphData;
             }
 
-            analyzer = selectedGraphData ? Validator.GetAnalyzer(selectedGraphData) : analyzer;
+            if (!selectedGraphData || analyzer && GraphData == selectedGraphData)
+                return;
+
+            analyzer = Validator.GetAnalyzer(selectedGraphData);
             Populate();
         }
 
         [UIElement("fix-errors-button")]
         private void OnFixErrors()
         {
-            if (!HasAnalyzer)
+            if (!analyzer)
                 return;
 
             analyzer.FixErrors();
@@ -125,7 +134,7 @@ namespace Z3.NodeGraph.Editor
         [UIElement("ping-object-button")]
         private void OnReveal()
         {
-            if (!HasAnalyzer)
+            if (!analyzer)
                 return;
 
             EditorGUIUtility.PingObject(GraphData);
@@ -144,7 +153,7 @@ namespace Z3.NodeGraph.Editor
 
             OnSelectIssue(null);
 
-            if (!HasAnalyzer)
+            if (!analyzer)
             {
                 overviewLeftContainer.style.SetDisplay(false);
                 graphDataLabel.text = "Select a Graph".AddRichTextColor(Color.grey);
@@ -169,11 +178,20 @@ namespace Z3.NodeGraph.Editor
             IEnumerable<IGrouping<AnalysisType, IssueDetail>> issuesGroup = analyzer.Issues.GroupBy(i => i.Type);
 
             corruptedAssets.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.CorruptedAsset));
-            nullSubAssets.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.NullSubAsset));
-            missingNodes.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.MissingNode));
-            missingSubAssets.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.MissingSubAsset));
-            missingParameters.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.MissingBinding));
-            otherIssues.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.Other));
+            nullAssets.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.NullAsset));
+            notIncludedAssets.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.NotIncludedAsset));
+            invalidAssetGuids.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.InvalidAssetGuid));
+            unreferencedAssets.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.UnreferencedAsset));
+            missingBindings.text = NoneOrError(analyzer.Issues.Count(i => i.Type == AnalysisType.MissingBinding));
+
+            HashSet<AnalysisType> others = new HashSet<AnalysisType>
+            {
+                AnalysisType.Other,
+                AnalysisType.StartNodeNotDefined,
+                AnalysisType.DuplicateAsset,
+                AnalysisType.InvalidAssetName
+            };
+            otherIssues.text = NoneOrError(analyzer.Issues.Count(i => others.Contains(i.Type)));
 
             issuesCount.text = NoneOrError(analyzer.IssuesCount);
 

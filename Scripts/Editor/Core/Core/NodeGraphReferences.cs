@@ -41,7 +41,11 @@ namespace Z3.NodeGraph.Editor
             variables.Init(this);
         }
 
-        public void Refresh() => SetGraphData(Data, GraphController);
+        public void Refresh()
+        {
+            Validator.Refresh(Data); // Rebind variables and update problems
+            SetGraphData(Data, GraphController);
+        }
 
         public void OpenGraphData(GraphData graphData, GraphController graphController)
         {

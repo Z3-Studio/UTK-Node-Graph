@@ -81,7 +81,7 @@ namespace Z3.NodeGraph.Editor
                     transitions.Remove(transition);
                 }
 
-                NodeGraphUtils.DeleteAssets(References.Data, itemsToRemove);
+                NodeGraphEditorUtils.DeleteAssets(References.Data, itemsToRemove);
             }
         }
     }

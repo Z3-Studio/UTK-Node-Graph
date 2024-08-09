@@ -8,8 +8,6 @@ using Z3.NodeGraph.Core;
 using Z3.NodeGraph.StateMachine;
 using Z3.Utils.ExtensionMethods;
 using Z3.Utils;
-using static UnityEngine.UI.GridLayoutGroup;
-using System.Reflection;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -31,8 +29,8 @@ namespace Z3.NodeGraph.Editor
                 // Instantiate and setup
                 Type type = typeof(Transition);
                 Transition newTransition = ScriptableObject.CreateInstance(type) as Transition;
-                newTransition.Guid = GUID.Generate().ToString();
-                newTransition.name = $"{parent.Node.name}/{type.Name} [{newTransition.Guid}]";
+
+                newTransition.SetGuid(GUID.Generate().ToString(), $"{parent.Node.name}/");
                 newTransition.Setup(child.Node);
 
                 // Before to add and remember

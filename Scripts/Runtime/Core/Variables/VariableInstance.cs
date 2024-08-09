@@ -18,6 +18,7 @@ namespace Z3.NodeGraph.Core
         {
             Name = variable.name;
             Value = variable.value;
+            Guid = variable.guid;
             OriginalType = variable.OriginalType;
         }
 

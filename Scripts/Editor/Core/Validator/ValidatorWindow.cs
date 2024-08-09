@@ -9,6 +9,7 @@ using Z3.UIBuilder.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
+    // TODO: Analyze Components and GraphVariables
     /// <summary> Used to find problems in GraphData </summary>
     /// <remarks> It not validate runtime changes </remarks>
     public class ValidatorWindow : EditorWindow

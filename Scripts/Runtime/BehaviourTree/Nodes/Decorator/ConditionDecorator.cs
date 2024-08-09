@@ -52,8 +52,13 @@ namespace Z3.NodeGraph.BehaviourTree
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> subAssets)
         {
             base.SetupDependencies(subAssets);
+            conditions.ReplaceDependencies(subAssets);
+        }
 
-            conditions.SetupDependencies(subAssets);
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            base.Parse(copies);
+            conditions.Parse(copies);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using Z3.Utils.Editor;
 
 namespace Z3.NodeGraph.Core
@@ -6,12 +7,13 @@ namespace Z3.NodeGraph.Core
     public static class Validator
     {
         public static Dictionary<GraphData, GraphDataAnalyzer> GraphDataAnalyzers { get; } = new();
-        // TODO: Components and Variables
-
         public static bool Initalized { get; private set; }
 
-        internal static void Init()
+        public static void Init()
         {
+            if (Application.isPlaying)
+                return;
+
             Initalized = true;
             ValidateAll();
         }
@@ -23,8 +25,7 @@ namespace Z3.NodeGraph.Core
             List<GraphData> allGraphData = EditorUtils.GetAllAssets<GraphData>();
             foreach (GraphData graphData in allGraphData)
             {
-                GraphDataAnalyzer analyzer = new GraphDataAnalyzer(graphData);
-                GraphDataAnalyzers[graphData] = analyzer;
+                GraphDataAnalyzers[graphData] = new GraphDataAnalyzer(graphData);
             }
         }
 
@@ -50,13 +51,27 @@ namespace Z3.NodeGraph.Core
         public static GraphDataAnalyzer GetAnalyzer(GraphData graphData)
         {
             // If is new asset, it may not have been analyzed yet
-            if (!GraphDataAnalyzers.TryGetValue(graphData, out GraphDataAnalyzer analyzer))
+            // Note: For some reason, when you duplicate an item in the editor, the asset is deleted, resulting in a null GraphData in the analyzer
+            if (!GraphDataAnalyzers.TryGetValue(graphData, out GraphDataAnalyzer analyzer) || !analyzer)
             {
                 analyzer = new GraphDataAnalyzer(graphData);
                 GraphDataAnalyzers[graphData] = analyzer;
             }
 
             return analyzer;
+        }
+
+        public static void Add(GraphData graphData)
+        {
+            GraphDataAnalyzer analyzer = new GraphDataAnalyzer(graphData);
+            GraphDataAnalyzers[graphData] = analyzer;
+        }
+
+        public static void Remove(GraphData graphData)
+        {
+            GraphDataAnalyzer analyzer = GraphDataAnalyzers.GetValueOrDefault(graphData);
+            analyzer?.Dispose();
+            GraphDataAnalyzers.Remove(graphData);
         }
     }
 }

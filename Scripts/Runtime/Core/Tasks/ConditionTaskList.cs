@@ -35,7 +35,7 @@ namespace Z3.NodeGraph.Tasks
             }
         }
 
-        public override string ToString()
+        public string GetLabel()
         {
             if (taskList.Count == 0)
                 return "Finish";
@@ -45,7 +45,11 @@ namespace Z3.NodeGraph.Tasks
 
             foreach (ConditionTask task in taskList)
             {
-                if (task.InvertCondition)
+                if (!task)
+                {
+                    text += "Missing".AddRichTextColor(Color.red);
+                }
+                else if (task.InvertCondition)
                 {
                     text += $"!({task})";
                 }

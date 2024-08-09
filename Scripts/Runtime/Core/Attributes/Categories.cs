@@ -31,5 +31,6 @@
         // External Plugins
         public const string FinalIK = NodeGraph + "/Final IK";
         public const string AstarPathfinding = NodeGraph + "/A* Pathfinding";
+        public const string Samples = NodeGraph + "Samples/";
     }
 }

@@ -40,8 +40,8 @@ namespace Z3.NodeGraph.Editor
 
         public ParameterView(SerializedProperty property, FieldInfo fieldInfo)
         {
-            targetObject = NodeGraphUtils.GetTarget<GraphSubAsset>(property);
-            data = NodeGraphUtils.GetGraphData(targetObject);
+            targetObject = NodeGraphEditorUtils.GetTarget<GraphSubAsset>(property);
+            data = NodeGraphEditorUtils.GetGraphData(targetObject);
 
             // TODO: Validate
             NodeGraphResources.ParameterVT.CloneTree(this);

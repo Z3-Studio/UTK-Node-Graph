@@ -4,11 +4,35 @@ namespace Z3.NodeGraph.Core
 {
     public enum AnalysisType
     {
+        /// <summary> Missing script, typically due to deletion or mismatch with meta file. </summary>
         CorruptedAsset,
-        NullSubAsset,
-        MissingNode,
-        MissingSubAsset,
+
+        /// <summary> Null field in the SubAssets list. </summary>
+        NullAsset,
+
+        /// <summary> Item not present in the SubAssets list. </summary>
+        NotIncludedAsset,
+
+        /// <summary> Invalid, empty, or already used GUID for a sub-asset. </summary>
+        InvalidAssetGuid,
+
+        /// <summary> Asset present in the SubAssets list, but is not a Node and not referenced by other assets. </summary>
+        UnreferencedAsset,
+
+        /// <summary> Parameter has a GUID but does not match any Variable. </summary>
         MissingBinding,
+
+        /// <summary> SubAsset appears more than once in the SubAsset list. </summary>
+        DuplicateAsset,
+
+        /// <summary> The graph contains Nodes, but no definition for the StartNode is set. </summary>
+        StartNodeNotDefined,
+
+        /// <summary> SubAsset name does not match type and guid </summary>
+        /// <remarks> Not implemented </remarks>
+        InvalidAssetName,
+
+        /// <summary> Other types of issues not classified. </summary>
         Other
     }
 

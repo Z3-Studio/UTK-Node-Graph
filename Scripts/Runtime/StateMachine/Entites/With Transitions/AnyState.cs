@@ -5,6 +5,7 @@ using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.StateMachine
 {
+    [ClassStyle("any-state")]
     [NodeIcon(GraphIcon.ConditionTask)]
     public class AnyState : StateMachineNode, IOutputNode, IParallelState
     {
@@ -13,8 +14,6 @@ namespace Z3.NodeGraph.StateMachine
 
         [HideInGraphInspector, ReadOnly]
         [SerializeField] protected TransitionList transitions = new();
-
-        public override string ClassStyle => "any-state";
 
         // IOutputNode
         public TransitionList Transitions => transitions;
@@ -44,7 +43,12 @@ namespace Z3.NodeGraph.StateMachine
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> instances)
         {
-            transitions.SetupDependencies(instances);
+            transitions.ReplaceDependencies(instances);
+        }
+
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            transitions.Parse(copies);
         }
     }
 }

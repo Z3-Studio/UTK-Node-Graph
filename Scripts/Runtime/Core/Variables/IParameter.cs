@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Z3.NodeGraph.Core
 {
@@ -22,6 +23,8 @@ namespace Z3.NodeGraph.Core
         void SelfBind();
         void Bind(Variable variable);
         void Unbind();
+
+        void ReplaceDependencies(string newGuid);
     }
 
     public interface IParameter<T> : IParameter

@@ -35,30 +35,34 @@
                         <engine:VisualElement style="min-height: 8px;" />
                         <engine:Label text="Issues" style="font-size: 18px;" />
                         <engine:VisualElement name="overview-item-corrupted-assets" style="flex-direction: row;">
-                            <engine:Label text="Corrupted Assets: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Corrupted Sub Assets: " style="-unity-font-style: bold;" />
                             <engine:Label text="Label" name="corrupted-assets" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="overview-item-null-sub-assets" style="flex-direction: row;">
+                        <engine:VisualElement name="overview-item-null-assets" style="flex-direction: row;">
                             <engine:Label text="Null Sub Assets: " style="-unity-font-style: bold;" />
-                            <engine:Label text="Label" name="null-sub-assets" />
+                            <engine:Label text="Label" name="null-assets" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="overview-item-missing-nodes" style="flex-direction: row;">
-                            <engine:Label text="Missing Nodes: " style="-unity-font-style: bold;" />
-                            <engine:Label text="Label" name="missing-nodes" />
+                        <engine:VisualElement name="overview-item-not-included-assets" style="flex-direction: row;">
+                            <engine:Label text="Not Included Sub Assets: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="not-included-assets" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="overview-item-missing-sub-assets" style="flex-direction: row;">
-                            <engine:Label text="Missing Sub Assets: " style="-unity-font-style: bold;" />
-                            <engine:Label name="missing-sub-assets" />
+                        <engine:VisualElement name="overview-item-missing-invalid-asset-guids" style="flex-direction: row;">
+                            <engine:Label text="Invalid Sub Asset Guids: " style="-unity-font-style: bold;" />
+                            <engine:Label name="invalid-asset-guids" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="overview-item-missing-parameters" style="flex-direction: row;">
-                            <engine:Label text="Missing Parameters: " style="-unity-font-style: bold;" />
-                            <engine:Label text="Label" name="missing-parameters" />
+                        <engine:VisualElement name="overview-item-unreferenced-assets" style="flex-direction: row;">
+                            <engine:Label text="Unreferenced Sub Assets: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="unreferenced-assets" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="overview-item-missing-parameters" style="flex-direction: row;">
+                        <engine:VisualElement name="overview-item-missing-bindings" style="flex-direction: row;">
+                            <engine:Label text="Missing Bindings: " style="-unity-font-style: bold;" />
+                            <engine:Label text="Label" name="missing-bindings" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="overview-item-other-issues" style="flex-direction: row;">
                             <engine:Label text="Others: " style="-unity-font-style: bold;" />
                             <engine:Label text="Label" name="other-issues" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="overview-item-issues" style="flex-direction: row;">
+                        <engine:VisualElement name="overview-item-issues-count" style="flex-direction: row;">
                             <engine:Label text="Total Issues: " style="-unity-font-style: bold;" />
                             <engine:Label text="Label" name="issues-count" />
                         </engine:VisualElement>

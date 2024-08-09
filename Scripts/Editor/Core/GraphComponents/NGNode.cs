@@ -49,7 +49,7 @@ namespace Z3.NodeGraph.Editor
 
         public void DeleteElement()
         {
-            NodeGraphUtils.DeleteAsset(References.Data, NodeView.Node);
+            NodeGraphEditorUtils.DeleteAsset(References.Data, NodeView.Node);
         }
 
         public VisualElement GetInspector() => NodeView.GetInspector();

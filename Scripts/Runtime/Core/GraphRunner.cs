@@ -44,19 +44,50 @@ namespace Z3.NodeGraph.Core
             RootController.StartGraph();
         }
 
-        private void FixedUpdate()
-        {
-            UpdateGraph();
-        }
-
         private void OnDisable()
         {
             RootController.StopGraph();
         }
 
-        public void UpdateGraph()
+        public void ManualFixedUpdate() => ManualUpdate(Time.fixedDeltaTime);
+
+        public void ManualUpdate() => ManualUpdate(Time.deltaTime);
+
+        public void ManualUpdate(float delta)
         {
-            DeltaTime = Time.fixedDeltaTime;
+            if (updateMethod != UpdateMethod.Manual)
+                return;
+
+            UpdateGraph(delta);
+        }
+
+        private void FixedUpdate()
+        {
+            if (updateMethod != UpdateMethod.FixedUpdate)
+                return;
+
+            UpdateGraph(Time.fixedDeltaTime);
+        }
+
+        private void Update()
+        {
+            if (updateMethod != UpdateMethod.Update)
+                return;
+
+            UpdateGraph(Time.deltaTime);
+        }
+
+        private void LateUpdate()
+        {
+            if (updateMethod != UpdateMethod.LateUpdate)
+                return;
+
+            UpdateGraph(Time.deltaTime);
+        }
+
+        private void UpdateGraph(float deltaTime)
+        {
+            DeltaTime = deltaTime;
             RootController.OnUpdate();
         }
     }

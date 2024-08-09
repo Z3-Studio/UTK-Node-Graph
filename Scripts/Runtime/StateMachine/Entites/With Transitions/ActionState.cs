@@ -6,6 +6,7 @@ using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.StateMachine
 {
+    [ClassStyle("action")]
     [NodeIcon(GraphIcon.ActionTask)]
     public class ActionState : TransitableStateNode, IOutputNode
     {
@@ -22,8 +23,6 @@ namespace Z3.NodeGraph.StateMachine
 
         public override string Info => "Action List";
         public override string SubInfo => taskList.GetInfo();
-
-        public override string ClassStyle => "action";
 
         public override void StartState()
         {
@@ -52,8 +51,14 @@ namespace Z3.NodeGraph.StateMachine
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> instances)
         {
-            transitions.SetupDependencies(instances);
-            taskList.SetupDependencies(instances);
+            transitions.ReplaceDependencies(instances);
+            taskList.ReplaceDependencies(instances);
+        }
+
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            transitions.Parse(copies);
+            taskList.Parse(copies);
         }
     }
 }

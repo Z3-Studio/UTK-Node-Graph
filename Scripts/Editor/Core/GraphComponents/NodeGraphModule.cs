@@ -1,12 +1,13 @@
-﻿using Z3.NodeGraph.Core;
-using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
-using System.Collections.Generic;
-using UnityEditor;
-using System;
+﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using Z3.Utils;
+using Z3.Utils.ExtensionMethods;
+using Z3.NodeGraph.Core;
 using Node = Z3.NodeGraph.Core.Node;
 using Status = UnityEngine.UIElements.DropdownMenuAction.Status;
 
@@ -27,6 +28,10 @@ namespace Z3.NodeGraph.Editor
         {
             References = references;
             Controller.graphViewChanged += OnGraphViewChanged;
+
+            Controller.serializeGraphElements += CutCopyOperation;
+            Controller.canPasteSerializedData += AllowPaste;
+            Controller.unserializeAndPaste += OnPaste;
         }
 
         public abstract void OnInitialize();
@@ -34,6 +39,11 @@ namespace Z3.NodeGraph.Editor
         public void Dispose()
         {
             Controller.graphViewChanged -= OnGraphViewChanged;
+
+            Controller.serializeGraphElements -= CutCopyOperation;
+            Controller.canPasteSerializedData -= AllowPaste;
+            Controller.unserializeAndPaste -= OnPaste;
+
             Controller.DeleteElements(Controller.graphElements);
         }
 
@@ -97,17 +107,14 @@ namespace Z3.NodeGraph.Editor
             evt.menu.AppendAction("Set as Start Note", action, status);
         }
 
-        protected void CreateNode(Type type, Vector2 localMousePosition)
+        protected void CreateNode(Type type, Vector2 mouseViewportPosition)
         {
             // Instantiate and setup
             Node newNode = ScriptableObject.CreateInstance(type) as Node;
-            newNode.Guid = GUID.Generate().ToString();
-            newNode.name = $"{type.Name} [{newNode.Guid}]";
+            newNode.SetGuid(GUID.Generate().ToString());
 
             // Set position
-            VisualElement contentViewContainer = Controller.contentViewContainer;
-            Vector2 worldMousePosition = localMousePosition - (Vector2)contentViewContainer.transform.position;
-            newNode.Position = worldMousePosition / contentViewContainer.transform.scale.x;
+            newNode.Position = Controller.GetMousePosition(mouseViewportPosition);
 
             // Before to add and remember
             UndoRecorder.AddUndo(CurrentGraph, "Create Node");
@@ -158,55 +165,6 @@ namespace Z3.NodeGraph.Editor
 
         protected abstract NodeView MakeNodeView(Node node); // TODO: Integrate with ModuleCreator to work by inheritance with best match
 
-        public void DeleteAssets<T>(List<T> assets) where T : GraphSubAsset
-        {
-            // Remember
-            UndoRecorder.AddUndo(CurrentGraph, "Delete NG assets"); // Transitions
-
-            foreach (T asset in assets)
-            {
-                DestroyAsset(asset);
-            }
-
-            AssetDatabase.SaveAssets();
-        }
-
-        public void DeleteAsset(GraphSubAsset asset)
-        {
-            // Remember
-            UndoRecorder.AddUndo(CurrentGraph, "Delete NG assets"); // Nodes
-
-            DestroyAsset(asset);
-
-            AssetDatabase.SaveAssets();
-        }
-
-        private void DestroyAsset(GraphSubAsset asset)
-        {
-            // TaskList + Transitions
-            List<ISubAssetList> subAssetFields = ReflectionUtils.GetAllFieldValuesTypeOf<ISubAssetList>(asset).ToList();
-            DeleteSubItemsRecursive(subAssetFields);
-
-            // Remove
-            CurrentGraph.RemoveSubAsset(asset);
-            AssetDatabase.RemoveObjectFromAsset(asset);
-        }
-
-        /// <summary>
-        /// Used to destroy sub items. 
-        /// Example: ActionListSM -> ActionTaskList, TransitionList -> ConditionTaskList
-        /// </summary>
-        private void DeleteSubItemsRecursive(List<ISubAssetList> subAssetFields)
-        {
-            foreach (ISubAssetList subAssetList in subAssetFields)
-            {
-                foreach (GraphSubAsset subItem in subAssetList.SubAssets)
-                {
-                    DestroyAsset(subItem);
-                }
-            }
-        }
-
         public virtual void Inspect(INodeGraphElement graphElement)
         {
             References.Inspector.Clear();
@@ -228,6 +186,79 @@ namespace Z3.NodeGraph.Editor
         {
             Controller.AddElement(graphElement);
         }
+
+        #region Copy, Cut, Paste
+        private bool AllowPaste(string data) => !Application.isPlaying;
+
+        private string CutCopyOperation(IEnumerable<GraphElement> elements)
+        {
+            List<string> guid = new();
+            foreach (GraphElement itemToCopy in elements)
+            {
+                guid.Add(itemToCopy.viewDataKey);
+            }
+
+            return Serializer.ToJson(guid);
+        }
+
+        private void OnPaste(string operationName, string data)
+        {
+            UndoRecorder.AddUndo(CurrentGraph, "Copy Assets");
+
+            // 1.Find all nodes to be copied
+            List<string> objects = Serializer.FromJson<List<string>>(data);
+
+            List<GraphSubAsset> nodesToCopy = objects.Select(guid => Controller.GetNodeByGuid(guid))
+                .OfType<NGNode>()
+                .Select(node => (GraphSubAsset)node.NodeView.Node)
+                .ToList();
+
+            // 2.Find all node dependencies
+            List<GraphSubAsset> assetsToCopy = NodeGraphEditorUtils.CollectAllDependencies(nodesToCopy);
+
+            // 3.Create new guid for depedencies
+            Dictionary<string, string> guidAssets = new();
+            Dictionary<string, GraphSubAsset> clones = new();
+
+            foreach (GraphSubAsset originalAsset in assetsToCopy)
+            {
+                guidAssets[originalAsset.Guid] = GUID.Generate().ToString();
+                clones[originalAsset.Guid] = originalAsset.CloneT(); // Object.Instantiate(node);
+            }
+
+            // 4. Create new assets using the new guids, and setup depedencies
+            // Offset = Paste Position - Copy Position
+            Vector2 offset = Controller.PasteLocalMousePosition - Controller.CopyLocalMousePosition;
+
+            // Key: Original (Copy), Value = Clone (Paste)
+            foreach (GraphSubAsset cloneAsset in clones.Values)
+            {
+                // Update position
+                if (cloneAsset is Node cloneNode)
+                {
+                    cloneNode.Position += offset;
+                }
+
+                // Setup name and guid
+                string newAssetGuid = guidAssets[cloneAsset.Guid];
+                string newName = NodeGraphEditorUtils.ReplaceGuids(cloneAsset.name, guidAssets);
+
+                int parentLastIndex = newName.LastIndexOf('/');
+                string newParentName = newName.Substring(0, parentLastIndex + 1);
+
+                cloneAsset.SetGuid(newAssetGuid, newParentName);
+                cloneAsset.Parse(clones);
+
+                CurrentGraph.AddSubAsset(cloneAsset);
+                AssetDatabase.AddObjectToAsset(cloneAsset, CurrentGraph);
+
+                UndoRecorder.AddCreation(cloneAsset, "Copy Assets");
+            }
+
+            AssetDatabase.SaveAssets();
+            References.Refresh();
+        }
+        #endregion
     }
 
     public abstract class NodeGraphModule<TGraphData> : NodeGraphModule where TGraphData : GraphData

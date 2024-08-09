@@ -6,6 +6,7 @@ using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.StateMachine
 {
+    [ClassStyle("sub-graph")]
     [NodeIcon(GraphIcon.SubGraph)]
     public class SubGraphDataSM : TransitableStateNode, ISubGraphNode, IOutputNode
     {
@@ -29,14 +30,10 @@ namespace Z3.NodeGraph.StateMachine
             }
         }
 
-        public GraphData SubGraph => subGraph;
-        public GraphController SubController => subController ??= GraphController.BuildSubGraph(subGraph);
-
-        public override string ClassStyle => "sub-graph";
-        //public override string DefaultTitle => "Sub Graph";
-
         public bool Startable => true;
 
+        public GraphData SubGraph => subGraph;
+        public GraphController SubController => subController ??= GraphController.BuildSubGraph(subGraph);
         public TransitionList Transitions => transitions;
 
         private GraphController subController;
@@ -72,7 +69,12 @@ namespace Z3.NodeGraph.StateMachine
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> instances)
         {
-            transitions.SetupDependencies(instances);
+            transitions.ReplaceDependencies(instances);
+        }
+
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            transitions.Parse(copies);
         }
     }
 }

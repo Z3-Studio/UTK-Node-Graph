@@ -18,7 +18,7 @@ namespace Z3.NodeGraph.StateMachine
 
         public State State { get; private set; }
 
-        public override string Info => conditions.ToString();
+        public override string Info => !string.IsNullOrEmpty(title) ? title : conditions.GetLabel();
 
         public void Setup(TransitableStateNode child)
         {
@@ -57,7 +57,13 @@ namespace Z3.NodeGraph.StateMachine
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> instances)
         {
             connection = instances[connection.Guid] as TransitableStateNode;
-            conditions.SetupDependencies(instances);
+            conditions.ReplaceDependencies(instances);
+        }
+
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            connection = copies.GetValueOrDefault(connection.Guid) as TransitableStateNode;
+            conditions.Parse(copies);
         }
     }
 }

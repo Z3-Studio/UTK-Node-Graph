@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.StateMachine
 {
+    [ClassStyle("pass")]
     [NodeIcon(GraphIcon.Sequencer)]
     public class Pass : TransitableStateNode, IOutputNode
     {
@@ -13,7 +13,6 @@ namespace Z3.NodeGraph.StateMachine
         [SerializeField] protected TransitionList transitions = new();
 
         public bool Startable => true;
-        public override string ClassStyle => "pass";
 
         public TransitionList Transitions => transitions;
 
@@ -36,7 +35,12 @@ namespace Z3.NodeGraph.StateMachine
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> instances)
         {
-            transitions.SetupDependencies(instances);
+            transitions.ReplaceDependencies(instances);
+        }
+
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            transitions.Parse(copies);
         }
     }
 }

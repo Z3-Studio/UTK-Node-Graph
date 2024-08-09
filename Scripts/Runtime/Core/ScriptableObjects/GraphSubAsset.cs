@@ -12,7 +12,8 @@ namespace Z3.NodeGraph.Core
         [ReadOnly, HideInGraphInspector]
         [SerializeField] private string guid;
 
-        public string Guid { get => guid; set => guid = value; }
+        /// <summary> Genered by using UnityEditor.GUID </summary>
+        public string Guid => guid;
 
         private string cachedInfo; // TODO: Delete this after compilation, if you rename the class a new bug will appear
         public virtual string Info
@@ -29,10 +30,13 @@ namespace Z3.NodeGraph.Core
         }
 
         public float DeltaTime => GraphController.DeltaTime;
-
-        public sealed override string ToString() => !string.IsNullOrEmpty(title) ? title : Info;
-
         protected GraphController GraphController { get; private set; }
+
+        public void SetGuid(string newGuid, string parent = "")
+        {
+            guid = newGuid;
+            name = parent + $"{GetType().Name} [{newGuid}]";
+        }
 
         public void SetupDependencies(GraphController graphController, Dictionary<string, GraphSubAsset> subAssets)
         {
@@ -48,9 +52,13 @@ namespace Z3.NodeGraph.Core
         }
 
         /// <summary>
-        /// Used to set <see cref="ISubAssetList"/> and other dependencies
+        /// Called at initialization to replace dependencies
         /// </summary>
         /// <param name="subAssets"> Key: GraphSubAsset.Guid, Value: Clone </param>
         protected virtual void SetupDependencies(Dictionary<string, GraphSubAsset> subAssets) { }
+
+        public virtual void Parse(Dictionary<string, GraphSubAsset> copies) { }
+
+        public sealed override string ToString() => !string.IsNullOrEmpty(title) ? title : Info;
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using Z3.Utils;
 using Z3.Utils.ExtensionMethods;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
@@ -73,6 +74,15 @@ namespace Z3.NodeGraph.Core
                 }
 
                 return cachedVariables.ToList();
+            }
+        }
+
+        public static void Init()
+        {
+            foreach (Type item in ReflectionUtils.GetDeriveredConcreteTypes<ITypeConverter>())
+            {
+                ITypeConverter conversor = (ITypeConverter)Activator.CreateInstance(item);
+                GetAndCreateMaps(conversor);
             }
         }
 

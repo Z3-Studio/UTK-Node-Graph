@@ -103,8 +103,8 @@ namespace Z3.NodeGraph.Editor
         public void DeleteElement()
         {
             throw new System.NotImplementedException("Test it");
-            Owner.Transitions.SubAssets.Remove(Transition); // Review it
-            NodeGraphUtils.DeleteAsset(References.Data, Transition);
+            //Owner.Transitions.SubAssets.Remove(Transition); // Review it
+            //NodeGraphUtils.DeleteAsset(References.Data, Transition);
         }
 
         public VisualElement GetInspector() => Transition.CreateNgInspector();

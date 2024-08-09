@@ -46,5 +46,10 @@ namespace Z3.NodeGraph.StateMachine
 
             subAssets.Add(newTransition);
         }
+
+        public override Node GetAnyStartableNode()
+        {
+            return subAssets.FirstOrDefault(asset => asset is TransitableStateNode smNode and IOutputNode outputNode && outputNode.Startable) as Node;
+        }
     }
 }

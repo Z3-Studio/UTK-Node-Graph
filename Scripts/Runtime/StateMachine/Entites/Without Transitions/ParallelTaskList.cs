@@ -36,7 +36,12 @@ namespace Z3.NodeGraph.StateMachine
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> instanceDict)
         {
-            taskList.SetupDependencies(instanceDict);
+            taskList.ReplaceDependencies(instanceDict);
+        }
+
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            taskList.Parse(copies);
         }
     }
 }

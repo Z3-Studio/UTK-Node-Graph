@@ -122,6 +122,11 @@ namespace Z3.NodeGraph.Core
             Set = TypeResolver.CreateSet(this, variable);
         }
 
+        public void ReplaceDependencies(string newGuid)
+        {
+            guid = newGuid;
+        }
+
         public override string ToString()
         {
             if (IsBinding)

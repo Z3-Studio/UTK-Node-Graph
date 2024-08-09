@@ -66,7 +66,7 @@ namespace Z3.NodeGraph.Editor
         {
             foreach (ISubAssetList subAssetList in subAssetFields)
             {
-                foreach (GraphSubAsset subItem in subAssetList.SubAssets)
+                foreach (GraphSubAsset subItem in subAssetList)
                 {
                     DestroyAsset(graph, subItem);
                 }

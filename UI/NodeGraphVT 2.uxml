@@ -1,8 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Modules/NodeGraph/UI/NodeGraphStyle.uss?fileID=7433441132597879392&amp;guid=0ce6a25c0bef52642bfb84c18768bad4&amp;type=3#NodeGraphStyle" />
+    <Style src="project://database/Packages/com.z3.node-graph/UI/NodeGraphStyle.uss?fileID=7433441132597879392&amp;guid=0ce6a25c0bef52642bfb84c18768bad4&amp;type=3#NodeGraphStyle" />
     <ui:VisualElement name="Root" style="width: 100%; height: 100%; justify-content: space-around; align-self: stretch; min-width: 500px; min-height: 200px;">
         <uie:Toolbar>
-            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Assets" />
+            <uie:ToolbarButton text="Refresh" name="refresh-button" />
+            <uie:ToolbarButton text="Open in Analizer" name="open-in-analyzer-button" />
         </uie:Toolbar>
         <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); justify-content: space-around; align-items: stretch; align-self: stretch; flex-direction: row; width: 100%; height: 100%;">
             <Z3.UIBuilder.Editor.SplitView fixed-pane-initial-dimension="350">

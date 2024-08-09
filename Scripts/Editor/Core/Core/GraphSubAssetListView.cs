@@ -72,8 +72,7 @@ namespace Z3.NodeGraph.Editor
         private void OnAdd(string _, Type type) // TODO: Move it to NodeGraphModule
         {
             T newActionTask = ScriptableObject.CreateInstance(type) as T;
-            newActionTask.Guid = GUID.Generate().ToString();
-            newActionTask.name = $"{assetParent.name}/{type.Name} [{newActionTask.Guid}]"; // TODO: It could be a static method
+            newActionTask.SetGuid(GUID.Generate().ToString(), $"{assetParent.name}/");
 
             IEnumerable<FieldInfo> fields = ReflectionUtils.GetAllFieldsTypeOf<IParameter>(newActionTask);
 

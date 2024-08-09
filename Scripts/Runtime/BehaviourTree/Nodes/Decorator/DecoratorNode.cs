@@ -4,10 +4,16 @@ using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.BehaviourTree
 {
+    [ClassStyle("decorator")]
     public abstract class DecoratorNode : BehaviourTreeNode
     {
         [HideInGraphInspector, ReadOnly]
         public BehaviourTreeNode child;
+
+        protected sealed override void InterruptNode()
+        {
+            child.Interrupt();
+        }
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> subAssets)
         {
@@ -17,11 +23,12 @@ namespace Z3.NodeGraph.BehaviourTree
             child = subAssets[child.Guid] as BehaviourTreeNode;
         }
 
-        public override string ClassStyle => "decorator";
-
-        protected sealed override void InterruptNode()
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
         {
-            child.Interrupt();
+            if (child == null)
+                return;
+
+            child = copies.GetValueOrDefault(child.Guid) as BehaviourTreeNode;
         }
     }
 }

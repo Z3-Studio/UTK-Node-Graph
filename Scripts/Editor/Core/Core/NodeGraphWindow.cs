@@ -131,6 +131,24 @@ namespace Z3.NodeGraph.Editor
             }
         }
 
+        [UIElement("open-in-analyzer-button")]
+        private void OnOpenInAnalyzer()
+        {
+            if (nodeGraphReferences == null)
+                return;
+
+            AnalyzerWindow.DisplayAsset(GraphData);
+        }
+
+        [UIElement("refresh-button")]
+        private void OnRefresh()
+        {
+            if (nodeGraphReferences == null)
+                return;
+
+            nodeGraphReferences.Refresh();
+        }
+
         private void OnGUI()
         {
             lockButtonStyle = "IN LockButton";

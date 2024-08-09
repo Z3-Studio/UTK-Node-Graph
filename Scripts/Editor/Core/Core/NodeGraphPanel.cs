@@ -1,13 +1,23 @@
-﻿using Z3.UIBuilder.Editor;
-using Z3.NodeGraph.Core;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using System.Collections.Generic;
+using Z3.UIBuilder.Editor;
+using Z3.NodeGraph.Core;
 using Z3.Utils.ExtensionMethods;
+using Node = UnityEditor.Experimental.GraphView.Node;
+using Object = UnityEngine.Object;
 
 namespace Z3.NodeGraph.Editor
 {
+    public class NgClipboard
+    {
+        public GraphData GraphData { get; set; }
+        public List<Core.Node> Nodes { get; set; }
+        public Vector2 PastePosition { get; set; }
+    }
+
     public class NodeGraphPanel : GraphPanel
     {
         public new class UxmlFactory : UxmlFactory<NodeGraphPanel, UxmlTraits> { }
@@ -16,6 +26,10 @@ namespace Z3.NodeGraph.Editor
         private GraphData CurrentGraph => references.Data;
 
         private NodeGraphReferences references;
+
+        // TEMP
+        public Vector2 CopyLocalMousePosition { get; private set; }
+        public Vector2 PasteLocalMousePosition { get; private set; }
 
         internal void Init(NodeGraphReferences nodeGraphReferences)
         {
@@ -70,8 +84,35 @@ namespace Z3.NodeGraph.Editor
             return Module.GetCompatiblePorts(startPort, nodeAdapter);
         }
 
+        public Vector2 GetMousePosition(Vector2 viewportPosition)
+        {
+            Vector2 worldMousePosition = viewportPosition - (Vector2)contentViewContainer.transform.position;
+            return worldMousePosition / contentViewContainer.transform.scale.x;
+        }
+
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
+            // TODO REFACTORY
+            Vector2 lastMousePosition = evt.localMousePosition;
+
+            if (evt.target is GraphView || evt.target is Node || evt.target is Group)
+            {
+                evt.menu.AppendAction("Copy", delegate
+                {
+                    CopyLocalMousePosition = GetMousePosition(lastMousePosition);
+                    CopySelectionCallback();
+                }, (DropdownMenuAction a) => canCopySelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            }
+
+            if (evt.target is GraphView)
+            {
+                evt.menu.AppendAction("Paste", delegate
+                {
+                    PasteLocalMousePosition = GetMousePosition(lastMousePosition);
+                    PasteCallback();
+                }, (DropdownMenuAction a) => canPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            }
+
             // https://www.youtube.com/watch?v=F4cTWOxMjMY&t=158s
             //SearchWindowContext ctx = new();
 
@@ -96,12 +137,12 @@ namespace Z3.NodeGraph.Editor
 
     public static class UndoRecorder // TODO: Improve and clean
     {
-        public static void AddUndo(UnityEngine.Object context, string action) // Make patterns
+        public static void AddUndo(Object context, string action) // Make patterns
         {
             Undo.RecordObject(context, $"NodeGraph: {action} {context.GetType().Name}");
         }
 
-        public static void AddCreation(UnityEngine.Object context, string action) // Make patterns
+        public static void AddCreation(Object context, string action) // Make patterns
         {
             Undo.RegisterCreatedObjectUndo(context, $"NodeGraph: {action} {context.GetType().Name}");
         }

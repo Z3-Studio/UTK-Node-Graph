@@ -1,16 +1,15 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Z3.NodeGraph.Core;
 
 namespace Z3.NodeGraph.Tasks
 {
-    public abstract class ActionTask<T> : ActionTask where T : class
+    public abstract class ActionTask<T> : ActionTask
     {
         [ParameterDefinition(AutoBindType.SelfBind)]
         [SerializeField] protected Parameter<T> data;
 
-        public string AgentInfo => data.ToString();
         public T Agent => data.Value;
+        public string AgentInfo => data.ToString();
     }
 
     public abstract class ActionTask : Task
@@ -68,9 +67,9 @@ namespace Z3.NodeGraph.Tasks
             State = State.Resting;
         }
 
-        protected void EndAction(bool successful = true)
+        protected void EndAction(bool success = true)
         {
-            State = successful ? State.Success : State.Failure;
+            State = success ? State.Success : State.Failure;
         }
 
         protected virtual void StartAction() { }

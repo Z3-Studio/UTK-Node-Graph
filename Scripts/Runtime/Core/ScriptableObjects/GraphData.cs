@@ -53,7 +53,7 @@ namespace Z3.NodeGraph.Core
         {
             subAssets.Add(newNode);
 
-            if (startNode == null && newNode is Node node && node.StartableNode)
+            if (startNode == null && newNode is Node node)
             {
                 startNode = node;
             }
@@ -72,6 +72,8 @@ namespace Z3.NodeGraph.Core
 
         /// <summary> Called after right click </summary>
         public virtual void SetStartNode(Node node) => startNode = node;
+
+        public virtual Node GetAnyStartableNode() => SubAssets.FirstOrDefault(a => a is Node) as Node;
 
         /// <summary> Called when connect a edge </summary>
         //public abstract void AddConnection(Node parent, Node child);

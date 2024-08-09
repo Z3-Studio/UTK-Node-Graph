@@ -12,7 +12,12 @@ namespace Z3.NodeGraph.BehaviourTree
 
         protected sealed override void SetupDependencies(Dictionary<string, GraphSubAsset> instances)
         {
-            TaskList.SetupDependencies(instances);
+            TaskList.ReplaceDependencies(instances);
+        }
+
+        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        {
+            TaskList.Parse(copies);
         }
     }
 }

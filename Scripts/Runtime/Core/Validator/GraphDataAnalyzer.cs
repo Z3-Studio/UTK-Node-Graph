@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -7,17 +7,21 @@ using Z3.Utils;
 using Z3.Utils.Editor;
 using Z3.Utils.ExtensionMethods;
 
-namespace Z3.NodeGraph.Core
+namespace Z3.NodeGraph.Core // TODO: It should be editor class
 {
     /// <summary> Used to diagnose errors and anomalies </summary>
-    public class GraphDataAnalyzer
+    public class GraphDataAnalyzer : IDisposable
     {
         public GraphData GraphData { get; }
         public List<IssueDetail> Issues { get; } = new(); // Maybe ObservableCollection
         public bool HasErrors => Issues.Count > 0;
         public int IssuesCount => Issues.Count;
+        public bool IsValid => GraphData;
 
         public Dictionary<string, VariableAnalyzer> VariableDependencies { get; } = new();
+
+        /// <summary> Size of <see cref="GUID"/> </summary>
+        private const int GuidSize = 32;
 
         public GraphDataAnalyzer(GraphData graphData)
         {
@@ -31,6 +35,12 @@ namespace Z3.NodeGraph.Core
             Debug.LogError(log, GraphData);
         }
 
+        public void Dispose()
+        {
+            Issues.Clear();
+            VariableDependencies.Clear();
+        }
+
         public void Refresh()
         {
             Validate();
@@ -39,12 +49,18 @@ namespace Z3.NodeGraph.Core
         public List<GraphSubAsset> GetDirectyDependencies(GraphSubAsset asset)
         {
             return ReflectionUtils.GetAllFieldValuesTypeOf<ISubAssetList>(asset)
-                .SelectMany(s => s.SubAssets.OfType<GraphSubAsset>())
+                .SelectMany(s => s.OfType<GraphSubAsset>())
                 .ToList();
         }
 
         private void Validate()
         {
+            if (!GraphData)
+            {
+                // TODO: Remove from list
+                return;
+            }
+
             VariableDependencies.Clear();
             Issues.Clear();
 
@@ -93,12 +109,21 @@ namespace Z3.NodeGraph.Core
                     {
                         p.Invalid();
 
-                        string log = $"Parameter type of '{p.GenericType}' has an invalid binding.\nVariable GUID: {parameterGuid.AddRichTextColor(Color.red)}\nAsset type '{asset.GetType().Name}' named as '{asset.name.AddRichTextColor(Color.yellow)}'";
+                        string log = $"Parameter type '{p.GenericType}' has an invalid binding.\nVariable GUID: {parameterGuid.AddRichTextColor(Color.red)}\nAsset type: '{asset.GetType().Name}' named '{asset.name.AddRichTextColor(Color.yellow)}'";
 
                         // asset
                         AddAnalysis(asset, AnalysisType.MissingBinding, log, AnalysisCriticality.Warning);
                     }
                 });
+            }
+
+            // Note: Is important to Bind variables in runtime to see the names in editor. But as GraphData can be cloned, it should not be validated
+            if (Application.isPlaying)
+            {
+                // TODO: Find clean solution
+                VariableDependencies.Clear();
+                Issues.Clear();
+                return;
             }
 
             // 2. Check for corrupted or missing sub-assets
@@ -114,7 +139,32 @@ namespace Z3.NodeGraph.Core
             {
                 if (GraphData.SubAssets[i] == null)
                 {
-                    AddAnalysis(null, AnalysisType.NullSubAsset, $"SubAssetList has null element at position {i.ToStringBold().AddRichTextColor(Color.red)}");
+                    AddAnalysis(null, AnalysisType.NullAsset, $"SubAsset list contains a null element at position {i.ToStringBold().AddRichTextColor(Color.red)}.");
+                }
+            }
+
+            // 3.1 Assets not included
+            IEnumerable<GraphSubAsset> allSubAssets = EditorUtils.GetAllSubAssets<GraphSubAsset>(GraphData);
+            List<GraphSubAsset> missingSubAssets = allSubAssets.Except(GraphData.SubAssets).ToList();
+
+            foreach (GraphSubAsset subAsset in missingSubAssets)
+            {
+                AddAnalysis(subAsset, AnalysisType.NotIncludedAsset, $"SubAsset {subAsset.name.AddRichTextColor(Color.yellow)} is not present in the SubAsset list");
+            }
+
+            // 3.2 Invalid GUID
+            foreach (GraphSubAsset subAsset in GraphData.SubAssets)
+            {
+                if (!subAsset)
+                    continue;
+
+                string name = subAsset.name;
+                string guid = subAsset.Guid;
+
+                // Validate if the GUID matches the substring from the end of the name. It ignores the last ']'
+                if (string.IsNullOrEmpty(guid) || name.Length + 2 < GuidSize || name.Substring(name.Length - GuidSize - 1, GuidSize) != guid)
+                {
+                    AddAnalysis(subAsset, AnalysisType.InvalidAssetGuid, $"SubAsset {subAsset.name.AddRichTextColor(Color.yellow)} has an invalid Guid: '{subAsset.Guid}'");
                 }
             }
 
@@ -122,13 +172,6 @@ namespace Z3.NodeGraph.Core
             List<GraphSubAsset> subAssetList = EditorUtils.GetAllSubAssets<GraphSubAsset>(GraphData).ToList();
             List<Node> nodeList = subAssetList.OfType<Node>().ToList();
 
-            foreach (Node node in nodeList)
-            {
-                if (!GraphData.SubAssets.Contains(node))
-                {
-                    AddAnalysis(node, AnalysisType.MissingNode, $"Node '{node.name.AddRichTextColor(Color.red)}' is not present in the SubAssetList");
-                }
-            }
 
             // 5. Check for null items in sub-assets
             foreach (GraphSubAsset subAsset in GraphData.SubAssets)
@@ -155,21 +198,24 @@ namespace Z3.NodeGraph.Core
 
                 if (foundReference == null)
                 {
-                    AddAnalysis(subAsset, AnalysisType.MissingSubAsset, $"SubAsset '{subAsset.name.AddRichTextColor(Color.red)}' is not being referenced");
+                    AddAnalysis(subAsset, AnalysisType.UnreferencedAsset, $"SubAsset '{subAsset.name.AddRichTextColor(Color.red)}' is not a Node and is not referenced by any other assets.");
                 }
             }
 
             // 7. Check if StartNode is set
-            if (GraphData.StartNode == null && GraphData.SubAssets.Any(s => s is Node node && node.StartableNode))
+            // Note: Review StateMachineData.AddSubAsset
+            if (GraphData.StartNode == null && GraphData.GetAnyStartableNode())
             {
-                AddAnalysis(null, AnalysisType.Other, "StartNode is not set", AnalysisCriticality.Warning);
+                AddAnalysis(null, AnalysisType.StartNodeNotDefined, "The graph contains Nodes, but there is no definition for the StartNode.", AnalysisCriticality.Warning);
             }
 
             // 8. Repeted items
-            int distincCount = GraphData.SubAssets.Distinct().Count();
-            if (distincCount < GraphData.SubAssets.Count)
+            foreach (GraphSubAsset asset in GraphData.SubAssets.GetDuplicates())
             {
-                AddAnalysis(null, AnalysisType.Other, "Repeated items", AnalysisCriticality.Error);
+                if (!asset)
+                    continue;
+
+                AddAnalysis(asset, AnalysisType.DuplicateAsset, $"SubAsset '{asset.name.AddRichTextColor(Color.red)}' appears more than once in the SubAsset list.", AnalysisCriticality.Error);
             }
         }
 
@@ -184,12 +230,12 @@ namespace Z3.NodeGraph.Core
             List<ISubAssetList> assetFields = ReflectionUtils.GetAllFieldValuesTypeOf<ISubAssetList>(asset).ToList();
             foreach (ISubAssetList assetList in assetFields)
             {
-                for (int i = 0; i < assetList.SubAssets.Count; i++)
+                for (int i = 0; i < assetList.Count; i++)
                 {
-                    GraphSubAsset subAsset = (GraphSubAsset)assetList.SubAssets[i];
+                    GraphSubAsset subAsset = (GraphSubAsset)assetList[i];
                     if (subAsset == null)
                     {
-                        AddAnalysis(asset, AnalysisType.NullSubAsset, $"SubAsset '{asset.name.AddRichTextColor(Color.yellow)}' has null element at position {i.ToStringBold().AddRichTextColor(Color.red)}.");
+                        AddAnalysis(asset, AnalysisType.NullAsset, $"SubAsset '{asset.name.AddRichTextColor(Color.yellow)}' contains a null element at position {i.ToStringBold().AddRichTextColor(Color.red)}.");
                     }
                     else
                     {
@@ -203,6 +249,7 @@ namespace Z3.NodeGraph.Core
         {
             bool fixMissingBinding = false;
 
+            // 1. Parameters
             if (Issues.Any(i => i.Type == AnalysisType.MissingBinding))
             {
                 string title = "Unbind missing bindings variables?";
@@ -218,6 +265,7 @@ namespace Z3.NodeGraph.Core
                 fixMissingBinding = result == 0;
             }
 
+            // 2. Corrupted scripts
             string path = AssetDatabase.GetAssetPath(GraphData);
             int corruptedObjects = AssetDatabase.RemoveScriptableObjectsWithMissingScript(path);
 
@@ -226,7 +274,7 @@ namespace Z3.NodeGraph.Core
                 Debug.Log($"Destroyed '{corruptedObjects}' null assets");
             }
 
-            // Remove empty slots
+            // 3. Remove null slots
             int nullCount = CollectionUtils.ClearNullObject(GraphData.SubAssets);
 
             if (nullCount > 0)
@@ -234,28 +282,48 @@ namespace Z3.NodeGraph.Core
                 Debug.Log($"Removed '{nullCount}' null assets");
             }
 
-            // Add missing items
-            List<GraphSubAsset> subAssetList = EditorUtils.GetAllSubAssets<GraphSubAsset>(GraphData).ToList();
-            List<Node> nodeList = subAssetList.OfType<Node>().ToList();
-
-            // Add non listed nodes
-            foreach (Node node in nodeList)
-            {
-                if (GraphData.SubAssets.Contains(node))
-                    continue;
-
-                GraphData.SubAssets.Add(node);
-                Debug.Log($"Added node '{node.name}");
-            }
-
-            // Removed null items
+            // 3.2 Fix GUID
             foreach (GraphSubAsset subAsset in GraphData.SubAssets)
             {
+                if (!subAsset)
+                    continue;
+
+                string name = subAsset.name;
+                string guid = subAsset.Guid;
+
+                // Validate if the GUID matches the substring from the end of the name. It ignores the last ']'
+                if (string.IsNullOrEmpty(guid) || name.Length + 2 < GuidSize || name.Substring(name.Length - GuidSize - 1, GuidSize) != guid)
+                {
+                    int parentLastIndex = name.LastIndexOf('/');
+                    string parentName = name.Substring(0, parentLastIndex + 1);
+
+                    guid = name.Substring(name.Length - GuidSize - 1, GuidSize);
+
+                    subAsset.SetGuid(guid, parentName);
+                }
+            }
+
+            // 3.1 Add non listed assets
+            IEnumerable<GraphSubAsset> allSubAssets = EditorUtils.GetAllSubAssets<GraphSubAsset>(GraphData);
+            List<GraphSubAsset> missingSubAssets = allSubAssets.Except(GraphData.SubAssets).ToList();
+
+            foreach (GraphSubAsset asset in missingSubAssets)
+            {
+                GraphData.SubAssets.Add(asset);
+                Debug.Log($"Added node '{asset.name}");
+            }
+
+            // 5. Repair null items
+            foreach (GraphSubAsset subAsset in GraphData.SubAssets)
+            {
+                // TODO: Improve it. Instructions inside of method
                 RepairSubItemsRecursive(subAsset);
             }
 
+            List<Node> nodeList = GraphData.SubAssets.OfType<Node>().ToList();
+
             // Add non listed sub assets
-            foreach (GraphSubAsset subAsset in subAssetList)
+            foreach (GraphSubAsset subAsset in GraphData.SubAssets.ToList())
             {
                 if (subAsset is Node)
                     continue;
@@ -286,9 +354,12 @@ namespace Z3.NodeGraph.Core
 
             if (GraphData.StartNode == null)
             {
-                Node node = GraphData.SubAssets.First(a => a is Node node && node.StartableNode) as Node;
-                GraphData.SetStartNode(node);
-                Debug.Log($"Included Start Node {node}");
+                Node node = GraphData.GetAnyStartableNode();
+                if (node)
+                {
+                    GraphData.SetStartNode(node);
+                    Debug.Log($"Included Start Node {node}");
+                }
             }
 
             // TODO: Fix repetition
@@ -328,13 +399,13 @@ namespace Z3.NodeGraph.Core
             int nullCount = 0;
             List<ISubAssetList> assetFields = ReflectionUtils.GetAllFieldValuesTypeOf<ISubAssetList>(asset).ToList();
 
-            foreach (ISubAssetList assetList in assetFields)
+            foreach (ISubAssetList subAssets in assetFields)
             {
-                IList subAssets = assetList.SubAssets;
                 for (int i = 0; i < subAssets.Count;)
                 {
                     GraphSubAsset subAsset = subAssets[i] as GraphSubAsset;
 
+                    // TODO: Before remove, try to find some asset that have good match. Example, use childAsset.name.Containes(parent.name) to fix null fields
                     if (subAsset == null)
                     {
                         nullCount++;
@@ -358,7 +429,7 @@ namespace Z3.NodeGraph.Core
             List<ISubAssetList> assetFields = ReflectionUtils.GetAllFieldValuesTypeOf<ISubAssetList>(target).ToList();
             foreach (ISubAssetList assetList in assetFields)
             {
-                foreach (GraphSubAsset subAsset in assetList.SubAssets)
+                foreach (GraphSubAsset subAsset in assetList)
                 {
                     if (subAsset == assetToCheck)
                         return target;
@@ -378,5 +449,9 @@ namespace Z3.NodeGraph.Core
         {
             return Issues.Where(e => e.Context == asset).ToList();
         }
+
+        public override string ToString() => GraphData ? GraphData.ToString() : "NULL";
+
+        public static implicit operator bool(GraphDataAnalyzer analyzer) => analyzer != null && analyzer.IsValid;
     }
 }

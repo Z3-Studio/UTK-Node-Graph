@@ -36,6 +36,13 @@ namespace Z3.NodeGraph.Editor
 
         public abstract void OnInitialize();
 
+        public void DeleteElements(params GraphElement[] element)
+        {
+            UndoRecorder.AddUndo(CurrentGraph, "Delete item");
+            Controller.DeleteElements(element);
+            AssetDatabase.SaveAssetIfDirty(CurrentGraph);
+        }
+
         public void Dispose()
         {
             Controller.graphViewChanged -= OnGraphViewChanged;

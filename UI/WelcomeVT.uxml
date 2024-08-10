@@ -1,0 +1,27 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.z3.node-graph/UI/WelcomeStyle.uss?fileID=7433441132597879392&amp;guid=97d3ae786eadbf84aad2840a30fa2490&amp;type=3#WelcomeStyle" />
+    <engine:VisualElement style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; flex-grow: 1;">
+        <engine:Label text="Node Graph" name="Label" style="-unity-text-align: middle-center; font-size: 30px;" />
+        <engine:ScrollView style="flex-grow: 1; margin-top: 20px; background-color: rgb(51, 51, 51); margin-bottom: 20px; margin-left: 0; margin-right: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
+            <engine:Label text="Welcome to Node Graph beta for Unity" name="Label" style="-unity-text-align: upper-center; margin-top: 20px; margin-bottom: 20px;" />
+            <engine:VisualElement style="flex-grow: 1; margin-bottom: 20px;">
+                <engine:Label text="Setup User Preferences" style="font-size: 20px; margin-bottom: 10px;" />
+                <engine:Label text="Open the path &lt;i&gt;Assets &gt; Editor &gt; Z3 &gt; UserPreferences&lt;/i&gt; and add your main add the first part of your namespace" />
+            </engine:VisualElement>
+            <engine:VisualElement style="flex-grow: 1; margin-bottom: 20px;">
+                <engine:Label text="Source Control" style="font-size: 20px; margin-bottom: 10px;" />
+                <engine:Label text="Ignore User Preferences" />
+                <engine:Label text="# Node Graph&#10;Assets/Editor/Z3/UserPreferences.asset&#10;Assets/Editor/Z3/UserPreferences.asset.meta" selectable="true" style="background-color: rgb(42, 42, 42); margin-left: 8px; margin-top: 8px; margin-right: 8px; margin-bottom: 8px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
+            </engine:VisualElement>
+            <engine:VisualElement style="flex-grow: 1; margin-bottom: 20px;">
+                <engine:Label text="Documentation" style="font-size: 20px; margin-bottom: 10px;" />
+                <engine:Label text="To learn more about using Node Graph, visit the documentation" />
+                <engine:Button text="Open Documentation" name="open-documentation-button" style="align-self: center; margin-top: 8px;" />
+            </engine:VisualElement>
+        </engine:ScrollView>
+        <engine:VisualElement style="flex-direction: row; align-self: center;">
+            <engine:Toggle label="Do not display this again" name="dont-display-again" style="margin-right: 20px;" />
+            <engine:Button text="Close" name="close-button" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

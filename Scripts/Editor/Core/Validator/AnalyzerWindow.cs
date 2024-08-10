@@ -24,7 +24,7 @@ namespace Z3.NodeGraph.Editor
     // Fix Error display popup with Check box list by categories. Ex: Null assets, Missing parameters, etc...
     // Issue item has button to fix
     // Create automated test to build a graph with error 
-    public class AnalyzerWindow : EditorWindow, IHasCustomMenu
+    public class AnalyzerWindow : Z3EditorWindow, IHasCustomMenu
     {
         [UIElement] private Label graphDataLabel;
 
@@ -82,7 +82,7 @@ namespace Z3.NodeGraph.Editor
             instance.Populate();
         }
 
-        private void CreateGUI()
+        protected override void CreateGUI()
         {
             NodeGraphResources.AnalizerWindowVT.CloneTree(rootVisualElement);
             rootVisualElement.BindUIElements(this);

@@ -13,15 +13,19 @@ namespace Z3.NodeGraph.Editor
     // Review it: consider using NodeGraph.Editor namespace
     public class UserPreferences : ScriptableObject
     {
+        [SerializeField] private bool parameterAutoBinding = true;
+        [SerializeField] private bool openWelcome = true;
         [SerializeField] private List<string> nameSpaces;
 
         [ReadOnly]
         [SerializeField] private List<GraphPreference> graphPreferences = new();
 
+        public static bool ParameterAutoBinding => Instance.parameterAutoBinding;
+        public static bool OpenWelcome { get => Instance.openWelcome; set => Instance.openWelcome = value; }
+
         private static UserPreferences Instance { get; set; }
 
-        [Button, InitializeOnLoadMethod]
-        private static void Init()
+        public static void Init()
         {
             if (Instance == null)
             {
@@ -32,6 +36,12 @@ namespace Z3.NodeGraph.Editor
                 Instance.Validate();
             }
 
+            Refresh();
+        }
+
+        [Button]
+        private static void Refresh()
+        {
             // TODO: Create a editor inspector class, to find and include types, and call this method
             List<string> namespaces = Instance.nameSpaces
                .Where(n => !string.IsNullOrEmpty(n))

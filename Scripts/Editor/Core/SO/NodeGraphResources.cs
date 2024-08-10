@@ -8,6 +8,7 @@ namespace Z3.NodeGraph.Editor
     public class NodeGraphResources : ScriptableObject // TODO: Dictionary attribute
     {
         [Title("Visual Tree")]
+        [SerializeField] private VisualTreeAsset welcomeVT;
         [SerializeField] private VisualTreeAsset analyzerWindowVT;
         [SerializeField] private VisualTreeAsset analizerSubAssetInfoVT;
         [SerializeField] private VisualTreeAsset validatorWindowVT;
@@ -48,6 +49,7 @@ namespace Z3.NodeGraph.Editor
 
         public static Texture2D ArrowTransition => Instance.arrowTransition;
         public static Texture2D MultipleArrowTransition => Instance.multipleArrowTransition;
+        public static VisualTreeAsset WelcomeVT => Instance.welcomeVT;
         public static VisualTreeAsset AnalizerWindowVT => Instance.analyzerWindowVT;
         public static VisualTreeAsset AnalizerSubAssetInfoVT => Instance.analizerSubAssetInfoVT;
         public static VisualTreeAsset ValidatorWindowVT => Instance.validatorWindowVT;
@@ -59,20 +61,15 @@ namespace Z3.NodeGraph.Editor
         public static VisualTreeAsset SmTransitionLabel => Instance.smTransitionLabel;
         public static VisualTreeAsset PopupVT => Instance.popupVT;
         public static StyleSheet NodeGraphSS => Instance.nodeGraphSS;
+        private static NodeGraphResources Instance { get; set; }
 
-        private static NodeGraphResources _Instance { get; set; }
-        private static NodeGraphResources Instance
+        public static void Init()
         {
-            get
+            if (!Instance)
             {
-                if (!_Instance)
-                {
-                    string path = $"Packages/{GraphPath.FullPackageName}/{nameof(NodeGraphResources)}.asset";
-                    _Instance = UnityEditor.AssetDatabase.LoadAssetAtPath<NodeGraphResources>(path);
-                    //_Instance = GraphPath.LoadNgAssetPath<NodeGraphResources>();
-                }
-
-                return _Instance;
+                string path = $"Packages/{GraphPath.FullPackageName}/{nameof(NodeGraphResources)}.asset";
+                Instance = UnityEditor.AssetDatabase.LoadAssetAtPath<NodeGraphResources>(path);
+                //_Instance = GraphPath.LoadNgAssetPath<NodeGraphResources>();
             }
         }
 

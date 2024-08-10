@@ -15,11 +15,16 @@ namespace Z3.NodeGraph.Editor
 
         static NodeGraphEditorStartup()
         {
+            NodeGraphResources.Init();
+            UserPreferences.Init();
+            NodeGraphStartup.Init(); // TypeResolver
+            Validator.Init();
+
+            WelcomeWindow.Init();
+
+            // Draw icons in Hierarchy
             texturePanel = NodeGraphResources.GetIGraphIcon(GraphIcon.GraphRunner);
             EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyItem;
-
-            NodeGraphStartup.Init();
-            Validator.Init();
         }
 
         private static void OnHierarchyItem(int instanceID, Rect selectionRect)

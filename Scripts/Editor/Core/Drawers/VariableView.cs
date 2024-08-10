@@ -18,6 +18,7 @@ namespace Z3.NodeGraph.Editor
         public event Action OnChangeName;
         public event Action<Variable> OnDelete;
         public event Action<Variable> OnChangeVariable;
+        public event Action<Variable> OnDuplicateVariable;
 
         public Variable Variable { get; private set; }
 
@@ -177,14 +178,20 @@ namespace Z3.NodeGraph.Editor
             toolbarMenu.style.marginRight = 1f;
 
             // Menu Options
-            toolbarMenu.menu.AppendAction(typeName, null, DropdownMenuAction.Status.Disabled);
+            DropdownMenu menu = toolbarMenu.menu;
+            menu.AppendAction(typeName, null, DropdownMenuAction.Status.Disabled);
 
-            toolbarMenu.menu.AppendAction("Delete", action =>
+            menu.AppendAction("Duplicate", action =>
+            {
+                OnDuplicateVariable.Invoke(Variable);
+            });
+
+            menu.AppendAction("Delete", action =>
             {
                 OnDelete.Invoke(Variable);
             });
 
-            toolbarMenu.menu.AppendAction($"Change Type", action =>
+            menu.AppendAction($"Change Type", action =>
             {
                 List<(string, Type)> types = TypeResolver.CachedVariables;
                 SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, worldBound.center);

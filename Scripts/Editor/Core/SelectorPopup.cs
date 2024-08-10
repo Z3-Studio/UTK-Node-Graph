@@ -20,17 +20,19 @@ namespace Z3.NodeGraph.Editor
 
         protected List<(string key, T value)> Items { get; set; } = new();
 
-        private List<string> pathHistory = new();
-        private Action<string, T> onSelectType;
-        private string title;
+        private readonly List<string> pathHistory = new();
+        private readonly Action<string, T> onSelectType;
+        private readonly string title;
+        private readonly bool autoOrder;
 
-        protected SelectorPopup(Action<string, T> onSelectType, string title)
+        protected SelectorPopup(Action<string, T> onSelectType, string title, bool autoOrder = true)
         {
             this.onSelectType = onSelectType;
             this.title = title;
+            this.autoOrder = autoOrder;
         }
 
-        protected SelectorPopup(Action<string, T> onSelectType, string title, List<(string, T)> source) : this(onSelectType, title)
+        protected SelectorPopup(Action<string, T> onSelectType, string title, List<(string, T)> source, bool autoOrder = true) : this(onSelectType, title, autoOrder)
         {
             Items = source;
         }
@@ -47,9 +49,9 @@ namespace Z3.NodeGraph.Editor
             instance.OpenGenericPopup(windowPosition);
         }
 
-        public static void OpenWindow(string title, List<(string, T)> source, Action<string, T> onSelectType)
+        public static void OpenWindow(string title, List<(string, T)> source, Action<string, T> onSelectType, bool autoOrder = true)
         {
-            SelectorPopup<T> instance = new(onSelectType, title, source);
+            SelectorPopup<T> instance = new(onSelectType, title, source, autoOrder);
             instance.OpenGenericPopup();
         }
 
@@ -70,7 +72,11 @@ namespace Z3.NodeGraph.Editor
             // Setup the window
             titleLabel.text = title;
 
-            Items = Items.OrderBy(i => i.key).ToList();
+            if (autoOrder)
+            {
+                Items = Items.OrderBy(i => i.key).ToList();
+            }
+
             CreateButtons(Items);
 
             searchField.RegisterCallback<ChangeEvent<string>>(OnSearchFieldChanged);
@@ -185,7 +191,6 @@ namespace Z3.NodeGraph.Editor
                     button.OnSelectItem += OnSelect;
                     buttonsContainer.Add(button);
                 }
-
             }
         }
     }

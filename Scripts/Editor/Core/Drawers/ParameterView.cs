@@ -169,24 +169,9 @@ namespace Z3.NodeGraph.Editor
             // Build variable list
             List<(string, Variable)> variables = new();
 
-            variables.AddRange(CreatePath("Local Variables", data.LocalVariables));
-
-            if (data.ReferenceVariables != null)
-            {
-                variables.AddRange(CreatePath("Reference Variables", data.ReferenceVariables.GetOriginalVariables()));
-            }
-
-            // Include Promote variable
-            if (data.ReferenceVariables != null)
-            {
-                variables.Add((NewReferenceVariable, null));
-            }
-
-            variables.Add((NewLocalVariable, null));
-
-            // Get Self Component
-            bool canSelfBind = typeof(Component).IsAssignableFrom(GenericType) 
-                || typeof(GameObject).IsAssignableFrom(GenericType) 
+            // Self Bind
+            bool canSelfBind = typeof(Component).IsAssignableFrom(GenericType)
+                || typeof(GameObject).IsAssignableFrom(GenericType)
                 || GenericType.IsInterface;
 
             if (canSelfBind)
@@ -194,7 +179,23 @@ namespace Z3.NodeGraph.Editor
                 variables.Add((SelfBind, null));
             }
 
-            SelectorPopup<Variable>.OpenWindow("Select Variable", variables, OnBind);
+            variables.Add((NewLocalVariable, null));
+
+            // Promote variable
+            if (data.ReferenceVariables != null)
+            {
+                variables.Add((NewReferenceVariable, null));
+            }
+
+            // Variable list
+            variables.AddRange(CreatePath("Local Variables", data.LocalVariables));
+
+            if (data.ReferenceVariables != null)
+            {
+                variables.AddRange(CreatePath("Reference Variables", data.ReferenceVariables.GetOriginalVariables()));
+            }
+
+            SelectorPopup<Variable>.OpenWindow("Select Variable", variables, OnBind, false);
         }
 
         private void OnBind(string name, Variable variable)
@@ -271,11 +272,11 @@ namespace Z3.NodeGraph.Editor
         private IEnumerable<(string, Variable)> CreatePath(string title, List<Variable> list)
         {
             List<(string, Variable)> variables = new();
+            List<(string, Variable)> convertedVariable = new();
             foreach (Variable variable in list)
             {
                 if (variable.OriginalType == typeof(Title))
                     continue;
-
 
                 Converter getConvertion = TypeResolver.GetGetConverterType(parameterT, variable);
                 if (getConvertion.type == ConvertionType.Null)
@@ -290,15 +291,18 @@ namespace Z3.NodeGraph.Editor
                 if (getConvertion.type == ConvertionType.IsAssignableFrom)
                 {
                     newLabel += variable.Name;
+                    variables.Add((newLabel, variable));
                 }
                 else
                 {
                     newLabel += $"{variable.Name} <b>({getConvertion.type})";
+                    convertedVariable.Add((newLabel, variable));
                 }
-
-                variables.Add((newLabel, variable));
-                
             }
+
+            variables = variables.OrderBy(p => p.Item1).ToList();
+            convertedVariable = convertedVariable.OrderBy(p => p.Item1).ToList();
+            variables.AddRange(convertedVariable);
 
             return variables;
         }

@@ -186,15 +186,15 @@ namespace Z3.NodeGraph.Editor
                 OnDuplicateVariable.Invoke(Variable);
             });
 
-            menu.AppendAction("Delete", action =>
-            {
-                OnDelete.Invoke(Variable);
-            });
-
             menu.AppendAction($"Change Type", action =>
             {
                 List<(string, Type)> types = TypeResolver.CachedVariables;
-                SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, worldBound.center);
+                SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, toolbarMenu.contentRect.position);
+            });
+
+            menu.AppendAction("Delete", action =>
+            {
+                OnDelete.Invoke(Variable);
             });
 
             // Build Row

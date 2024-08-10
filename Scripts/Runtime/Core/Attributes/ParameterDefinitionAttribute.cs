@@ -10,6 +10,17 @@ namespace Z3.NodeGraph.Core
         FindSimilarVariable
     }
 
+    /// <summary>
+    /// Attribute is an automation for creating new GraphSubAssets
+    /// </summary>
+    /// <remarks>
+    /// For self binding you also can set you parameter using <see cref="Parameter{T}.MakeSelfBinding"/>.
+    /// This can be useful in newly created fields.
+    /// <para>  Declaration example:  </para>
+    /// <para>  
+    /// [SerializeField] private <see cref="Parameter{T}"/> data = <see cref="Parameter{T}.MakeSelfBinding"/>;
+    /// </para>
+    /// </remarks>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class)]
     public class ParameterDefinitionAttribute : Attribute 
     {

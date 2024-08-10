@@ -21,7 +21,6 @@ namespace Z3.NodeGraph.Editor
         [Obsolete("TEMP")]
         public event Action<T> onDelete;
 
-
         // Core
         private readonly GraphData graphData;
         private readonly GraphSubAsset assetParent;
@@ -86,29 +85,38 @@ namespace Z3.NodeGraph.Editor
                 }
 
                 ParameterDefinitionAttribute attribute = field.GetCustomAttribute<ParameterDefinitionAttribute>();
-                if (attribute == null)
+                if (attribute == null && !UserPreferences.ParameterAutoBinding)
                     continue;
 
-                switch (attribute.AutoBindType)
+                if (attribute.AutoBindType == AutoBindType.SelfBind)
                 {
-                    case AutoBindType.SelfBind:
-                        if (parameter.CanSelfBind())
-                        {
-                            parameter.SelfBind();
-                        }
-                        else
-                        {
-                            Debug.LogError($"Self-binding is not supported for type '{parameter.GenericType.Name}'. Check the '{nameof(ParameterDefinitionAttribute)}' in class '{type.Name}'.");
-                        }
-                        break;
+                    if (parameter.CanSelfBind())
+                    {
+                        parameter.SelfBind();
+                    }
+                    else
+                    {
+                        Debug.LogError($"Self-binding is not supported for type '{parameter.GenericType.Name}'. Check the '{nameof(ParameterDefinitionAttribute)}' in class '{type.Name}'.");
+                    }
+                }
+                else if (attribute.AutoBindType == AutoBindType.FindSameVariable)
+                {
+                    Variable variable = graphData.GetVariables().FirstOrDefault(v => v.name == field.Name);
 
-                    case AutoBindType.FindSameVariable:
-                        // TODO
-                        break;
+                    if (variable != null && TypeResolver.CanConvert(parameter, variable))
+                    {
+                        parameter.Bind(variable);
+                    }
+                }
+                else if (attribute.AutoBindType == AutoBindType.FindSimilarVariable || UserPreferences.ParameterAutoBinding)
+                {
+                    string similarName = field.Name.ToLower().Replace(" ", string.Empty);
+                    Variable variable = graphData.GetVariables().FirstOrDefault(v => v.name.ToLower().Replace(" ", string.Empty) == similarName);
 
-                    case AutoBindType.FindSimilarVariable:
-                        // TODO
-                        break;
+                    if (variable != null && TypeResolver.CanConvert(parameter, variable))
+                    {
+                        parameter.Bind(variable);
+                    }
                 }
             }
 

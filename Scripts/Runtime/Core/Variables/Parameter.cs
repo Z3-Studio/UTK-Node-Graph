@@ -171,6 +171,8 @@ namespace Z3.NodeGraph.Core
             return Value.ToString().ToBold();
         }
 
+        public static Parameter<T> MakeSelfBinding() => new Parameter<T>() { guid = SelfBinding };
+
         /// <summary> Used to define the default value </summary>
         public static implicit operator Parameter<T>(T value)
         {

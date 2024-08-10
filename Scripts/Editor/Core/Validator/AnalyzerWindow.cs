@@ -114,10 +114,11 @@ namespace Z3.NodeGraph.Editor
                 selectedGraphData = Selection.activeObject as GraphData;
             }
 
-            if (!selectedGraphData || analyzer && GraphData == selectedGraphData)
-                return;
+            if (selectedGraphData && (!analyzer || GraphData != selectedGraphData))
+            {
+                analyzer = Validator.GetAnalyzer(selectedGraphData);
+            }
 
-            analyzer = Validator.GetAnalyzer(selectedGraphData);
             Populate();
         }
 

@@ -27,5 +27,8 @@
                 </Z3.UIBuilder.Editor.SplitView>
             </Z3.UIBuilder.Editor.SplitView>
         </ui:VisualElement>
+        <ui:VisualElement name="select-graph-container" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; background-color: rgb(60, 60, 60); align-items: center; justify-content: center;">
+            <ui:Label text="Select a &lt;b&gt;GraphData&lt;/b&gt; in Project &#10;or a &lt;b&gt;GraphRunner&lt;/b&gt; Component" style="font-size: 30px; -unity-text-align: middle-center; background-color: rgb(40, 40, 40); padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; width: 80%;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

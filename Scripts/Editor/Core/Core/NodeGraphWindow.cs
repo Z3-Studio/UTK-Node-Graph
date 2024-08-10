@@ -7,12 +7,14 @@ using Z3.NodeGraph.Core;
 using Z3.UIBuilder;
 using Z3.UIBuilder.Core;
 using Z3.UIBuilder.ExtensionMethods;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
     public class NodeGraphWindow : EditorWindow, IHasCustomMenu
     {
         [UIElement] private NodeGraphPanel nodeGraphPanel;
+        [UIElement] private VisualElement selectGraphContainer;
         [UIElement] private BreadcrumbView breadcrumbView;
         [UIElement(optional: true)] private VisualElement nodeInspectorPanel;
         [UIElement(optional: true)] private NodeVariablesPanel nodeVariablesPanel;
@@ -122,6 +124,8 @@ namespace Z3.NodeGraph.Editor
 
             if (graph && graph != GraphData)
             {
+                selectGraphContainer.style.SetDisplay(false);
+
                 // RootNodeBug? After create a soon as possible
                 // TODO: Understand why and when this is necessary and document it
                 if (checkId && !AssetDatabase.CanOpenAssetInEditor(graph.GetInstanceID())) 

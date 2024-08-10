@@ -83,6 +83,7 @@ namespace Z3.NodeGraph.Editor
 
             NodeGraphResources.NodeGraphVT.CloneTree(rootVisualElement);
             rootVisualElement.BindUIElements(this);
+            selectGraphContainer.style.SetDisplay(true);
 
             nodeGraphReferences = new(this, nodeGraphPanel, nodeInspectorPanel, breadcrumbView, nodeVariablesPanel);
 
@@ -121,7 +122,6 @@ namespace Z3.NodeGraph.Editor
                 graph = Selection.activeObject as GraphData;
             }
             
-
             if (graph && graph != GraphData)
             {
                 selectGraphContainer.style.SetDisplay(false);
@@ -151,6 +151,15 @@ namespace Z3.NodeGraph.Editor
                 return;
 
             nodeGraphReferences.Refresh();
+        }
+
+        [UIElement("ping-object-button")]
+        private void OnRevealInProject()
+        {
+            if (nodeGraphReferences == null)
+                return;
+
+            EditorGUIUtility.PingObject(GraphData);
         }
 
         private void OnGUI()

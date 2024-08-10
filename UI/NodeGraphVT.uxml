@@ -4,6 +4,8 @@
         <uie:Toolbar>
             <uie:ToolbarButton text="Refresh" name="refresh-button" />
             <uie:ToolbarButton text="Open in Analizer" name="open-in-analyzer-button" />
+            <ui:VisualElement style="flex-grow: 1;" />
+            <uie:ToolbarButton display-tooltip-when-elided="true" name="ping-object-button" style="min-width: 30px; -unity-background-image-tint-color: rgb(154, 154, 154); background-image: url(&quot;project://database/Packages/com.z3.ui-builder/Art/Eye.png?fileID=2800000&amp;guid=dc6a23adb0fa15347b725ced4160a967&amp;type=3#Eye&quot;); -unity-background-scale-mode: scale-to-fit;" />
         </uie:Toolbar>
         <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); justify-content: space-around; align-items: stretch; align-self: stretch; flex-direction: row; width: 100%; height: 100%;">
             <Z3.UIBuilder.Editor.SplitView fixed-pane-initial-dimension="350">
@@ -27,7 +29,7 @@
                 </Z3.UIBuilder.Editor.SplitView>
             </Z3.UIBuilder.Editor.SplitView>
         </ui:VisualElement>
-        <ui:VisualElement name="select-graph-container" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; background-color: rgb(60, 60, 60); align-items: center; justify-content: center;">
+        <ui:VisualElement name="select-graph-container" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; background-color: rgb(60, 60, 60); align-items: center; justify-content: center; display: none;">
             <ui:Label text="Select a &lt;b&gt;GraphData&lt;/b&gt; in Project &#10;or a &lt;b&gt;GraphRunner&lt;/b&gt; Component" style="font-size: 30px; -unity-text-align: middle-center; background-color: rgb(40, 40, 40); padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; width: 80%;" />
         </ui:VisualElement>
     </ui:VisualElement>

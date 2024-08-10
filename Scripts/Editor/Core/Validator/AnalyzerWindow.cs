@@ -133,7 +133,7 @@ namespace Z3.NodeGraph.Editor
         }
 
         [UIElement("ping-object-button")]
-        private void OnReveal()
+        private void OnRevealInProject()
         {
             if (!analyzer)
                 return;

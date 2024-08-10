@@ -142,19 +142,24 @@ namespace Z3.NodeGraph.Editor
             return name.Substring(0, lastBracketStart + 1) + newGuid + name.Substring(lastBracketEnd);
         }
 
-        // Replace values of: Parameters, List<SubAsset>, SubAsset, ISubAssetList (taskList, transitions)
-        public static void Replace(GraphSubAsset subAsset, Dictionary<string, string> guidVariables, Dictionary<string, GraphSubAsset> newSubAssets)
+        public static void ReplaceParameterBinding(GraphSubAsset subAsset, Dictionary<string, string> guidVariables)
         {
             foreach (FieldInfo field in ReflectionUtils.GetAllFieldsTypeOf<IParameter>(subAsset))
             {
                 IParameter parameter = field.GetValue(subAsset) as IParameter;
 
-                if (guidVariables.TryGetValue(parameter.Guid, out string newGuid))
+                if (guidVariables.TryGetValue(parameter.Guid, out string newVariableGuid))
                 {
-                    parameter.ReplaceDependencies(newGuid);
+                    parameter.SetBinding(newVariableGuid);
                 }
             }
+        }
 
+        // Replace values of: Parameters, List<SubAsset>, SubAsset, ISubAssetList (taskList, transitions)
+        /*
+        public static void Replace(GraphSubAsset subAsset, Dictionary<string, string> guidVariables, Dictionary<string, GraphSubAsset> newSubAssets)
+        {
+            ReplaceParameterBinding(subAsset, guidVariables);
 
             return;
             foreach (FieldInfo field in ReflectionUtils.GetAllFields(subAsset))
@@ -215,7 +220,7 @@ namespace Z3.NodeGraph.Editor
                     //list.ReplaceDependencies(newSubAssets);
                 }
             }
-        }
+        }*/
 
         /*
         // using NUnit.Framework;

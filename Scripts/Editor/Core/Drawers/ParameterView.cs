@@ -38,6 +38,8 @@ namespace Z3.NodeGraph.Editor
         private const string NewReferenceVariable = "☆ Promote Reference Variable";
         private const string NewLocalVariable = "☆ Promote Local Variable";
 
+        private static IParameter clipboard;
+
         public ParameterView(SerializedProperty property, FieldInfo fieldInfo)
         {
             targetObject = NodeGraphEditorUtils.GetTarget<GraphSubAsset>(property);
@@ -81,6 +83,47 @@ namespace Z3.NodeGraph.Editor
             this.RegisterUpdate(UpdateLabel);
 
             UpdateVariable();
+
+            // Note: Even doing the Bind and setting bindingPath, I couldn't find a way to force Unity to copy.
+            // For this reason, normal Fields and Parameters do not have interoperability.
+            this.AddManipulator(new ContextualMenuManipulator(evt =>
+            {
+                DropdownMenu menu = evt.menu;
+
+                menu.AppendAction("Copy", actionEvent =>
+                {
+                    clipboard = parameterT;
+                });
+
+                bool canPaste = false;
+                if (clipboard != null)
+                {
+                    if (clipboard.IsSelfBinding)
+                    {
+                        // Will self bind
+                        canPaste = typeof(Component).IsAssignableFrom(GenericType)
+                            || typeof(GameObject).IsAssignableFrom(GenericType)
+                            || GenericType.IsInterface;
+                    }
+                    else if (clipboard.IsBinding)
+                    {
+                        // Will copy Guid
+                        canPaste = TypeResolver.CanConvert(parameterT, clipboard.Variable);
+                    }
+                    else
+                    {
+                        // Will copy serialized value
+                        canPaste = parameterT.GenericType.IsAssignableFrom(clipboard.GenericType);
+                    }
+                }
+
+                menu.AppendAction("Paste", actionEvent =>
+                {
+                    parameterT.CopyParameter(clipboard);
+                    bindToggle.value = parameterT.IsBinding;
+
+                }, canPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            }));
         }
 
         private void UpdateLabel() // TODO: User event instead update
@@ -93,7 +136,7 @@ namespace Z3.NodeGraph.Editor
             {
                 variableSelectionLabel.text = "Select a variable".AddRichTextColor(EditorStyle.DarkLabel);
             }
-            else if (parameterT.IsSelfBind)
+            else if (parameterT.IsSelfBinding)
             {
                 variableSelectionLabel.text = SelfBind;
             }
@@ -116,8 +159,9 @@ namespace Z3.NodeGraph.Editor
             {
                 parameterT.Unbind();
                 variableSelectionLabel.text = string.Empty;
-                UpdateVariable();
             }
+
+            UpdateVariable();
         }
 
         private void OpenVariablesSelection(MouseDownEvent _)

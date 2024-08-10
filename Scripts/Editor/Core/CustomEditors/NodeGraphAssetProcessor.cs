@@ -94,16 +94,7 @@ namespace Z3.NodeGraph.Editor
 
                 subAsset.SetGuid(newAssetGuid, newParentName);
 
-                // Setup parameters depedencies
-                foreach (FieldInfo field in ReflectionUtils.GetAllFieldsTypeOf<IParameter>(subAsset))
-                {
-                    IParameter parameter = field.GetValue(subAsset) as IParameter;
-
-                    if (guidVariables.TryGetValue(parameter.Guid, out string newVariableGuid))
-                    {
-                        parameter.ReplaceDependencies(newVariableGuid);
-                    }
-                }
+                NodeGraphEditorUtils.ReplaceParameterBinding(subAsset, guidVariables);
             }
 
             AssetDatabase.SaveAssets();

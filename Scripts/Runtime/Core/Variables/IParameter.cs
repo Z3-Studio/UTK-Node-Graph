@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Z3.NodeGraph.Core
 {
@@ -10,10 +9,14 @@ namespace Z3.NodeGraph.Core
         Type GenericType { get; }
         bool IsBinding { get; } // TODO: Binded
 
-        ///<summary> The variable is not null </summary>
-        bool IsDefined { get; }
-        bool IsSelfBind { get; }
+        bool IsSelfBinding { get; }
         Variable Variable { get; }
+
+        ///<summary> Variable is not null </summary>
+        bool IsDefined { get; }
+
+        ///<summary> IsBinding && !IsSelfBinding </summary>
+        bool IsVariableBinding { get; }
 
         // Runtime methods
         void SetupDependencies(GraphController graphController);
@@ -24,7 +27,8 @@ namespace Z3.NodeGraph.Core
         void Bind(Variable variable);
         void Unbind();
 
-        void ReplaceDependencies(string newGuid);
+        void SetBinding(string newGuid);
+        void CopyParameter(IParameter otherParameter);
     }
 
     public interface IParameter<T> : IParameter

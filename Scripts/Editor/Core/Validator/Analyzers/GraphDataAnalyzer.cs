@@ -102,7 +102,7 @@ namespace Z3.NodeGraph.Editor // TODO: It should be editor class
                     VariableDependencies[parameterGuid].AddDependency(asset, p);
 
                     // Validation is not required, even though this may cause errors. This is because the object can add and remove components.
-                    if (p.IsSelfBind)
+                    if (p.IsSelfBinding)
                         return;
 
                     // Check if the variable exist and the type matches
@@ -380,7 +380,7 @@ namespace Z3.NodeGraph.Editor // TODO: It should be editor class
 
                     asset.GetAllFieldValuesTypeOf<IParameter>().ForEach(p =>
                     {
-                        if (!p.IsBinding || p.IsSelfBind)
+                        if (!p.IsVariableBinding)
                             return;
 
                         // Check if the variable exist and the type matches

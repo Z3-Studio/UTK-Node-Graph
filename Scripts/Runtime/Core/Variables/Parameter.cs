@@ -21,7 +21,8 @@ namespace Z3.NodeGraph.Core
         // Editor
         public bool IsDefined => Variable != null;
         public bool IsBinding => !string.IsNullOrEmpty(guid);
-        public bool IsSelfBind => guid == SelfBind;
+        public bool IsVariableBinding => IsBinding && !IsSelfBinding;
+        public bool IsSelfBinding => guid == SelfBind;
         public Variable Variable { get; private set; }
 
         // Runtime
@@ -96,7 +97,7 @@ namespace Z3.NodeGraph.Core
 
         private void BuildBind(GraphController graphController)
         {
-            if (IsSelfBind)
+            if (IsSelfBinding)
             {
                 Get = graphController.CachedComponents.CreateGetter(GenericType);
                 Set = (newValue) => throw new InvalidOperationException("You cannot set a component using SelfBind, is only get. Consider using GameObject.AddComponent<T>() or Destroy()");
@@ -122,16 +123,36 @@ namespace Z3.NodeGraph.Core
             Set = TypeResolver.CreateSet(this, variable);
         }
 
-        public void ReplaceDependencies(string newGuid)
+        public void SetBinding(string newGuid)
         {
             guid = newGuid;
+        }
+
+        public void CopyParameter(IParameter otherParameter)
+        {
+            if (otherParameter.IsSelfBinding)
+            {
+                guid = otherParameter.Guid;
+                Variable = null;
+            }
+            else if (otherParameter.IsBinding)
+            {
+                guid = otherParameter.Guid;
+                Variable = otherParameter.Variable;
+            }
+            else
+            {
+                value = (T)otherParameter.Value;
+                guid = string.Empty;
+                Variable = null;
+            }
         }
 
         public override string ToString()
         {
             if (IsBinding)
             {
-                if (IsSelfBind)
+                if (IsSelfBinding)
                     return "Self".ToBold();
 
                 if (IsDefined)

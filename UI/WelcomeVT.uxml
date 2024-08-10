@@ -5,23 +5,23 @@
         <engine:ScrollView style="flex-grow: 1; margin-top: 20px; background-color: rgb(51, 51, 51); margin-bottom: 20px; margin-left: 0; margin-right: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
             <engine:Label text="Welcome to Node Graph beta for Unity" name="Label" style="-unity-text-align: upper-center; margin-top: 20px; margin-bottom: 20px;" />
             <engine:VisualElement style="flex-grow: 1; margin-bottom: 20px;">
-                <engine:Label text="Setup User Preferences" style="font-size: 20px; margin-bottom: 10px;" />
-                <engine:Label text="Open the path &lt;i&gt;Assets &gt; Editor &gt; Z3 &gt; UserPreferences&lt;/i&gt; and add your main add the first part of your namespace" />
+                <engine:Label text="User Preferences" class="title" />
+                <engine:Label text="Navigate to &lt;i&gt;Assets &gt; Editor &gt; Z3 &gt; UserPreferences&lt;/i&gt; and configure your namespace." />
             </engine:VisualElement>
             <engine:VisualElement style="flex-grow: 1; margin-bottom: 20px;">
-                <engine:Label text="Source Control" style="font-size: 20px; margin-bottom: 10px;" />
-                <engine:Label text="Ignore User Preferences" />
+                <engine:Label text="Source Control" class="title" />
+                <engine:Label text="Add the following paths to your .gitignore file:" />
                 <engine:Label text="# Node Graph&#10;Assets/Editor/Z3/UserPreferences.asset&#10;Assets/Editor/Z3/UserPreferences.asset.meta" selectable="true" style="background-color: rgb(42, 42, 42); margin-left: 8px; margin-top: 8px; margin-right: 8px; margin-bottom: 8px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
             </engine:VisualElement>
             <engine:VisualElement style="flex-grow: 1; margin-bottom: 20px;">
-                <engine:Label text="Documentation" style="font-size: 20px; margin-bottom: 10px;" />
+                <engine:Label text="Documentation" class="title" />
                 <engine:Label text="To learn more about using Node Graph, visit the documentation" />
                 <engine:Button text="Open Documentation" name="open-documentation-button" style="align-self: center; margin-top: 8px;" />
             </engine:VisualElement>
         </engine:ScrollView>
         <engine:VisualElement style="flex-direction: row; align-self: center;">
             <engine:Toggle label="Do not display this again" name="dont-display-again" style="margin-right: 20px;" />
-            <engine:Button text="Close" name="close-button" />
+            <engine:Button text="Close Window" name="close-button" />
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

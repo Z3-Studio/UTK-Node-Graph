@@ -72,8 +72,8 @@ namespace Z3.NodeGraph.Editor // TODO: It should be editor class
             // 1. Parameters
             Dictionary<string, Variable> variables = GraphData.GetVariables().ToDictionary(v => v.guid, v => v);
 
-            string selfBind = Parameter<object>.SelfBind;
-            VariableDependencies[selfBind] = new VariableAnalyzer(selfBind.ToItalic(), " - ", VariableScope.SelfBind);
+            string selfBind = Parameter<object>.SelfBinding;
+            VariableDependencies[selfBind] = new VariableAnalyzer(selfBind.ToItalic(), " - ", VariableScope.SelfBinding);
 
             foreach ((string guid, Variable variable) in variables)
             {

@@ -78,8 +78,12 @@ namespace Z3.NodeGraph.Editor
 
             foreach (FieldInfo field in fields)
             {
-                IParameter newParameter = Activator.CreateInstance(field.FieldType) as IParameter;
-                field.SetValue(newActionTask, newParameter);
+                IParameter parameter = field.GetValue(newActionTask) as IParameter;
+                if (parameter == null)
+                {
+                    parameter = Activator.CreateInstance(field.FieldType) as IParameter;
+                    field.SetValue(newActionTask, parameter);
+                }
 
                 ParameterDefinitionAttribute attribute = field.GetCustomAttribute<ParameterDefinitionAttribute>();
                 if (attribute == null)
@@ -88,9 +92,13 @@ namespace Z3.NodeGraph.Editor
                 switch (attribute.AutoBindType)
                 {
                     case AutoBindType.SelfBind:
-                        if (typeof(Component).IsAssignableFrom(field.FieldType))
+                        if (parameter.CanSelfBind())
                         {
-                            newParameter.SelfBind();
+                            parameter.SelfBind();
+                        }
+                        else
+                        {
+                            Debug.LogError($"Self-binding is not supported for type '{parameter.GenericType.Name}'. Check the '{nameof(ParameterDefinitionAttribute)}' in class '{type.Name}'.");
                         }
                         break;
 

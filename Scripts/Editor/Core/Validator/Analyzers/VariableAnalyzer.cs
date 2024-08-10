@@ -7,7 +7,7 @@ namespace Z3.NodeGraph.Editor
     {
         Reference,
         Local,
-        SelfBind,
+        SelfBinding,
         Undefined
     }
 

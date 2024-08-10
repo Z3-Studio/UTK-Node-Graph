@@ -7,7 +7,6 @@ using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
-
     /// <summary>
     /// Display all types derived from TType
     /// </summary>

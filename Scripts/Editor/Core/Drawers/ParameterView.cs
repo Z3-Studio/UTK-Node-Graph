@@ -34,7 +34,7 @@ namespace Z3.NodeGraph.Editor
 
         private Type GenericType => parameterT.GenericType;
 
-        private const string SelfBind = "☆ Self Bind";
+        private const string SelfBind = "☆ Self Binding";
         private const string NewReferenceVariable = "☆ Promote Reference Variable";
         private const string NewLocalVariable = "☆ Promote Local Variable";
 
@@ -170,11 +170,7 @@ namespace Z3.NodeGraph.Editor
             List<(string, Variable)> variables = new();
 
             // Self Bind
-            bool canSelfBind = typeof(Component).IsAssignableFrom(GenericType)
-                || typeof(GameObject).IsAssignableFrom(GenericType)
-                || GenericType.IsInterface;
-
-            if (canSelfBind)
+            if (parameterT.CanSelfBind())
             {
                 variables.Add((SelfBind, null));
             }

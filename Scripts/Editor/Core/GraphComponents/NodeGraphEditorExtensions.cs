@@ -1,5 +1,7 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Editor;
@@ -10,6 +12,15 @@ namespace Z3.NodeGraph.Editor
 {
     public static class NodeGraphEditorExtensions
     {
+        public static bool CanSelfBind(this IParameter parameter)
+        {
+            Type genericType = parameter.GenericType;
+
+            return  typeof(Component).IsAssignableFrom(genericType)
+                || typeof(GameObject).IsAssignableFrom(genericType)
+                || genericType.IsInterface;
+        }
+
         public static TNodeView GetNodeView<TNodeView>(this Port port) where TNodeView : NodeView
         {
             return GetNodeView<TNodeView>(port.node);

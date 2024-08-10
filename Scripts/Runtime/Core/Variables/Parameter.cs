@@ -22,7 +22,7 @@ namespace Z3.NodeGraph.Core
         public bool IsDefined => Variable != null;
         public bool IsBinding => !string.IsNullOrEmpty(guid);
         public bool IsVariableBinding => IsBinding && !IsSelfBinding;
-        public bool IsSelfBinding => guid == SelfBind;
+        public bool IsSelfBinding => guid == SelfBinding;
         public Variable Variable { get; private set; }
 
         // Runtime
@@ -54,7 +54,7 @@ namespace Z3.NodeGraph.Core
         private Action<object> Set { get; set; }
 
         public const string ValueField = nameof(value);
-        public const string SelfBind = "SelfBind";
+        public const string SelfBinding = "SelfBinding";
 
         void IParameter.SetupDependencies(GraphController graphController)
         {
@@ -64,7 +64,7 @@ namespace Z3.NodeGraph.Core
 
         void IParameter.SelfBind()
         {
-            guid = SelfBind;
+            guid = SelfBinding;
             Variable = null;
         }
 

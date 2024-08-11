@@ -103,7 +103,7 @@ namespace Z3.NodeGraph.Editor
         private void OnChangeVariable(Variable variable)
         {
             EditorUtility.SetDirty(target);
-            AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssetIfDirty(target);
         }
 
         private void OnDuplicateVariable(Variable variable)

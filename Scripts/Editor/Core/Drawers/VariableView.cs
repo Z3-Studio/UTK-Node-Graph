@@ -28,8 +28,6 @@ namespace Z3.NodeGraph.Editor
 
         public Variable Variable { get; private set; }
 
-        private SerializedProperty serializedProperty;
-
         public VariableView(SerializedProperty serializedProperty) : this()
         {
             Variable = serializedProperty.GetValue<Variable>();
@@ -66,6 +64,10 @@ namespace Z3.NodeGraph.Editor
 
             variableName.RegisterCallback<BlurEvent>(evt =>
             {
+                if (variableName.value == Variable.name)
+                    return;
+
+                Variable.name = variableName.value;
                 OnChangeName?.Invoke();
                 OnChangeVariable?.Invoke(Variable);
             });
@@ -80,7 +82,6 @@ namespace Z3.NodeGraph.Editor
                     newValue = newValue.Replace("/", string.Empty);
                     variableName.value = newValue;
                 }
-                Variable.name = newValue;
             });
 
             Type type = Variable.OriginalType;
@@ -119,23 +120,15 @@ namespace Z3.NodeGraph.Editor
                 // Save changes
                 baseField.OnChangeValue += () =>
                 {
+                    if (Variable.value == baseField.Value)
+                        return;
+
                     Variable.value = baseField.Value;
-                    if (serializedProperty != null)
-                    {
-                        EditorUtility.SetDirty(serializedProperty.serializedObject.targetObject);
-                    }
-                    else
-                    {
-                        OnChangeVariable?.Invoke(Variable);
-                    }
+                    OnChangeVariable?.Invoke(Variable);
                 };
 
                 // Remove Label of the value field
-                Label label = valueField.Q<Label>();
-                if (label != null && label.parent != null)
-                {
-                    label.parent.Remove(label);
-                }
+                baseField.SetLabel(string.Empty);
             }
             else
             {

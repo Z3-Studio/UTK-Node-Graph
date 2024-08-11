@@ -1,7 +1,8 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.z3.ui-builder/UI/ListStyle.uss?fileID=7433441132597879392&amp;guid=06d2b6a4e0e0db94c966a720694a0d54&amp;type=3#ListStyle" />
     <engine:VisualElement name="variable-view" style="flex-direction: row; justify-content: space-between; min-width: 100%;">
         <engine:TextField placeholder-text="filler text" name="variable-name" style="flex-basis: 100%; flex-shrink: 1;" />
         <engine:VisualElement name="property-container" style="flex-basis: 100%;" />
-        <engine:Button text="x" name="actions-button" style="background-color: rgb(60, 60, 60); color: rgb(212, 212, 212); border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; min-width: 18px; max-width: 18px; margin-top: 1px; padding-top: 0; padding-bottom: 1px; margin-right: 1px;" />
+        <engine:Button text="x" name="actions-button" class="z3-button-list" />
     </engine:VisualElement>
 </engine:UXML>

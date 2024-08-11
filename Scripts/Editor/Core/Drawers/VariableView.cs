@@ -7,14 +7,20 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder;
+using Z3.UIBuilder.Core;
 using Z3.UIBuilder.Editor;
 using Z3.Utils.ExtensionMethods;
+using Z3.UIBuilder.ExtensionMethods;
 using Object = UnityEngine.Object;
 
 namespace Z3.NodeGraph.Editor
 {
     public class VariableView : VisualElement
     {
+        [UIElement] private TextField variableName;
+        [UIElement] private VisualElement propertyContainer;
+        [UIElement] private Button actionsButton;
+
         public event Action OnChangeName;
         public event Action<Variable> OnDelete;
         public event Action<Variable> OnChangeVariable;
@@ -50,20 +56,21 @@ namespace Z3.NodeGraph.Editor
 
         private void BuildElement()
         {
+            NodeGraphResources.VariableVT.CloneTree(this);
+            this.BindUIElements();
+
             Validate();
 
             // Variable Name
-            TextField nameText = new TextField();
-            nameText.value = Variable.name;
-            nameText.style.SetAsExpanded();
+            variableName.value = Variable.name;
 
-            nameText.RegisterCallback<BlurEvent>(evt =>
+            variableName.RegisterCallback<BlurEvent>(evt =>
             {
                 OnChangeName?.Invoke();
                 OnChangeVariable?.Invoke(Variable);
             });
 
-            nameText.RegisterValueChangedCallback((e) =>
+            variableName.RegisterValueChangedCallback((e) =>
             {
                 string newValue = e.newValue;
                 if (newValue.Contains("/"))
@@ -71,39 +78,22 @@ namespace Z3.NodeGraph.Editor
                     // Avoid create paths when open the bind section of the ParameterView
                     Debug.Log("Variable names with '/' is not allowed");
                     newValue = newValue.Replace("/", string.Empty);
-                    nameText.value = newValue;
+                    variableName.value = newValue;
                 }
                 Variable.name = newValue;
             });
 
-            Add(nameText);
-
             Type type = Variable.OriginalType;
             if (type == typeof(Title))
             {
-                DrawAsTitle();
+                // Draw as title
+                actionsButton.clicked += () => OnDelete?.Invoke(Variable);
+                propertyContainer.style.SetDisplay(false);
             }
             else
             {
                 DrawAsVariable(type);
             }
-
-            // Temp
-            //SerializedProperty property = new SerializedProperty(parameter); // IMGUIContainer?
-            //PropertyField propertyField = new PropertyField(property);
-            //Add(propertyField);
-        }
-
-        private void DrawAsTitle()
-        {
-            ToolbarButton button = new(() => OnDelete?.Invoke(Variable));
-            button.text = "x";
-
-            button.style.paddingLeft = 5;
-            button.style.unityFontStyleAndWeight = FontStyle.Italic;
-            EditorStyle.SetSmallEditorButton(button.style);
-
-            Add(button);
         }
 
         private void DrawAsVariable(Type type)
@@ -116,13 +106,17 @@ namespace Z3.NodeGraph.Editor
             IBaseFieldReader baseField = EditorBuilder.GetElement(type);
             VisualElement valueField = baseField.VisualElement;
 
+            // Check if is a field or serialized property
             if (baseField.TwoWay)
             {
-                baseField.CreateGetSet(() =>
-                {
-                    return Variable.value;
-                }, newValue => Variable.value = newValue);
+                // Bind
+                baseField.CreateGetSet
+                (
+                    () => Variable.value,
+                    newValue => Variable.value = newValue
+                );
 
+                // Save changes
                 baseField.OnChangeValue += () =>
                 {
                     Variable.value = baseField.Value;
@@ -142,10 +136,10 @@ namespace Z3.NodeGraph.Editor
                 {
                     label.parent.Remove(label);
                 }
-
             }
             else
             {
+                // Create buttons for serialized properties
                 if (Variable.value == null)
                 {
                     valueField = new Button(() =>
@@ -167,39 +161,37 @@ namespace Z3.NodeGraph.Editor
             valueField.style.SetAsExpanded();
             valueField.style.marginLeft = 10;
 
-            // Menu
-            ToolbarMenu toolbarMenu = new ToolbarMenu();
-            VisualElement iconElement = toolbarMenu.ElementAt(1);
-
-            iconElement.style.backgroundImage = (Texture2D)EditorIcons.GetTexture(IconType.Cog);
-            iconElement.style.right = 1.5f;
-
-            EditorStyle.SetSmallEditorButton(toolbarMenu.style);
-            toolbarMenu.style.marginRight = 1f;
-
             // Menu Options
-            DropdownMenu menu = toolbarMenu.menu;
-            menu.AppendAction(typeName, null, DropdownMenuAction.Status.Disabled);
+            actionsButton.style.backgroundImage = (Texture2D)EditorIcons.GetTexture(IconType.Cog);
+            actionsButton.style.backgroundSize = new BackgroundSize(Length.Percent(75), Length.Percent(75));
+            actionsButton.text = string.Empty;
 
-            menu.AppendAction("Duplicate", action =>
+            actionsButton.clicked += () =>
             {
-                OnDuplicateVariable.Invoke(Variable);
-            });
+                DropdownMenu menu = new DropdownMenu();
+                menu.AppendAction(typeName, null, DropdownMenuAction.Status.Disabled);
 
-            menu.AppendAction($"Change Type", action =>
-            {
-                List<(string, Type)> types = TypeResolver.CachedVariables;
-                SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, toolbarMenu.contentRect.position);
-            });
+                menu.AppendAction("Duplicate", action =>
+                {
+                    OnDuplicateVariable.Invoke(Variable);
+                });
 
-            menu.AppendAction("Delete", action =>
-            {
-                OnDelete.Invoke(Variable);
-            });
+                menu.AppendAction($"Change Type", action =>
+                {
+                    List<(string, Type)> types = TypeResolver.CachedVariables;
+                    SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, actionsButton.contentRect.position);
+                });
 
-            // Build Row
-            Add(valueField);
-            Add(toolbarMenu);
+                menu.AppendAction("Delete", action =>
+                {
+                    OnDelete.Invoke(Variable);
+                });
+
+                Rect rect = new Rect(Event.current.mousePosition.x , Event.current.mousePosition.y, 0, 0);
+                menu.DisplayEditorMenu(rect);
+            };
+
+            propertyContainer.Add(valueField);
         }
 
         private void SetType(string _, Type selectedType)

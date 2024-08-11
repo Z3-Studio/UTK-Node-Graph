@@ -13,8 +13,8 @@ namespace Z3.NodeGraph.Editor
     // Review it: consider using NodeGraph.Editor namespace
     public class UserPreferences : ScriptableObject
     {
-        [SerializeField] private AutoBindType defaultAutoBindType = AutoBindType.FindSimilarVariable;
         [SerializeField] private bool openWelcome = true;
+        [SerializeField] private AutoBindType defaultAutoBindType = AutoBindType.FindSimilarVariable;
         [SerializeField] private List<string> nameSpaces;
 
         [ReadOnly]
@@ -36,11 +36,11 @@ namespace Z3.NodeGraph.Editor
                 Instance.Validate();
             }
 
-            Refresh();
+            RefreshTypes();
         }
 
         [Button]
-        private static void Refresh()
+        private static void RefreshTypes()
         {
             // TODO: Create a editor inspector class, to find and include types, and call this method
             List<string> namespaces = Instance.nameSpaces

@@ -47,10 +47,10 @@ namespace Z3.NodeGraph.Editor
             NodeGraphResources.WelcomeVT.CloneTree(rootVisualElement);
             rootVisualElement.BindUIElements(this);
 
-            dontDisplayAgain.value = UserPreferences.OpenWelcome;
+            dontDisplayAgain.value = !UserPreferences.OpenWelcome;
             dontDisplayAgain.RegisterValueChangedCallback(e =>
             {
-                UserPreferences.OpenWelcome = e.newValue;
+                UserPreferences.OpenWelcome = !e.newValue;
             });
         }
 

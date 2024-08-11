@@ -85,10 +85,14 @@ namespace Z3.NodeGraph.Editor
                 }
 
                 ParameterDefinitionAttribute attribute = field.GetCustomAttribute<ParameterDefinitionAttribute>();
-                if (attribute == null && !UserPreferences.ParameterAutoBinding)
-                    continue;
+                AutoBindType bindType = UserPreferences.DefaultAutoBindType;
 
-                if (attribute.AutoBindType == AutoBindType.SelfBind)
+                if (attribute != null)
+                {
+                    bindType = attribute.AutoBindType;
+                }
+
+                if (bindType == AutoBindType.SelfBind)
                 {
                     if (parameter.CanSelfBind())
                     {
@@ -99,7 +103,7 @@ namespace Z3.NodeGraph.Editor
                         Debug.LogError($"Self-binding is not supported for type '{parameter.GenericType.Name}'. Check the '{nameof(ParameterDefinitionAttribute)}' in class '{type.Name}'.");
                     }
                 }
-                else if (attribute.AutoBindType == AutoBindType.FindSameVariable)
+                else if (bindType == AutoBindType.FindSameVariable)
                 {
                     Variable variable = graphData.GetVariables().FirstOrDefault(v => v.name == field.Name);
 
@@ -108,7 +112,7 @@ namespace Z3.NodeGraph.Editor
                         parameter.Bind(variable);
                     }
                 }
-                else if (attribute.AutoBindType == AutoBindType.FindSimilarVariable || UserPreferences.ParameterAutoBinding)
+                else if (bindType == AutoBindType.FindSimilarVariable)
                 {
                     string similarName = field.Name.ToLower().Replace(" ", string.Empty);
                     Variable variable = graphData.GetVariables().FirstOrDefault(v => v.name.ToLower().Replace(" ", string.Empty) == similarName);

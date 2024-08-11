@@ -64,9 +64,9 @@ namespace Z3.NodeGraph.Editor
             });
 
             // Local Variables
-            VariableList localVariables = new VariableList("Local Variables".ToBold(), graphData, graphData.LocalVariables, true);
+            string tooltip = "Visible only in this graph, consider it as a variable declared inside a method";
+            VariableList localVariables = new VariableList("Local Variables".ToBold(), graphData, graphData.LocalVariables, true, tooltip);
             localVariables.OnDelete += OnDeleteVariable;
-            localVariables.tooltip = "Visible only in this graph, consider it as a variable declared inside a method";
 
             // Add Visual Elements
             Add(propertyField);
@@ -93,9 +93,8 @@ namespace Z3.NodeGraph.Editor
 
             if (graphData.ReferenceVariables != null)
             {
-
-                VariableList referenceVariables = new VariableList("Reference Variables".ToBold(), graphData.ReferenceVariables, graphData.ReferenceVariables.GetOriginalVariables(), true);
-                referenceVariables.tooltip = "Global variables can be used in multiple graphs, but their main function is to collect the name and GUID to enable binding in Parameter<T>";
+                string tooltip = "Global variables can be used in multiple graphs, but their main function is to collect the name and GUID to enable binding in Parameter<T>";
+                VariableList referenceVariables = new VariableList("Reference Variables".ToBold(), graphData.ReferenceVariables, graphData.ReferenceVariables.GetOriginalVariables(), true, tooltip);
                 referenceVariables.OnDelete += OnDeleteVariable;
                 root.Add(referenceVariables);
             }

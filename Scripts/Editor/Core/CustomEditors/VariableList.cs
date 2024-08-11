@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.Editor
 
         public VariableList(ScriptableObject so, List<Variable> source) : this("Variables", so, source) { }
 
-        public VariableList(string label, ScriptableObject so, List<Variable> source, bool showFoldout = false) 
+        public VariableList(string label, ScriptableObject so, List<Variable> source, bool showFoldout = false, string tooptip = "") 
         {
             target = so;
             targetList = source;
@@ -27,6 +27,7 @@ namespace Z3.NodeGraph.Editor
             Z3ListViewConfig listConfig = new()
             {
                 listName = label,
+                tooltip = tooptip,
                 showAddBtn = true,
                 showRemoveButton = false,
                 selectable = false,

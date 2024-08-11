@@ -14,8 +14,6 @@ namespace Z3.NodeGraph.Editor
     /// <remarks> It not validate runtime changes </remarks>
     public class ValidatorWindow : EditorWindow
     {
-        [UIElement] private ToolbarButton validateAllButton;
-        [UIElement] private ToolbarButton fixAllButton;
         [UIElement] private ToolbarButton warningButton;
         [UIElement] private ToolbarButton errorButton;
         [UIElement] private VisualElement content;
@@ -36,20 +34,19 @@ namespace Z3.NodeGraph.Editor
             NodeGraphResources.ValidatorWindowVT.CloneTree(rootVisualElement);
             rootVisualElement.BindUIElements(this);
 
-            validateAllButton.clicked += OnValidateAll;
-            fixAllButton.clicked += OnFixAll;
-
             PopulateErrors();
 
             // TODO: Scroll and highlight to object when selection
         }
 
+        [UIElement("refresh-all-button")]
         private void OnValidateAll()
         {
             Validator.ValidateAll();
             PopulateErrors();
         }
 
+        [UIElement("fix-all-button")]
         private void OnFixAll()
         {
             foreach (ValidatorLogView log in validatorLog)

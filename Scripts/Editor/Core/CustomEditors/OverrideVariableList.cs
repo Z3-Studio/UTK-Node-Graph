@@ -32,10 +32,10 @@ namespace Z3.NodeGraph.Editor
                 showFoldout = false,
                 selectable = false,
                 onMakeItem = OnMake,
-                onBind = OnBind
             };
 
             customListView = new ListViewBuilder<Variable, OverrideVariableView>(parentVariables, listConfig);
+            customListView.onBind += OnBind;
             Add(customListView);
         }
 
@@ -50,14 +50,12 @@ namespace Z3.NodeGraph.Editor
             return visualElement;
         }
 
-        private void OnBind(VisualElement visualElement, int i)
+        private void OnBind(OverrideVariableView view, Variable _, int i)
         {
-            OverrideVariableView variableElement = visualElement as OverrideVariableView;
-
             Func<Variable> variable = () => targetList[i];
             Func<OverrideVariable> overrideVariable = () => overrideList.FirstOrDefault(ov => ov == targetList[i]);
 
-            variableElement.SetElement(variable, overrideVariable);
+            view.SetElement(variable, overrideVariable);
         }
 
         private void OnCreate(OverrideVariable newOverrideVariable)

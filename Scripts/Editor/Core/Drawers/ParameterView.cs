@@ -90,7 +90,7 @@ namespace Z3.NodeGraph.Editor
             {
                 DropdownMenu menu = evt.menu;
 
-                menu.AppendAction("Copy", actionEvent =>
+                menu.AppendAction("Copy Paramter", actionEvent =>
                 {
                     clipboard = parameterT;
                 });
@@ -117,7 +117,7 @@ namespace Z3.NodeGraph.Editor
                     }
                 }
 
-                menu.AppendAction("Paste", actionEvent =>
+                menu.AppendAction("Paste Parameter", actionEvent =>
                 {
                     parameterT.CopyParameter(clipboard);
                     bindToggle.value = parameterT.IsBinding;

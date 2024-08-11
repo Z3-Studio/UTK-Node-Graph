@@ -24,19 +24,21 @@ namespace Z3.NodeGraph.Editor
         // Core
         private readonly GraphData graphData;
         private readonly GraphSubAsset assetParent;
-        private readonly List<T> source;
+        private readonly IList<T> source;
 
         // Visual Elements
-        private readonly ListViewBuilder<T, ParameterView> customListView;
+        private readonly ListViewBuilder<T, ListElementView> customListView;
         private readonly Label inspectorTitle;
         private InspectorElement inspector;
 
-        public GraphSubAssetListView(GraphSubAsset owner, List<T> taskList, Z3ListViewConfig listConfig) : this(NodeGraphUtils.GetGraphData(owner), owner, taskList, listConfig)
+        private static T clipboard;
+
+        public GraphSubAssetListView(GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig) : this(NodeGraphUtils.GetGraphData(owner), owner, taskList, listConfig)
         {
 
         }
 
-        public GraphSubAssetListView(GraphData graphData, GraphSubAsset owner, List<T> taskList, Z3ListViewConfig listConfig) // editable == remove and reorder
+        public GraphSubAssetListView(GraphData graphData, GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig) // editable == remove and reorder
         {
             style.backgroundColor = Color.black.SetAlpha(0.15f); // TEMP: Create a way to define the draw order
 
@@ -48,8 +50,9 @@ namespace Z3.NodeGraph.Editor
             if (listConfig.showAddBtn)
                 listConfig.addEvent = () => TypeSelectorPopup<T>.OpenWindow(OnAdd);
 
-            customListView = new ListViewBuilder<T, ParameterView>(taskList, listConfig);
+            customListView = new ListViewBuilder<T, ListElementView>(taskList, listConfig);
             customListView.style.marginBottom = 8f;
+            customListView.onBind += OnBind;
 
             customListView.OnDelete += OnDeleteActionTask;
 
@@ -66,6 +69,31 @@ namespace Z3.NodeGraph.Editor
             // Update Selection
             customListView.OnSelectChange += OnChangeSelection;
             OnChangeSelection(taskList.FirstOrDefault());
+        }
+
+        private void OnBind(ListElementView view, T element, int i)
+        {
+            view.AddManipulator(new ContextualMenuManipulator(evt =>
+            {
+                DropdownMenu menu = evt.menu;
+                menu.AppendAction(typeof(T).Name, null, DropdownMenuAction.Status.Disabled);
+                menu.AppendSeparator();
+
+                menu.AppendAction($"Copy", action =>
+                {
+                    clipboard = element;
+                });
+
+                bool canPaste = clipboard && graphData.CanCopy(clipboard);
+
+                menu.AppendAction($"Paste as New", actionEvent =>
+                {
+                    NodeGraphEditorUtils.AddCopy(graphData, source, clipboard);
+                    customListView.Rebuild();
+                    Validator.Refresh(graphData);
+
+                }, canPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            }));
         }
 
         private void OnAdd(string _, Type type) // TODO: Move it to NodeGraphModule

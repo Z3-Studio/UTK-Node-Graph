@@ -26,7 +26,6 @@ namespace Z3.NodeGraph.Editor
                 showFoldout = false,
                 selectable = false,
                 onMakeItem = OnMake,
-                onBind = OnBind
             };
 
             customListView = new ListViewBuilder<VariableInstance, VariableInstanceView>(source, listConfig);
@@ -34,12 +33,5 @@ namespace Z3.NodeGraph.Editor
         }
 
         private VariableInstanceView OnMake() => new();
-
-        private void OnBind(VisualElement visualElement, int i)
-        {
-            VariableInstanceView variableElement = visualElement as VariableInstanceView;
-
-            variableElement.BuildItem(targetList[i]);
-        }
     }
 }

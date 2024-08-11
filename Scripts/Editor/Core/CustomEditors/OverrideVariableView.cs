@@ -5,10 +5,11 @@ using Z3.UIBuilder.Editor;
 using System.Reflection;
 using UnityEngine;
 using Z3.Utils.ExtensionMethods;
+using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.Editor
 {
-    public class OverrideVariableView : VisualElement
+    public class OverrideVariableView : VisualElement, IBindElement<OverrideVariableView>
     {
         public event Action<OverrideVariable> OnCreate;
         public event Action<OverrideVariable> OnRemove;
@@ -24,6 +25,11 @@ namespace Z3.NodeGraph.Editor
         {
             style.flexDirection = FlexDirection.Row;
             style.justifyContent = Justify.SpaceAround;
+        }
+
+        public void Bind(OverrideVariableView item, int index)
+        {
+            // TODO: Improve it
         }
 
         public void SetElement(Func<Variable> getVariable, Func<OverrideVariable> getOverrideVariable)

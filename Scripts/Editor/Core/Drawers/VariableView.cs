@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 
 namespace Z3.NodeGraph.Editor
 {
-    public class VariableView : VisualElement
+    public class VariableView : VisualElement, IBindElement<Variable>
     {
         [UIElement] private TextField variableName;
         [UIElement] private VisualElement propertyContainer;
@@ -40,8 +40,12 @@ namespace Z3.NodeGraph.Editor
             style.justifyContent = Justify.SpaceBetween;
         }
 
-        public void SetElement(Variable variable)
+        public void Bind(Variable variable, int index)
         {
+            // TODO: Review it
+            if (variable == null) // Avoid change values when reorder
+                throw new NullReferenceException();
+
             Variable = variable;
             BuildElement();
         }
@@ -163,6 +167,7 @@ namespace Z3.NodeGraph.Editor
             {
                 DropdownMenu menu = new DropdownMenu();
                 menu.AppendAction(typeName, null, DropdownMenuAction.Status.Disabled);
+                menu.AppendSeparator();
 
                 menu.AppendAction("Duplicate", action =>
                 {

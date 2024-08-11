@@ -1,6 +1,6 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <editor:Toolbar>
-        <editor:ToolbarButton text="Validate All" name="validate-all-button" />
+        <editor:ToolbarButton text="Refresh All" name="refresh-all-button" />
         <editor:ToolbarButton text="Fix All" name="fix-all-button" />
         <editor:ToolbarSpacer style="flex-grow: 1;" />
         <editor:ToolbarButton text="Warnings" name="warning-button" />

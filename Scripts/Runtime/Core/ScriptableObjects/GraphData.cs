@@ -46,22 +46,22 @@ namespace Z3.NodeGraph.Core
 
 
         /// <summary> Called after right click </summary>
-        public virtual void AddSubAsset(GraphSubAsset newNode)
+        public virtual void AddSubAsset(GraphSubAsset subAsset)
         {
-            subAssets.Add(newNode);
+            subAssets.Add(subAsset);
 
-            if (startNode == null && newNode is Node node)
+            if (startNode == null && subAsset is Node node)
             {
                 startNode = node;
             }
         }
 
         /// <summary> Called after press delete </summary>
-        public virtual void RemoveSubAsset(GraphSubAsset node)
+        public virtual void RemoveSubAsset(GraphSubAsset subAsset)
         {
-            subAssets.Remove(node);
+            subAssets.Remove(subAsset);
 
-            if (startNode == node)
+            if (startNode == subAsset)
             {
                 startNode = subAssets.FirstOrDefault(x => x is Node) as Node;
             }
@@ -71,6 +71,8 @@ namespace Z3.NodeGraph.Core
         public virtual void SetStartNode(Node node) => startNode = node;
 
         public virtual Node GetAnyStartableNode() => SubAssets.FirstOrDefault(a => a is Node) as Node;
+
+        public virtual bool CanCopy(GraphSubAsset clipboard) => true;
 
         /// <summary> Called when connect a edge </summary>
         //public abstract void AddConnection(Node parent, Node child);

@@ -51,5 +51,15 @@ namespace Z3.NodeGraph.StateMachine
         {
             return subAssets.FirstOrDefault(asset => asset is TransitableStateNode smNode and IOutputNode outputNode && outputNode.Startable) as Node;
         }
+
+        public override bool CanCopy(GraphSubAsset clipboard)
+        {
+            if (clipboard is Transition)
+            {
+                return SubAssets.Contains(clipboard);
+            }
+
+            return true;
+        }
     }
 }

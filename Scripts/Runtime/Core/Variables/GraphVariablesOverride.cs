@@ -13,7 +13,7 @@ namespace Z3.NodeGraph.Core
     public sealed class GraphVariablesOverride : VariablesAsset
     {
         [SerializeField] private VariablesAsset baseVariablesAsset;
-        [Hide]
+        [Hide, HideInInspector]
         [SerializeField] private List<OverrideVariable> overrideVariables = new();
 
         public VariablesAsset BaseVariablesAsset => baseVariablesAsset;

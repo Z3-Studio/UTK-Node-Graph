@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 using Z3.NodeGraph.Core;
+using Z3.NodeGraph.Tasks;
 using Z3.Utils;
 using Z3.Utils.ExtensionMethods;
 using Object = UnityEngine.Object;
@@ -125,7 +124,6 @@ namespace Z3.NodeGraph.Editor
             return name;
         }
 
-
         public static string ReplaceGuid(string name, string newGuid)
         {
             // Find the index of the last '[' and ']'
@@ -153,6 +151,33 @@ namespace Z3.NodeGraph.Editor
                     parameter.SetBinding(newVariableGuid);
                 }
             }
+        }
+
+        public static void AddCopy<T>(GraphData graphData, IList<T> source, T clipboard) where T : GraphSubAsset
+        {
+            // It can be transitions and taks
+            if (clipboard is not Task)
+                throw new NotImplementedException();
+
+            UndoRecorder.AddUndo(graphData, "Copy Asset susing Context");
+
+            T cloneAsset = clipboard.CloneT();
+            string newAssetGuid = GUID.Generate().ToString();
+            string newName = ReplaceGuid(cloneAsset.name, newAssetGuid);
+
+            int parentLastIndex = newName.LastIndexOf('/');
+            string newParentName = newName.Substring(0, parentLastIndex + 1);
+
+
+            cloneAsset.SetGuid(newAssetGuid, newParentName);
+            source.Add(cloneAsset);   //cloneAsset.Parse(clones); // Transition must to use Parse method
+
+            graphData.AddSubAsset(cloneAsset);
+            AssetDatabase.AddObjectToAsset(cloneAsset, graphData);
+
+
+            UndoRecorder.AddCreation(cloneAsset, "Copy Assets using Context");
+            AssetDatabase.SaveAssetIfDirty(graphData);
         }
 
         // Replace values of: Parameters, List<SubAsset>, SubAsset, ISubAssetList (taskList, transitions)

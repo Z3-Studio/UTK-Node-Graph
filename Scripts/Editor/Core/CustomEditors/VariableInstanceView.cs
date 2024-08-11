@@ -4,10 +4,11 @@ using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Editor;
 using System.Reflection;
 using Z3.Utils.ExtensionMethods;
+using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.Editor
 {
-    public class VariableInstanceView : VisualElement
+    public class VariableInstanceView : VisualElement, IBindElement<VariableInstance>
     {
         public VariableInstanceView()
         {
@@ -15,9 +16,8 @@ namespace Z3.NodeGraph.Editor
             style.justifyContent = Justify.SpaceAround;
         }
 
-        public void BuildItem(VariableInstance variable)
+        public void Bind(VariableInstance variable, int index)
         {
-
             // Variable Name
             Label nameText = new Label();
             nameText.text = variable.Name;

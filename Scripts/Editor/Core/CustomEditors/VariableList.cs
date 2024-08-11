@@ -34,7 +34,6 @@ namespace Z3.NodeGraph.Editor
                 showReordable = true,
                 showFoldout = showFoldout,
                 onMakeItem = OnMake,
-                onBind = OnBind,
                 addEvent = () =>
                 {
                     List<(string, Type)> types = TypeResolver.CachedVariables;
@@ -65,17 +64,6 @@ namespace Z3.NodeGraph.Editor
 
             EditorUtility.SetDirty(target);
             AssetDatabase.SaveAssets();
-        }
-
-        private void OnBind(VisualElement visualElement, int i)
-        {
-            Variable variable = targetList[i];
-            VariableView variableView = visualElement as VariableView;
-
-            if (variableView.Variable != null) // Avoid change values when reorder
-                return;
-
-            variableView.SetElement(variable);
         }
 
         private VariableView OnMake()

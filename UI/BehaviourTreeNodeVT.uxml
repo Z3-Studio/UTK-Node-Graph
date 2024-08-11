@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <Style src="project://database/Assets/Modules/NodeGraph/UI/BehaviourTreeNodeStyle.uss?fileID=7433441132597879392&amp;guid=a10ef6f232da8184dac8e6743aaa6714&amp;type=3#BehaviourTreeNodeStyle" />
-    <Style src="project://database/Assets/Modules/NodeGraph/UI/BaseNodeStyle.uss?fileID=7433441132597879392&amp;guid=8ae7079840d280f4a9730679d64ad2ca&amp;type=3#BaseNodeStyle" />
+    <Style src="project://database/Packages/com.z3.node-graph/UI/BehaviourTreeNodeStyle.uss?fileID=7433441132597879392&amp;guid=a10ef6f232da8184dac8e6743aaa6714&amp;type=3#BehaviourTreeNodeStyle" />
+    <Style src="project://database/Packages/com.z3.node-graph/UI/BaseNodeStyle.uss?fileID=7433441132597879392&amp;guid=8ae7079840d280f4a9730679d64ad2ca&amp;type=3#BaseNodeStyle" />
     <ui:VisualElement name="node-state" />
-    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; width: 100%; max-width: 100%; min-width: 100%; right: 50%;">
+    <ui:VisualElement style="flex-direction: row;">
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; max-width: 100%; min-width: 100%;">
             <ui:VisualElement name="node-border">
                 <ui:VisualElement name="contents">

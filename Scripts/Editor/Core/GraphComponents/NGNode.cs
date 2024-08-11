@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,6 +21,14 @@ namespace Z3.NodeGraph.Editor
         {
             NodeView = nodeView;
             viewDataKey = nodeView.Node.Guid; // kind of metadata store and retrieve the node view information
+
+            RegisterCallback<GeometryChangedEvent>(e =>
+            {
+                // Centralize node
+                Translate translate = style.translate.value;
+                translate.x = e.newRect.size.x / -2f;
+                style.translate = translate;
+            });
         }
 
         public override void SetPosition(Rect newPos)

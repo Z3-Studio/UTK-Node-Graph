@@ -79,15 +79,15 @@
 }
 
 #selection-border {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    top: 0;
     border-left-color: rgb(0, 255, 255);
     border-right-color: rgb(0, 255, 255);
     border-top-color: rgb(0, 255, 255);
     border-bottom-color: rgb(0, 255, 255);
-    position: absolute;
-    left: -50%;
-    top: 0;
-    right: 50%;
-    bottom: 0;
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -144,9 +144,9 @@
 
 #node-state {
     position: absolute;
-    left: -50%;
     top: 0;
-    right: 50%;
+    right: 0;
+    left: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0);
     margin-left: -2.5px;

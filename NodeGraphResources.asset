@@ -20,6 +20,7 @@ MonoBehaviour:
   popupVT: {fileID: 9197481963319205126, guid: 30534a504cef4a54c9f1448c7ae209da, type: 3}
   nodeGraphVT: {fileID: 9197481963319205126, guid: 84b74240952552f4cbe44378f19e6fe2, type: 3}
   variableVT: {fileID: 9197481963319205126, guid: 7e4d91cdd12e6044dbeb3be4fdae7f0d, type: 3}
+  overrideVariableVT: {fileID: 9197481963319205126, guid: 8d784b7f05e6e244d919d849b1278e1b, type: 3}
   parameterVT: {fileID: 9197481963319205126, guid: a2e3439156d39504d91fe6576912507d, type: 3}
   btNodeVT: {fileID: 9197481963319205126, guid: 9e7e19cfdd2495940ab634e5d3b3e6a2, type: 3}
   smNodeVT: {fileID: 9197481963319205126, guid: 24c3f53d0d10e6e44bc8224ca9cb8539, type: 3}

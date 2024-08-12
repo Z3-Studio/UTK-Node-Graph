@@ -27,7 +27,7 @@ namespace Z3.NodeGraph.Editor
         private readonly IList<T> source;
 
         // Visual Elements
-        private readonly ListViewBuilder<T, ListElementView> customListView;
+        private readonly ListViewBuilder<T, LabelView> customListView;
         private readonly Label inspectorTitle;
         private InspectorElement inspector;
 
@@ -50,7 +50,7 @@ namespace Z3.NodeGraph.Editor
             if (listConfig.showAddBtn)
                 listConfig.addEvent = () => TypeSelectorPopup<T>.OpenWindow(OnAdd);
 
-            customListView = new ListViewBuilder<T, ListElementView>(taskList, listConfig);
+            customListView = new ListViewBuilder<T, LabelView>(taskList, listConfig);
             customListView.style.marginBottom = 8f;
             customListView.onBind += OnBind;
 
@@ -61,7 +61,7 @@ namespace Z3.NodeGraph.Editor
 
             // Create components and set style
 
-            inspectorTitle = TitleBuilder.GetTitle();
+            inspectorTitle = new TitleView();
             inspectorTitle.style.marginBottom = 8f;
 
             Add(inspectorTitle);
@@ -71,7 +71,7 @@ namespace Z3.NodeGraph.Editor
             OnChangeSelection(taskList.FirstOrDefault());
         }
 
-        private void OnBind(ListElementView view, T element, int i)
+        private void OnBind(LabelView view, T element, int i)
         {
             view.AddManipulator(new ContextualMenuManipulator(evt =>
             {

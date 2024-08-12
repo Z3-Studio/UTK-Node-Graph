@@ -1,16 +1,20 @@
 ﻿using System;
-using UnityEngine.UIElements;
-using Z3.NodeGraph.Core;
-using Z3.UIBuilder.Editor;
 using System.Reflection;
-using UnityEngine;
+using UnityEngine.UIElements;
+using Z3.UIBuilder.Editor;
 using Z3.Utils.ExtensionMethods;
+using Z3.UIBuilder.ExtensionMethods;
 using Z3.UIBuilder.Core;
+using Z3.NodeGraph.Core;
 
 namespace Z3.NodeGraph.Editor
 {
-    public class OverrideVariableView : VisualElement, IBindElement<OverrideVariableView>
+    public class OverrideVariableView : VisualElement, IBindElement<Variable>
     {
+        [UIElement] private Label variableName;
+        [UIElement] private VisualElement propertyContainer;
+        [UIElement] private Button actionsButton;
+
         public event Action<OverrideVariable> OnCreate;
         public event Action<OverrideVariable> OnRemove;
         public event Action OnUpdateValue;
@@ -27,7 +31,7 @@ namespace Z3.NodeGraph.Editor
             style.justifyContent = Justify.SpaceAround;
         }
 
-        public void Bind(OverrideVariableView item, int index)
+        public void Bind(Variable item, int index)
         {
             // TODO: Improve it
         }
@@ -42,71 +46,54 @@ namespace Z3.NodeGraph.Editor
 
         private void BuildElement()
         {
-            // Variable Name
-            Label nameText = new Label();
-            nameText.text = Variable.name;
+            NodeGraphResources.OverrideVariableVT.CloneTree(this);
+            this.BindUIElements();
 
-            // Build Row
-            nameText.style.SetAsExpanded();
-            Add(nameText);
+            variableName.text = Variable.name;
 
             Type type = Type.GetType(Variable.type);
             if (type == typeof(Title))
+            {
+                propertyContainer.style.SetDisplay(false);
+                actionsButton.style.SetDisplay(false);
                 return;
+            }
 
             // Menu
-            Button revertButton = new Button();
 
-            VisualElement valueField;
+            IBaseFieldReader baseField;
             if (OverrideVariable)
             {
                 FieldInfo field = OverrideVariable.GetType().GetField(nameof(OverrideVariable.value));
 
-                IBaseFieldReader baseField = EditorBuilder.GetElement(OverrideVariable, field, type);
-                valueField = baseField.VisualElement;
+                baseField = EditorBuilder.GetElement(OverrideVariable, field, type);
                 baseField.OnChangeValue += OnUpdateValue;
 
-                ButtonAsOverride(revertButton);
+                actionsButton.text = "-";
             }
             else
             {
                 FieldInfo field = Variable.GetType().GetField(nameof(Variable.value));
-                IBaseFieldReader baseField = EditorBuilder.GetElement(Variable, field, type);
-                valueField = baseField.VisualElement;
+                baseField = EditorBuilder.GetElement(Variable, field, type);
 
-                valueField.SetEnabled(false);
-                ButtonAsVariable(revertButton);
+                baseField.VisualElement.SetEnabled(false);
+                actionsButton.text = "+";
             }
 
-            // Remove Label of the value field
-            Label label = valueField.Q<Label>();
-            if (label != null && label.parent != null)
-            {
-                label.parent.Remove(label);
-            }
+            baseField.SetLabel(string.Empty);
 
             // Set Style
-            valueField.style.SetAsExpanded();
-            Add(valueField);
-
-            EditorStyle.SetSmallEditorButton(revertButton.style);
-            Add(revertButton);
+            propertyContainer.Add(baseField.VisualElement);
         }
 
-        private void ButtonAsOverride(Button revertButton)
+        [UIElement("actions-button")]
+        private void Switch()
         {
-            revertButton.style.backgroundImage = (Texture2D)EditorIcons.GetTexture(UIBuilder.IconType.Minus);
-            revertButton.clicked += () =>
+            if (OverrideVariable)
             {
                 OnRemove.Invoke(OverrideVariable);
-                Rebuild();
-            };
-        }
-
-        private void ButtonAsVariable(Button revertButton)
-        {
-            revertButton.style.backgroundImage = (Texture2D)EditorIcons.GetTexture(UIBuilder.IconType.Plus);
-            revertButton.clicked += () =>
+            }
+            else
             {
                 OverrideVariable newOverrideVariable = new OverrideVariable()
                 {
@@ -115,12 +102,9 @@ namespace Z3.NodeGraph.Editor
                 };
 
                 OnCreate(newOverrideVariable);
-                Rebuild();
-            };
-        }
+            }
 
-        private void Rebuild()
-        {
+            // Rebuild
             Clear();
             BuildElement();
         }

@@ -36,7 +36,7 @@ namespace Z3.NodeGraph.Editor
         {
             VisualElement element = new();
 
-            TitleBuilder.AddTitle(element, obj.GetTypeNiceString());
+            TitleView.AddTitle(element, obj.GetTypeNiceString());
 
             InspectorElement inspector = new InspectorElement(obj);
             inspector.style.SetPadding(0f);

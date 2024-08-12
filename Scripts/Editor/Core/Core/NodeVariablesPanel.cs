@@ -70,9 +70,9 @@ namespace Z3.NodeGraph.Editor
 
             // Add Visual Elements
             Add(propertyField);
-            TitleBuilder.AddTitle(this, string.Empty);
+            TitleView.AddTitle(this, string.Empty);
             Add(referenceVariablesSlot);
-            TitleBuilder.AddTitle(this, string.Empty);
+            TitleView.AddTitle(this, string.Empty);
             Add(localVariables);
         }
 
@@ -81,9 +81,9 @@ namespace Z3.NodeGraph.Editor
             VariableInstanceListView referenceVariableList = new VariableInstanceListView(graphController.ReferenceVariables);
             VariableInstanceListView localvariableList = new VariableInstanceListView(graphController.LocalVariables);
 
-            TitleBuilder.AddTitle(this, string.Empty);
+            TitleView.AddTitle(this, string.Empty);
             Add(referenceVariableList);
-            TitleBuilder.AddTitle(this, string.Empty);
+            TitleView.AddTitle(this, string.Empty);
             Add(localvariableList);
         }
 

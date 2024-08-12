@@ -36,19 +36,11 @@ namespace Z3.NodeGraph.Editor
             {
                 EditorApplication.delayCall -= DelayCall;
 
-                GameObject prefabRoot = AssetDatabase.LoadMainAssetAtPath(assetPath) as GameObject;
-
                 GraphData graphData = AssetDatabase.LoadAssetAtPath<GraphData>(assetPath);
-                string fullPath = Path.GetFullPath(assetPath);
-
                 if (!graphData)
-                {
-                    Debug.LogError($"Fail loading asset at path {assetPath}");
                     return;
-                }
 
                 UpdateNewAsset(graphData);
-
                 Validator.Add(graphData);
             }
 

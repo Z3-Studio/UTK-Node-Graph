@@ -188,7 +188,7 @@ namespace Z3.NodeGraph.Editor
 
             if (data.ReferenceVariables != null)
             {
-                variables.AddRange(CreatePath("Reference Variables", data.ReferenceVariables.GetOriginalVariables()));
+                variables.AddRange(CreatePath("Reference Variables", data.ReferenceVariables.GetAllVariables()));
             }
 
             SelectorPopup<Variable>.OpenWindow("Select Variable", variables, OnBind, false);
@@ -209,7 +209,7 @@ namespace Z3.NodeGraph.Editor
                 }
                 else if (name == NewReferenceVariable && data.ReferenceVariables != null)
                 {
-                    variable = Variable.CreateVariable(GenericType, data.ReferenceVariables.GetOriginalVariables(), displayName.Replace(" ", string.Empty));
+                    variable = Variable.CreateVariable(GenericType, data.ReferenceVariables.GetAllVariables(), displayName.Replace(" ", string.Empty));
                     NodeGraphWindow.ForceRedrawVariables(data);
                 }
                 else

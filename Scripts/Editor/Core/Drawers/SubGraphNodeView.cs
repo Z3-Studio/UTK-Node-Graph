@@ -10,8 +10,8 @@ namespace Z3.NodeGraph.Editor
 
         private VisualElement bindingContainer;
 
-        private VariablesAsset graphVariableCache;
-        private VariablesAsset subGraphVariableCache;
+        private GraphVariables graphVariableCache;
+        private GraphVariables subGraphVariableCache;
 
         public NodeGraphReferences References { get; }
 
@@ -50,8 +50,8 @@ namespace Z3.NodeGraph.Editor
             if (bindingContainer == null)
                 return;
 
-            VariablesAsset graphVariable = References.Data.ReferenceVariables;
-            VariablesAsset subGraphVariable = Node.SubGraph != null ? Node.SubGraph.ReferenceVariables : null;
+            GraphVariables graphVariable = References.Data.ReferenceVariables;
+            GraphVariables subGraphVariable = Node.SubGraph != null ? Node.SubGraph.ReferenceVariables : null;
 
             // Check if the cache is updated, if is not, redraw
             if (graphVariable == graphVariableCache && subGraphVariable == subGraphVariableCache)
@@ -94,7 +94,7 @@ namespace Z3.NodeGraph.Editor
                 return;
             }
 
-            foreach (Variable variable in subGraphVariableCache.GetOriginalVariables())
+            foreach (Variable variable in subGraphVariableCache.GetAllVariables())
             {
                 bindingContainer.Add(new Label($"TODO: {variable.Name}"));
             }

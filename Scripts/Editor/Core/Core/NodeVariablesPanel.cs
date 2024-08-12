@@ -94,7 +94,7 @@ namespace Z3.NodeGraph.Editor
             if (graphData.ReferenceVariables != null)
             {
                 string tooltip = "Global variables can be used in multiple graphs, but their main function is to collect the name and GUID to enable binding in Parameter<T>";
-                VariableList referenceVariables = new VariableList("Reference Variables".ToBold(), graphData.ReferenceVariables, graphData.ReferenceVariables.GetOriginalVariables(), true, tooltip);
+                VariableList referenceVariables = new VariableList("Reference Variables".ToBold(), graphData.ReferenceVariables, graphData.ReferenceVariables.GetAllVariables(), true, tooltip);
                 referenceVariables.OnDelete += OnDeleteVariable;
                 root.Add(referenceVariables);
             }

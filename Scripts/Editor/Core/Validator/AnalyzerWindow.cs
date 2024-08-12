@@ -172,7 +172,7 @@ namespace Z3.NodeGraph.Editor
             assetsCount.text = GraphData.SubAssets.Count.ToString();
             startNode.text = GraphData.StartNode.ToString();
             startNode.tooltip = GraphData.StartNode.name.ToString();
-            referenceVariablesCount.text = GraphData.ReferenceVariables ? GraphData.ReferenceVariables.GetVariables().Count.ToString() : "Null".ToItalic();
+            referenceVariablesCount.text = GraphData.ReferenceVariables ? GraphData.ReferenceVariables.GetAllVariables().Count.ToString() : "Null".ToItalic();
             localVariablesCount.text = GraphData.LocalVariables.Count.ToString();
 
             // Issues overview

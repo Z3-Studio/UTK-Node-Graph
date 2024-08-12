@@ -20,7 +20,7 @@ namespace Z3.NodeGraph.Core
         public const string ReferenceVariablesField = nameof(referenceVariables);
         public Node StartNode => startNode;
         public List<GraphSubAsset> SubAssets => subAssets;
-        public VariablesAsset ReferenceVariables => referenceVariables;
+        public GraphVariables ReferenceVariables => referenceVariables;
         public List<Variable> LocalVariables => localVariables;
 
         public event Action OnValidateRequested;
@@ -33,7 +33,7 @@ namespace Z3.NodeGraph.Core
 
             if (ReferenceVariables != null)
             {
-                list.AddRange(ReferenceVariables.GetOriginalVariables());
+                list.AddRange(ReferenceVariables.GetAllVariables());
             }
 
             list.AddRange(LocalVariables);

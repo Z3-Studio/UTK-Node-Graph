@@ -122,7 +122,7 @@ namespace Z3.NodeGraph.Editor
                 );
 
                 // Save changes
-                baseField.OnChangeValue += () =>
+                baseField.OnValueChangedAfterBlur += () =>
                 {
                     if (Variable.value == baseField.Value)
                         return;

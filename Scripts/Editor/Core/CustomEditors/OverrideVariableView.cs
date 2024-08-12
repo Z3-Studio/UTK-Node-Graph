@@ -67,7 +67,7 @@ namespace Z3.NodeGraph.Editor
                 FieldInfo field = OverrideVariable.GetType().GetField(nameof(OverrideVariable.value));
 
                 baseField = EditorBuilder.GetElement(OverrideVariable, field, type);
-                baseField.OnChangeValue += OnUpdateValue;
+                baseField.OnValueChangedAfterBlur += OnUpdateValue;
 
                 actionsButton.text = "-";
             }

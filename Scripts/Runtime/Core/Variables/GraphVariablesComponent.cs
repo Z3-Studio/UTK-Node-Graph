@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.Core
     [AddComponentMenu(GraphPath.ComponentMenu + "Graph Variables Component")]
     public class GraphVariablesComponent : MonoBehaviour
     {
-        [SerializeField] private VariablesAsset baseVariablesAsset;
+        [SerializeField] private GraphVariables baseVariablesAsset;
         [ReadOnly, HideInInspector]
         [SerializeField] private List<OverrideVariable> overrideVariables = new();
 
@@ -31,7 +31,7 @@ namespace Z3.NodeGraph.Core
                 return;
             }
 
-            OverrideVariable.Validate(baseVariablesAsset.GetOriginalVariables(), overrideVariables);
+            OverrideVariable.Validate(baseVariablesAsset.GetAllVariables(), overrideVariables);
         }
 
         public List<OverrideVariable> GetOverrideVariables()
@@ -45,7 +45,7 @@ namespace Z3.NodeGraph.Core
             if (baseVariablesAsset == null)
                 return new();
 
-            return baseVariablesAsset.GetVariables();
+            return baseVariablesAsset.CloneAllVariables();
         }
 
         public bool HasAsset() => baseVariablesAsset != null;

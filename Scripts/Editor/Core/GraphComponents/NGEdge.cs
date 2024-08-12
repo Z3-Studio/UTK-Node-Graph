@@ -13,16 +13,7 @@ namespace Z3.NodeGraph.Editor
         public NodeGraphReferences References { get; private set; }
         public GraphElement Self => this;
 
-        public NGEdge() : base() 
-        {
-            this.AddManipulator(new ContextualMenuManipulator(evt =>
-            {
-                evt.menu.AppendAction($"Disconnect", action =>
-                {
-                    References.Module.DeleteElements(this);
-                });
-            }));
-        }
+        public NGEdge() : base() { }
 
         public void InjectDependencies(NodeGraphReferences references)
         {

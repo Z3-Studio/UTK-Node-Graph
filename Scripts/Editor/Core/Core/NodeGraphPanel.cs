@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
@@ -6,19 +8,27 @@ using UnityEditor.Experimental.GraphView;
 using Z3.UIBuilder.Editor;
 using Z3.NodeGraph.Core;
 using Z3.Utils.ExtensionMethods;
-using Node = UnityEditor.Experimental.GraphView.Node;
-using Object = UnityEngine.Object;
+using Node = Z3.NodeGraph.Core.Node;
 
 namespace Z3.NodeGraph.Editor
 {
-    public class NgClipboard
+    public class GraphClipboard
     {
-        public GraphData GraphData { get; set; }
-        public List<Core.Node> Nodes { get; set; }
-        public Vector2 PastePosition { get; set; }
+        public GraphData GraphData { get; }
+        public List<GraphSubAsset> Copies { get; } = new List<GraphSubAsset>();
+        public Vector2 MousePosition { get; set; }
+
+        public GraphClipboard(GraphData graphData, List<GraphSubAsset> guidList)
+        {
+            GraphData = graphData;
+            Copies = guidList;
+        }
     }
 
-    public class NodeGraphPanel : GraphPanel
+    /// <summary>
+    /// Simplifies GraphView to create more efficient callbacks to simplify implementation of the new NodeGraphModule
+    /// </summary>
+    public sealed class NodeGraphPanel : GraphPanel, IDisposable
     {
         public new class UxmlFactory : UxmlFactory<NodeGraphPanel, UxmlTraits> { }
 
@@ -27,15 +37,28 @@ namespace Z3.NodeGraph.Editor
 
         private NodeGraphReferences references;
 
-        // TEMP
-        public Vector2 CopyLocalMousePosition { get; private set; }
-        public Vector2 PasteLocalMousePosition { get; private set; }
+        private static GraphClipboard clipboard;
+
+        // Block Commands
+        protected override bool canCutSelection => false;
+        protected override bool canDuplicateSelection => false;
 
         internal void Init(NodeGraphReferences nodeGraphReferences)
         {
             references = nodeGraphReferences;
             references.OnChangeGraph += BuildView;
             viewTransformChanged += OnViewChange;
+
+            serializeGraphElements += CutCopyOperation;
+            canPasteSerializedData += CanPaste;
+            unserializeAndPaste += OnPaste;
+        }
+
+        public void Dispose()
+        {
+            serializeGraphElements -= CutCopyOperation;
+            canPasteSerializedData -= CanPaste;
+            unserializeAndPaste -= OnPaste;
         }
 
         internal void ForceRedraw()
@@ -92,59 +115,145 @@ namespace Z3.NodeGraph.Editor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            // TODO REFACTORY
-            Vector2 lastMousePosition = evt.localMousePosition;
-
-            if (evt.target is GraphView || evt.target is Node || evt.target is Group)
+            // Edge
+            if (evt.target is NGEdge edge)
             {
-                evt.menu.AppendAction("Copy", delegate
+                evt.menu.AppendAction($"Disconnect", action =>
                 {
-                    CopyLocalMousePosition = GetMousePosition(lastMousePosition);
-                    CopySelectionCallback();
-                }, (DropdownMenuAction a) => canCopySelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+                    DeleteElements(edge);
+                    AssetDatabase.SaveAssetIfDirty(CurrentGraph);
+                });
+                return;
             }
 
-            if (evt.target is GraphView)
+            // Copy, Paste, Delete
+            evt.menu.AppendAction("Copy", delegate
             {
-                evt.menu.AppendAction("Paste", delegate
-                {
-                    PasteLocalMousePosition = GetMousePosition(lastMousePosition);
-                    PasteCallback();
-                }, (DropdownMenuAction a) => canPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-            }
+                CopySelectionCallback();
+            }, (DropdownMenuAction a) => canCopySelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
 
-            // https://www.youtube.com/watch?v=F4cTWOxMjMY&t=158s
-            //SearchWindowContext ctx = new();
+            evt.menu.AppendAction("Paste", delegate
+            {
+                PasteCallback();
+            }, (DropdownMenuAction a) => canPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
 
-            //VisualElement windowRoot = references.Window.rootVisualElement;
-            //Vector2 worldMousePosition = windowRoot.ChangeCoordinatesTo(windowRoot.parent, ctx.screenMousePosition - references.Window.position.position);
-            //Vector2 localMousePosition = contentViewContainer.WorldToLocal(worldMousePosition);
-            //UnityEngine.Debug.Log(localMousePosition);
+            evt.menu.AppendAction("Delete", delegate
+            {
+                DeleteSelectionCallback(AskUser.AskUser);
+            }, (DropdownMenuAction a) => canDeleteSelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
 
-            // Review it: Missing actions like "Disconnect All"
+            evt.menu.AppendSeparator();
 
             if (evt.target is NGNode node)
             {
-                base.BuildContextualMenu(evt); // Cut, Copy, Paste, Delete, Duplicate
+                // Selecting node
                 Module.BuildNodeMenu(evt, node.NodeView);
             }
             else if (evt.target is NodeGraphPanel graphView) // this
             {
+                // Selection Graph
                 Module.BuildGraphMenu(evt);
             }
         }
-    }
 
-    public static class UndoRecorder // TODO: Improve and clean
-    {
-        public static void AddUndo(Object context, string action) // Make patterns
+        public void DeleteElements(params GraphElement[] element) => DeleteElements(element);
+
+        #region Commands
+        private string CutCopyOperation(IEnumerable<GraphElement> elements)
         {
-            Undo.RecordObject(context, $"NodeGraph: {action} {context.GetType().Name}");
+            // 1.Find all nodes to be copied
+            List<Node> nodesToCopy = elements.Select(itemToCopy => GetNodeByGuid(itemToCopy.viewDataKey))
+                .OfType<NGNode>()
+                .Select(node => node.NodeView.Node)
+                .ToList();
+
+            // 2.Find all node dependencies and create copies
+            List<GraphSubAsset> allDependencies = NodeGraphEditorUtils.CollectAllDependencies(nodesToCopy);
+                //.Where(a => a is not Node node || nodesToCopy.Contains(node))
+                //.ToList();
+
+            // 3. Remove invalid dependencies. Example Transitions without connection
+            List<string> itemsToCopy = allDependencies.Select(a => a.Guid).ToList();
+
+            foreach (GraphSubAsset subAsset in allDependencies)
+            {
+                subAsset.ValidatePaste(itemsToCopy);
+            }
+
+            // 4. Create copies to be saved in clipboard
+            List<GraphSubAsset> copies = allDependencies.Where(a => itemsToCopy.Contains(a.Guid))
+                .Select(a => a.CloneT())
+                .ToList();
+
+            clipboard = new GraphClipboard(CurrentGraph, copies);
+            return string.Empty;
         }
 
-        public static void AddCreation(Object context, string action) // Make patterns
+        private bool CanPaste(string data)
         {
-            Undo.RegisterCreatedObjectUndo(context, $"NodeGraph: {action} {context.GetType().Name}");
+            // Check if GraphData are compatible
+            if (!Application.isPlaying && clipboard?.GraphData && CurrentGraph.GetType().IsAssignableFrom(clipboard.GraphData.GetType()))
+            {
+                // Node: Is not possible to capture mouse position in OnPaste as mousePosition will be in MenuContext
+                Vector2 mouseViewport = this.WorldToLocal(Event.current.mousePosition);
+                clipboard.MousePosition = GetMousePosition(mouseViewport);
+                return true;
+            }
+
+            return false;
         }
+
+        private void OnPaste(string operationName, string data)
+        {
+            UndoRecorder.AddUndo(CurrentGraph, "Copy Nodes and Dependencies");
+
+            // 1.Create new guids
+            Dictionary<string, string> guidAssets = new();
+            Dictionary<string, GraphSubAsset> clones = new();
+
+            foreach (GraphSubAsset originalAsset in clipboard.Copies)
+            {
+                // Note: Although the clipboard is already cloned, it is necessary to clone again to avoid having repeated items in case of multiple pastes.
+                guidAssets[originalAsset.Guid] = GUID.Generate().ToString();
+                clones[originalAsset.Guid] = originalAsset.CloneT();
+            }
+
+            // 2. Calculate node offsets
+            Vector2 center = clipboard.Copies.OfType<Node>()
+                .Select(n => n.Position)
+                .CalculateCentroid();
+
+            Vector2 offset = clipboard.MousePosition - center;
+
+            // 3. Create new assets using the new guids, and setup depedencies
+            // Key: Original (Copy), Vlue = Clone (Paste)
+            foreach (GraphSubAsset cloneAsset in clones.Values)
+            {
+                // Update position
+                if (cloneAsset is Node cloneNode)
+                {
+                    cloneNode.Position += offset;
+                }
+
+                // Setup name and guid
+                string newAssetGuid = guidAssets[cloneAsset.Guid];
+                string newName = NodeGraphEditorUtils.ReplaceGuids(cloneAsset.name, guidAssets);
+
+                int parentLastIndex = newName.LastIndexOf('/');
+                string newParentName = newName.Substring(0, parentLastIndex + 1);
+
+                cloneAsset.SetGuid(newAssetGuid, newParentName);
+                cloneAsset.Paste(clones);
+
+                CurrentGraph.AddSubAsset(cloneAsset);
+                AssetDatabase.AddObjectToAsset(cloneAsset, CurrentGraph);
+
+                UndoRecorder.AddCreation(cloneAsset, "Copy Nodes and Dependencies");
+            }
+
+            AssetDatabase.SaveAssets();
+            references.Refresh();
+        }
+        #endregion
     }
 }

@@ -11,6 +11,19 @@ using Object = UnityEngine.Object;
 
 namespace Z3.NodeGraph.Editor
 {
+    public static class UndoRecorder // TODO: Improve and clean
+    {
+        public static void AddUndo(Object context, string action) // Make patterns
+        {
+            Undo.RecordObject(context, $"NodeGraph: {action} {context.GetType().Name}");
+        }
+
+        public static void AddCreation(Object context, string action) // Make patterns
+        {
+            Undo.RegisterCreatedObjectUndo(context, $"NodeGraph: {action} {context.GetType().Name}");
+        }
+    }
+
     public static class NodeGraphEditorUtils
     {
         public static T GetTarget<T>(SerializedProperty property) where T : Object // TODO: Extension method
@@ -74,7 +87,7 @@ namespace Z3.NodeGraph.Editor
             }
         }
 
-        public static List<GraphSubAsset> CollectAllDependencies(List<GraphSubAsset> assets)
+        public static List<GraphSubAsset> CollectAllDependencies<T>(List<T> assets) where T : GraphSubAsset
         {
             List<GraphSubAsset> list = new List<GraphSubAsset>();
 
@@ -95,33 +108,51 @@ namespace Z3.NodeGraph.Editor
 
             list.AddRange(dependencies);
 
+            // TODO: SM Transition has STRONGA depedency of your connection, different than BTs
+            // Maybe get all IList<GraphAsset> and GraphAsset fields
+            // Use IsAssignableFrom is essencial for both operations
+
             foreach (GraphSubAsset dependency in dependencies)
             {
                 AddDependenciesRecursivily(list, dependency);
             }
         }
-
+        /// <summary>
+        /// Replaces GUIDs in the input string using the values from the dictionary 
+        /// <para> Throws an exception if an unmatched GUID is found after the first replacement. </para>
+        /// </summary>
+        /// <param name="dictionary"> Key: Old guid, Value: New guid </param>
         public static string ReplaceGuids(string name, Dictionary<string, string> dictionary)
         {
+            string newName = name;
             int iterations = name.Count(c => c == '/') + 1;
             int startIndex = 0;
+            bool foundFirstMatch = false;
 
             for (int i = 0; i < iterations; i++)
             {
                 int startGuid = name.IndexOf('[', startIndex);
-
-                if (startGuid == -1)
-                    break;
-
                 int endGuid = name.IndexOf(']', startGuid);
                 string oldGuid = name.Substring(startGuid + 1, endGuid - startGuid - 1);
-                string newGuid = dictionary.GetValueOrDefault(oldGuid, oldGuid);
 
-                name = name.Substring(0, startGuid + 1) + newGuid + name.Substring(endGuid);
+                // Replace GUID if a match is found, otherwise keep original GUID
+                if (!dictionary.TryGetValue(oldGuid, out string newGuid))
+                {
+                    if (foundFirstMatch)
+                        throw new InvalidOperationException("Unmatched GUID found after a replacement.");
+
+                    newGuid = oldGuid;
+                }
+                else
+                {
+                    foundFirstMatch = true;
+                }
+
+                newName = newName.Substring(0, startGuid + 1) + newGuid + newName.Substring(endGuid);
                 startIndex = endGuid + 1;
             }
 
-            return name;
+            return newName;
         }
 
         public static string ReplaceGuid(string name, string newGuid)
@@ -252,12 +283,12 @@ namespace Z3.NodeGraph.Editor
         [Test]
         public void TestGuidReplacement_ValidInputs()
         {
-            // Definir entradas
+            // Define inputs
             string inputA = "SubGraphDataSM [c93fe2a49903e8c4b8120cda50b28492]/Transition [9bc565fc110f80d44a0d1c5c35662ec1]/CharacterControllerIsGrounded [0cbf3add8f88bda40958026bf0296c5b]";
-            string inputB = "SubGraphDataSM [c93fe2a49903e8c4b8120cda50b28492]/Transition [9bc565fc110f80d44a0d1c5c35662ec1]/CheckBool [1f1a79d96d749644180555d1685b3152]";
+            string inputB = "SubGraphDataSM [812e162e10f15f448b83970ab7e84c3b]/Transition [9bc565fc110f80d44a0d1c5c35662ec1]/CheckBool [1f1a79d96d749644180555d1685b3152]";
             string inputC = "SubGraphDataSM [812e162e10f15f448b83970ab7e84c3b]/Transition [bb4e8679e00187449b4cba2ba716448a]";
-
-            // Criar o dicionário com GUIDs antigos e novos GUIDs gerados
+        
+            // Create dictionary with old and new GUIDs
             Dictionary<string, string> dictionary = new Dictionary<string, string>
             {
                 { "c93fe2a49903e8c4b8120cda50b28492", "AAAA0000AAAA0000AAAA0000AAAA0000" },
@@ -265,18 +296,23 @@ namespace Z3.NodeGraph.Editor
                 { "0cbf3add8f88bda40958026bf0296c5b", "CCCC2222CCCC2222CCCC2222CCCC2222" },
                 { "1f1a79d96d749644180555d1685b3152", "DDDD3333DDDD3333DDDD3333DDDD3333" },
                 { "812e162e10f15f448b83970ab7e84c3b", "EEEE4444EEEE4444EEEE4444EEEE4444" },
-                { "bb4e8679e00187449b4cba2ba716448a", "FFFF5555FFFF5555FFFF5555FFFF5555" }
+                //{ "bb4e8679e00187449b4cba2ba716448a", "FFFF5555FFFF5555FFFF5555FFFF5555" }
             };
-
-            // Processar e gerar os outputs
+        
+            // Process and generate outputs
             string outputA = GetGuid(inputA, dictionary);
-            string outputB = GetGuid(inputB, dictionary);
-            string outputC = GetGuid(inputC, dictionary);
-
-            // Exibir os outputs
             Assert.AreEqual(outputA, "SubGraphDataSM [AAAA0000AAAA0000AAAA0000AAAA0000]/Transition [BBBB1111BBBB1111BBBB1111BBBB1111]/CharacterControllerIsGrounded [CCCC2222CCCC2222CCCC2222CCCC2222]");
-            Assert.AreEqual(outputB, "SubGraphDataSM [AAAA0000AAAA0000AAAA0000AAAA0000]/Transition [BBBB1111BBBB1111BBBB1111BBBB1111]/CheckBool [DDDD3333DDDD3333DDDD3333DDDD3333]");
-            Assert.AreEqual(outputC, "SubGraphDataSM [EEEE4444EEEE4444EEEE4444EEEE4444]/Transition [FFFF5555FFFF5555FFFF5555FFFF5555]");
+            
+            string outputB = GetGuid(inputB, dictionary);
+            Assert.AreEqual(outputB, "SubGraphDataSM [bb4e8679e00187449b4cba2ba716448a]/Transition [BBBB1111BBBB1111BBBB1111BBBB1111]/CheckBool [DDDD3333DDDD3333DDDD3333DDDD3333]");
+
+            string outputC = GetGuid(inputC, dictionary);
+            Assert.AreEqual(outputC, "SubGraphDataSM [EEEE4444EEEE4444EEEE4444EEEE4444]/Transition [bb4e8679e00187449b4cba2ba716448a]"); // ERROR
+
+            // Output without error
+            //Output A: SubGraphDataSM [AAAA0000AAAA0000AAAA0000AAAA0000]/Transition [BBBB1111BBBB1111BBBB1111BBBB1111]/CharacterControllerIsGrounded [CCCC2222CCCC2222CCCC2222CCCC2222]
+            //Output B: SubGraphDataSM [bb4e8679e00187449b4cba2ba716448a]/Transition [BBBB1111BBBB1111BBBB1111BBBB1111]/CheckBool [DDDD3333DDDD3333DDDD3333DDDD3333]
+            //Output C: SubGraphDataSM [EEEE4444EEEE4444EEEE4444EEEE4444]/Transition [bb4e8679e00187449b4cba2ba716448a]
         }
         */
     }

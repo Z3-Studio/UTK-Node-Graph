@@ -5,14 +5,15 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using Z3.Utils;
-using Z3.Utils.ExtensionMethods;
 using Z3.NodeGraph.Core;
 using Node = Z3.NodeGraph.Core.Node;
 using Status = UnityEngine.UIElements.DropdownMenuAction.Status;
 
 namespace Z3.NodeGraph.Editor
 {
+    /// <summary>
+    /// Abstraction for creating new GraphData editors
+    /// </summary>
     public abstract class NodeGraphModule
     {
         protected GraphData CurrentGraph => References.Data;
@@ -28,28 +29,13 @@ namespace Z3.NodeGraph.Editor
         {
             References = references;
             Controller.graphViewChanged += OnGraphViewChanged;
-
-            Controller.serializeGraphElements += CutCopyOperation;
-            Controller.canPasteSerializedData += AllowPaste;
-            Controller.unserializeAndPaste += OnPaste;
         }
 
         public abstract void OnInitialize();
 
-        public void DeleteElements(params GraphElement[] element)
-        {
-            UndoRecorder.AddUndo(CurrentGraph, "Delete item");
-            Controller.DeleteElements(element);
-            AssetDatabase.SaveAssetIfDirty(CurrentGraph);
-        }
-
         public void Dispose()
         {
             Controller.graphViewChanged -= OnGraphViewChanged;
-
-            Controller.serializeGraphElements -= CutCopyOperation;
-            Controller.canPasteSerializedData -= AllowPaste;
-            Controller.unserializeAndPaste -= OnPaste;
 
             Controller.DeleteElements(Controller.graphElements);
         }
@@ -58,6 +44,7 @@ namespace Z3.NodeGraph.Editor
         {
             if (graphViewChange.elementsToRemove != null)
             {
+                UndoRecorder.AddUndo(CurrentGraph, "Delete item");
                 OnElementsToRemove(graphViewChange.elementsToRemove);
             }
 
@@ -72,6 +59,8 @@ namespace Z3.NodeGraph.Editor
             {
                 OnMovedElements(graphViewChange.movedElements);
             }
+
+            // Set dirty?
 
             return graphViewChange;
         }
@@ -193,79 +182,6 @@ namespace Z3.NodeGraph.Editor
         {
             Controller.AddElement(graphElement);
         }
-
-        #region Copy, Cut, Paste
-        private bool AllowPaste(string data) => !Application.isPlaying;
-
-        private string CutCopyOperation(IEnumerable<GraphElement> elements)
-        {
-            List<string> guid = new();
-            foreach (GraphElement itemToCopy in elements)
-            {
-                guid.Add(itemToCopy.viewDataKey);
-            }
-
-            return Serializer.ToJson(guid);
-        }
-
-        private void OnPaste(string operationName, string data)
-        {
-            UndoRecorder.AddUndo(CurrentGraph, "Copy Assets");
-
-            // 1.Find all nodes to be copied
-            List<string> objects = Serializer.FromJson<List<string>>(data);
-
-            List<GraphSubAsset> nodesToCopy = objects.Select(guid => Controller.GetNodeByGuid(guid))
-                .OfType<NGNode>()
-                .Select(node => (GraphSubAsset)node.NodeView.Node)
-                .ToList();
-
-            // 2.Find all node dependencies
-            List<GraphSubAsset> assetsToCopy = NodeGraphEditorUtils.CollectAllDependencies(nodesToCopy);
-
-            // 3.Create new guid for depedencies
-            Dictionary<string, string> guidAssets = new();
-            Dictionary<string, GraphSubAsset> clones = new();
-
-            foreach (GraphSubAsset originalAsset in assetsToCopy)
-            {
-                guidAssets[originalAsset.Guid] = GUID.Generate().ToString();
-                clones[originalAsset.Guid] = originalAsset.CloneT(); // Object.Instantiate(node);
-            }
-
-            // 4. Create new assets using the new guids, and setup depedencies
-            // Offset = Paste Position - Copy Position
-            Vector2 offset = Controller.PasteLocalMousePosition - Controller.CopyLocalMousePosition;
-
-            // Key: Original (Copy), Value = Clone (Paste)
-            foreach (GraphSubAsset cloneAsset in clones.Values)
-            {
-                // Update position
-                if (cloneAsset is Node cloneNode)
-                {
-                    cloneNode.Position += offset;
-                }
-
-                // Setup name and guid
-                string newAssetGuid = guidAssets[cloneAsset.Guid];
-                string newName = NodeGraphEditorUtils.ReplaceGuids(cloneAsset.name, guidAssets);
-
-                int parentLastIndex = newName.LastIndexOf('/');
-                string newParentName = newName.Substring(0, parentLastIndex + 1);
-
-                cloneAsset.SetGuid(newAssetGuid, newParentName);
-                cloneAsset.Parse(clones);
-
-                CurrentGraph.AddSubAsset(cloneAsset);
-                AssetDatabase.AddObjectToAsset(cloneAsset, CurrentGraph);
-
-                UndoRecorder.AddCreation(cloneAsset, "Copy Assets");
-            }
-
-            AssetDatabase.SaveAssets();
-            References.Refresh();
-        }
-        #endregion
     }
 
     public abstract class NodeGraphModule<TGraphData> : NodeGraphModule where TGraphData : GraphData

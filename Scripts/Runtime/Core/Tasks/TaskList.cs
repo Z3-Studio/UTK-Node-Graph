@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.Tasks
         bool ICollection.IsSynchronized => ((ICollection)taskList).IsSynchronized;
         object ICollection.SyncRoot => ((ICollection)taskList).SyncRoot;
         bool IList.IsReadOnly => ((IList)taskList).IsReadOnly;
-        int ICollection.Count => taskList.Count;
+        public int Count => taskList.Count; // IColleciton
         object IList.this[int index]
         {
             get => ((IList)taskList)[index];

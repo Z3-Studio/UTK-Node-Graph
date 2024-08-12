@@ -48,9 +48,9 @@ namespace Z3.NodeGraph.BehaviourTree
             conditions.ReplaceDependencies(subAssets);
         }
 
-        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        public override void Paste(Dictionary<string, GraphSubAsset> copies)
         {
-            base.Parse(copies);
+            base.Paste(copies);
             conditions.Parse(copies);
         }
     }

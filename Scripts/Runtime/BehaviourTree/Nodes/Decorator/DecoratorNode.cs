@@ -23,7 +23,7 @@ namespace Z3.NodeGraph.BehaviourTree
             child = subAssets[child.Guid] as BehaviourTreeNode;
         }
 
-        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        public override void Paste(Dictionary<string, GraphSubAsset> copies)
         {
             if (child == null)
                 return;

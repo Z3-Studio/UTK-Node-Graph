@@ -33,7 +33,7 @@ namespace Z3.NodeGraph.Editor
 
         private static T clipboard;
 
-        public GraphSubAssetListView(GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig) : this(NodeGraphUtils.GetGraphData(owner), owner, taskList, listConfig)
+        public GraphSubAssetListView(GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig) : this(NodeGraphEditorUtils.GetGraphData(owner), owner, taskList, listConfig)
         {
 
         }
@@ -193,7 +193,7 @@ namespace Z3.NodeGraph.Editor
 
         protected virtual void OnDeleteActionTask(T task)
         {
-            NodeGraphUtils.DeleteAsset(graphData, task);
+            NodeGraphEditorUtils.DeleteAsset(graphData, task);
             onDelete?.Invoke(task);
         }
     }

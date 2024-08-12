@@ -23,7 +23,7 @@ namespace Z3.NodeGraph.BehaviourTree
             children.ReplaceDependencies(subAssets);
         }
 
-        public sealed override void Parse(Dictionary<string, GraphSubAsset> copies)
+        public sealed override void Paste(Dictionary<string, GraphSubAsset> copies)
         {
             children.Parse(copies);
         }

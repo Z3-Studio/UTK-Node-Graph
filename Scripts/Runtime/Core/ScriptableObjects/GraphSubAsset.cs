@@ -57,7 +57,12 @@ namespace Z3.NodeGraph.Core
         /// <param name="subAssets"> Key: GraphSubAsset.Guid, Value: Clone </param>
         protected virtual void SetupDependencies(Dictionary<string, GraphSubAsset> subAssets) { }
 
-        public virtual void Parse(Dictionary<string, GraphSubAsset> copies) { }
+        /// <summary>
+        /// Validates the list of items to be copied. Removes the Guid of the SubAssets and its dependencies if they are invalid or not present in the list.
+        /// </summary>
+        public virtual void ValidatePaste(List<string> itemsToCopy) { }
+
+        public virtual void Paste(Dictionary<string, GraphSubAsset> copies) { }
 
         public sealed override string ToString() => !string.IsNullOrEmpty(title) ? title : Info;
     }

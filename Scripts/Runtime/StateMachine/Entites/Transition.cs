@@ -13,9 +13,6 @@ namespace Z3.NodeGraph.StateMachine
         [SerializeField] private ConditionTaskList conditions = new();
 
         public TransitableStateNode Connection => connection;
-
-        public List<ConditionTask> Conditions => conditions;
-
         public State State { get; private set; }
 
         public override string Info => !string.IsNullOrEmpty(title) ? title : conditions.GetLabel();
@@ -60,9 +57,26 @@ namespace Z3.NodeGraph.StateMachine
             conditions.ReplaceDependencies(instances);
         }
 
-        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        public override void ValidatePaste(List<string> itemsToCopy)
+        {
+            if (!itemsToCopy.Contains(connection.Guid))
+            {
+                itemsToCopy.Remove(Guid);
+
+                foreach (ConditionTask condition in conditions)
+                {
+                    itemsToCopy.Remove(condition.Guid);
+                }
+            }
+        }
+
+        public override void Paste(Dictionary<string, GraphSubAsset> copies)
         {
             connection = copies.GetValueOrDefault(connection.Guid) as TransitableStateNode;
+
+            if (connection == null && conditions.Count > 0)
+                throw new System.InvalidOperationException("Connection is null, but conditions are present.");
+
             conditions.Parse(copies);
         }
     }

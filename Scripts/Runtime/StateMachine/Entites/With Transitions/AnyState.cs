@@ -46,7 +46,7 @@ namespace Z3.NodeGraph.StateMachine
             transitions.ReplaceDependencies(instances);
         }
 
-        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        public override void Paste(Dictionary<string, GraphSubAsset> copies)
         {
             transitions.Parse(copies);
         }

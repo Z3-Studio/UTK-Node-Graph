@@ -15,7 +15,7 @@ namespace Z3.NodeGraph.BehaviourTree
             TaskList.ReplaceDependencies(instances);
         }
 
-        public override void Parse(Dictionary<string, GraphSubAsset> copies)
+        public override void Paste(Dictionary<string, GraphSubAsset> copies)
         {
             TaskList.Parse(copies);
         }

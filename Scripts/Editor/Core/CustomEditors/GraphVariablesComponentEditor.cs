@@ -40,6 +40,7 @@ namespace Z3.NodeGraph.Editor
 
             objectField.BindProperty(baseVariablesAsset);
             objectField.RegisterValueChangedCallback(Redraw);
+            objectField.AddAlignedStyle();
 
             root.Add(objectField);
 

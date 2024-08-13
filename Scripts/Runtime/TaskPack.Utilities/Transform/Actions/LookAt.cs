@@ -38,7 +38,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         protected override void UpdateAction() 
         {
             Quaternion eulerRotation = GetRotation();
-            Agent.rotation = Quaternion.Slerp(Agent.rotation, eulerRotation, speed.Value * Time.fixedDeltaTime);
+            Agent.rotation = Quaternion.Slerp(Agent.rotation, eulerRotation, speed.Value * DeltaTime);
 
             if (Vector3.Angle(eulerRotation * Vector3.forward, Agent.forward) <= angleDifference.Value)
             {

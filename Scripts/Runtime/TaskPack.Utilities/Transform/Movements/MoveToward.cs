@@ -20,7 +20,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
 
         protected override void UpdateAction() 
         {
-            data.Value.position = Vector3.MoveTowards(data.Value.position, targetPosition.Value, Time.fixedDeltaTime * speed.Value);
+            data.Value.position = Vector3.MoveTowards(data.Value.position, targetPosition.Value, DeltaTime * speed.Value);
 
             if (Vector3.Distance(data.Value.position, targetPosition.Value) < ThresholdDistance) 
             {

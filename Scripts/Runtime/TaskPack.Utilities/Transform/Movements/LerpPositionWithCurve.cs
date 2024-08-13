@@ -31,7 +31,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Movement
 
         protected override void UpdateAction()
         {
-            t += Time.deltaTime / time.Value;
+            t += DeltaTime / time.Value;
             data.Value.position = Vector2.Lerp(initPosition, finalPosition, animationCurve.Value.Evaluate(t));
 
             if (t >= 1)

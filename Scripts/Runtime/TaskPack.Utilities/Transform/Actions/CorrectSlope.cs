@@ -21,7 +21,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
         protected override void StartAction()
         {
             float slopeDownAngle = CheckSlope();
-            float currentDegrees = Mathf.MoveTowardsAngle(data.Value.eulerAngles.z, slopeDownAngle, Time.fixedDeltaTime * speed.Value);
+            float currentDegrees = Mathf.MoveTowardsAngle(data.Value.eulerAngles.z, slopeDownAngle, DeltaTime * speed.Value);
             data.Value.rotation = Quaternion.Euler(data.Value.eulerAngles.x, data.Value.eulerAngles.y, currentDegrees);
             
             EndAction();

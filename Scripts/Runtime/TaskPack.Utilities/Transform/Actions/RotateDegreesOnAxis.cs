@@ -38,7 +38,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void UpdateAction()
         {
-            currentDegrees = Mathf.MoveTowards(currentDegrees, degrees.Value, Time.fixedDeltaTime * speed.Value);
+            currentDegrees = Mathf.MoveTowards(currentDegrees, degrees.Value, DeltaTime * speed.Value);
             data.Value.rotation = updateRotation();
 
             if (currentDegrees == degrees.Value)

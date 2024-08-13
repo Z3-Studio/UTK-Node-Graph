@@ -31,7 +31,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             if (data.Value.color != endColor.Value && duration.Value != 0f)
             {
-                timeStep += Time.fixedDeltaTime / duration.Value;
+                timeStep += DeltaTime / duration.Value;
                 data.Value.color = Color.Lerp(startColor, endColor.Value, timeStep);
             }
             else

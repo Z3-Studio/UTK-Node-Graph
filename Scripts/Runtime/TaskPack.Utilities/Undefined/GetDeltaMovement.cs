@@ -27,7 +27,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.AI
         {
             if (Time.frameCount > previousFrame)
             {
-                velocity.Value = (data.Value.position - previousPosition) / Time.fixedDeltaTime;
+                velocity.Value = (data.Value.position - previousPosition) / DeltaTime;
                 EndAction();
             }
         }

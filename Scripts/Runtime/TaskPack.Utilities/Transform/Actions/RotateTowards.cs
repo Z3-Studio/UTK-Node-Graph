@@ -20,7 +20,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             Vector3 lookPos = target.Value - data.Value.position;
             Quaternion rotation = Quaternion.LookRotation(lookPos);
-            data.Value.rotation = Quaternion.Slerp(data.Value.rotation, rotation, Time.fixedDeltaTime * speed.Value);
+            data.Value.rotation = Quaternion.Slerp(data.Value.rotation, rotation, DeltaTime * speed.Value);
 
             if (Vector3.Angle(lookPos, data.Value.forward) <= angleDifference.Value)
             {

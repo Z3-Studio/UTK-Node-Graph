@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using Z3.NodeGraph.Core;
-using Z3.NodeGraph.Tasks;
 using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.BehaviourTree
@@ -23,7 +22,7 @@ namespace Z3.NodeGraph.BehaviourTree
         [SerializeField] private Parameter<int> times;
 
         [Header("- Until Mode")]
-        [SerializeField] private ConditionTaskList conditions;
+        [SerializeField] private StateResult untilResult;
 
         public override string SubInfo => $"Mode: {repeaterMode.ToStringBold()}";
 
@@ -34,11 +33,6 @@ namespace Z3.NodeGraph.BehaviourTree
         {
             finishCounter = 0;
 
-            if (repeaterMode == RepeaterMode.Forever)
-            {
-                conditions.StartTaskList();
-            }
-
             update = repeaterMode switch
             {
                 RepeaterMode.Forever => RepeatForever,
@@ -46,14 +40,6 @@ namespace Z3.NodeGraph.BehaviourTree
                 RepeaterMode.Until => RepeatUntil,
                 _ => throw new NotImplementedException(),
             };
-        }
-
-        protected override void StopNode()
-        {
-            if (repeaterMode == RepeaterMode.Forever)
-            {
-                conditions.StopTaskList();
-            }
         }
 
         private State RepeatForever()
@@ -79,11 +65,14 @@ namespace Z3.NodeGraph.BehaviourTree
 
         private State RepeatUntil()
         {
-            bool result = conditions.CheckConditions();
-            if (result)
+            State state = child.Update();
+
+            if (untilResult == StateResult.Success && state == State.Success)
                 return State.Success;
 
-            child.Update();
+            if (untilResult == StateResult.Failure && state == State.Failure)
+                return State.Failure;
+
             return State.Running;
         }
 

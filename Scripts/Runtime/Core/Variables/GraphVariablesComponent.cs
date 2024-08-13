@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.Core
 {
@@ -9,9 +8,9 @@ namespace Z3.NodeGraph.Core
     public class GraphVariablesComponent : MonoBehaviour
     {
         [SerializeField] private GraphVariables baseVariablesAsset;
-        [ReadOnly, HideInInspector]
         [SerializeField] private List<OverrideVariable> overrideVariables = new();
 
+        public GraphVariables BaseVariablesAsset => baseVariablesAsset;
         public VariableInstanceList ReferenceVariables { get; set; }
 
         public void InitReferenceVariables()
@@ -48,8 +47,6 @@ namespace Z3.NodeGraph.Core
             return baseVariablesAsset.CloneAllVariables();
         }
 
-        public bool HasAsset() => baseVariablesAsset != null;
-
         public bool AssetIsValid()
         {
             try
@@ -57,8 +54,9 @@ namespace Z3.NodeGraph.Core
                 OnValidate();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.LogError(e);
                 return false;
             }
         }

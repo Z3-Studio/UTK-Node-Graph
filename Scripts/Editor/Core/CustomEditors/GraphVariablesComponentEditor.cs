@@ -1,10 +1,14 @@
-﻿using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
-using Z3.NodeGraph.Core;
-using Z3.UIBuilder.Editor;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEditor.SceneManagement;
 using Z3.Utils.ExtensionMethods;
+using Z3.UIBuilder.Editor;
+using Z3.NodeGraph.Core;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -16,49 +20,80 @@ namespace Z3.NodeGraph.Editor
 
         private VariableInstanceListView variableInstanceList;
 
+        private VisualElement content;
+
+        private const string OverrideVariablesField = "overrideVariables";
+        private const string BaseVariablesAssetField = "baseVariablesAsset";
+
         public override VisualElement CreateInspectorGUI()
         {
             VisualElement root = new VisualElement();
-            root.Add(base.CreateInspectorGUI());
+            root.Add(GetMonoScript());
 
-            if (!Target.HasAsset())
-                return root;
+            SerializedProperty baseVariablesAsset = serializedObject.FindProperty(BaseVariablesAssetField);
+
+            ObjectField objectField = new ObjectField(baseVariablesAsset.displayName)
+            {
+                value = Target.BaseVariablesAsset,
+                objectType = typeof(GraphVariables),
+            };
+
+            objectField.BindProperty(baseVariablesAsset);
+            objectField.RegisterValueChangedCallback(Redraw);
+
+            root.Add(objectField);
+
+            content = new VisualElement();
+            root.Add(content);
+
+            Draw();
+            return root;
+        }
+
+        private void Draw()
+        {
+            if (!Target.BaseVariablesAsset)
+                return;
 
             if (!Target.AssetIsValid())
             {
-                Label error = new Label("Asset is invalida".AddRichTextColor(Color.red));
-                root.Add(error);
-                return root;
+                Label error = new Label("Asset is invalid".AddRichTextColor(Color.red));
+                content.Add(error);
+                return;
             }
 
             searchField = new();
             searchField.RegisterCallback<ChangeEvent<string>>(OnSearchFieldChanged);
             searchField.style.width = new Length(100, LengthUnit.Percent);
 
-            root.Add(searchField);
+            content.Add(searchField);
 
             if (Application.isPlaying)
             {
-                //if (Target.ReferenceVaribles == null)
-                //{
-                //    Target.InitReferenceVariables();
-                //}
+                Target.InitReferenceVariables(); // Force initilize avoid null reference
+
                 variableInstanceList = new VariableInstanceListView(Target.ReferenceVariables);
-                root.Add(variableInstanceList);
+                content.Add(variableInstanceList);
             }
             else
             {
+                // TODO: Add SerializedProperties to Bind and display overrides
                 variableList = new OverrideVariableList(Target, Target.GetOverrideVariables(), Target.GetBaseVariables());
-                root.Add(variableList);
+                content.Add(variableList);
             }
+        }
 
+        private void Redraw(ChangeEvent<Object> e)
+        {
+            if (e.newValue == e.previousValue)
+                return;
 
-            return root;
+            content.Clear();
+            Draw();
         }
 
         private void OnSearchFieldChanged(ChangeEvent<string> evt)
         {
-            return;
             // Get the text typed
             string searchText = evt.newValue;
 
@@ -70,46 +105,57 @@ namespace Z3.NodeGraph.Editor
             }
         }
 
-        private void PrefabIdeas()
+        private void PrefabIdeas(SerializedProperty baseVariablesAsset)
         {
-            // Get the root GameObject of the prefab
-            GameObject rootPrefab = PrefabUtility.GetOutermostPrefabInstanceRoot(Target.gameObject);
+            SerializedProperty list = serializedObject.FindProperty(OverrideVariablesField);
 
-            // Check if the component is part of a prefab instance
-            if (PrefabUtility.IsPartOfPrefabInstance(Target))
+            List<SerializedProperty> array = new List<SerializedProperty>();
+            foreach (SerializedProperty item in list)
             {
-                // Get the corresponding prefab asset path
-                string prefabAssetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(Target.gameObject);
+                array.Add(list);
+            }
 
-                // Get the root GameObject of the prefab asset
-                GameObject rootPrefabAsset = AssetDatabase.LoadAssetAtPath<GameObject>(prefabAssetPath);
+            if (PrefabUtility.IsPartOfPrefabInstance(Target.gameObject))
+            {
+                GameObject prefabInstance = PrefabUtility.GetOutermostPrefabInstanceRoot(Target.gameObject);
 
-                // Create serialized objects for the prefab asset and the prefab instance
-                SerializedObject prefabAssetSerializedObject = new SerializedObject(rootPrefabAsset);
-                SerializedObject prefabInstanceSerializedObject = new SerializedObject(rootPrefab);
+                List<PropertyModification> modifications = PrefabUtility.GetPropertyModifications(prefabInstance)
+                    .Where(m => m.target is GraphVariablesComponent)
+                    .ToList();
 
-                // Compare the properties of the prefab asset and the prefab instance
-                SerializedProperty assetProperty = prefabAssetSerializedObject.GetIterator();
-                SerializedProperty instanceProperty = prefabInstanceSerializedObject.GetIterator();
-                while (instanceProperty.Next(true) && assetProperty.Next(true))
+
+                List<ObjectOverride> overrideCounts = PrefabUtility.GetObjectOverrides(Target.gameObject);
+
+
+                Regex ArrayPathRegex = new Regex(@"(.*?\[\d+\])", RegexOptions.Compiled);
+
+                List<SerializedProperty> overrides = new List<SerializedProperty>();
+
+                if (modifications.Any(m => m.propertyPath == baseVariablesAsset.propertyPath))
                 {
-                    if (SerializedProperty.EqualContents(instanceProperty, assetProperty))
+                    overrides.Add(baseVariablesAsset);
+                }
+
+
+                foreach (PropertyModification modification in modifications)
+                {
+                    Match match = ArrayPathRegex.Match(modification.propertyPath);
+
+                    if (match.Success)
                     {
-                        continue;
+                        SerializedProperty property = serializedObject.FindProperty(match.Value);
+                        if (property != null)
+                        {
+                            overrides.Add(property);
+                        }
                     }
+                }
 
-                    EditorGUILayout.LabelField(instanceProperty.displayName);
-
-                    EditorGUI.indentLevel++;
-
-                    EditorGUI.BeginChangeCheck();
-                    EditorGUILayout.PropertyField(instanceProperty, true);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        prefabInstanceSerializedObject.ApplyModifiedProperties();
-                    }
-
-                    EditorGUI.indentLevel--;
+                if (overrides.Count > 0)
+                {
+                    PopupField<string> overrideDropdown = new PopupField<string>("Overrides", overrides.Select(p => p.propertyPath).ToList(), 0);
+                    overrideDropdown.tooltip = "Temporary solution";
+                    //root.Add(overrideDropdown);
                 }
             }
         }

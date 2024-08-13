@@ -18,7 +18,7 @@ namespace Z3.NodeGraph.BehaviourTree
         }
         protected override State UpdateNode()
         {
-            time += Time.deltaTime;
+            time += DeltaTime;
             if (time >= NodeRunningTime)
             {
                 child.Interrupt();

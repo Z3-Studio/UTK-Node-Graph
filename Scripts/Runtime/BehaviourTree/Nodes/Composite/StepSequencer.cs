@@ -7,22 +7,23 @@ namespace Z3.NodeGraph.BehaviourTree
     [NodeDescription("It executes one child per call, and when finished returns the value. On the next call it jumps to the next child repeating the process.")]
     public class StepSequencer : CompositeNode
     {
-        [SerializeField] private Parameter<bool> dontStop;
-
-        private int currentChild;
+        [SerializeField] private Parameter<int> currentChild;
 
         protected override State UpdateNode()
         {
-            if (currentChild >= children.Count)
+            if (children.Count == 0)
+                return State.Success;
+
+            if (currentChild.Value >= children.Count)
             {
-                currentChild = 0;
+                currentChild.Value = 0;
             }
 
-            State state = children[currentChild].Update();
+            State state = children[currentChild.Value].Update();
 
             if (state == State.Success || state == State.Failure)
             {
-                currentChild++;
+                currentChild.Value++;
                 return state;
             }
 

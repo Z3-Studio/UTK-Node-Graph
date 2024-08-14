@@ -2,6 +2,7 @@
 using Z3.NodeGraph.Tasks;
 using UnityEngine;
 using Z3.Utils.ExtensionMethods;
+using Z3.Utils;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
@@ -21,7 +22,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void Subscribe()
         {
-            monoEvents = MonoEventDispatcher.ValidateEmmiter(monoEvents, target.Value);
+            UnityUtils.AddComponentIfNeeded(ref monoEvents, target.Value);
 
             if (triggerEnter.Value)
                 monoEvents.OnTriggerEnterEvent += OnTrigger;

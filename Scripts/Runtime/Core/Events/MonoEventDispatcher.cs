@@ -72,20 +72,5 @@ namespace Z3.NodeGraph.Core
         private void OnEnable() => OnEnableEvent?.Invoke();
         private void OnDisable() => OnDisableEvent?.Invoke();
         private void OnDestroy() => OnDestroyEvent?.Invoke();
-
-        public static MonoEventDispatcher ValidateEmmiter(MonoEventDispatcher monoEvents, Component component)
-        {
-            return ValidateEmmiter(monoEvents, component.gameObject);
-        }
-
-        public static MonoEventDispatcher ValidateEmmiter(MonoEventDispatcher monoEvents, GameObject gameObject)
-        {
-            if (!monoEvents || monoEvents.gameObject != gameObject)
-            {
-                monoEvents = gameObject.GetOrAddComponent<MonoEventDispatcher>();
-            }
-
-            return monoEvents;
-        }
     }
 }

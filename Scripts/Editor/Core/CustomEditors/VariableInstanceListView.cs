@@ -11,10 +11,9 @@ namespace Z3.NodeGraph.Editor
 
         private ListViewBuilder<VariableInstance, VariableInstanceView> customListView;
 
-        public VariableInstanceListView(VariableInstanceList source) : this(source.Values) { }
-
-        public VariableInstanceListView(List<VariableInstance> source)
+        public VariableInstanceListView(VariableInstanceList list)
         {
+            List<VariableInstance> source = list.Values;
             targetList = source;
 
             Z3ListViewConfig listConfig = new()

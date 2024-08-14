@@ -14,6 +14,7 @@ namespace Z3.NodeGraph.Core
     /// <summary>
     /// Utility class to make easier the dispatcher process
     /// </summary>
+    [AddComponentMenu(GraphPath.ComponentMenu + "String Dispatcher References")]
     public class StringDispatcherReferences : MonoBehaviour
     {
         [SerializeField] private StringDispatcherReference[] references;

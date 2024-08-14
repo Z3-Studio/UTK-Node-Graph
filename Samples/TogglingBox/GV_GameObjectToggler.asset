@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93fc43bbb82ae6b4c89b625ef1b4ec40, type: 3}
   m_Name: GV_GameObjectToggler
   m_EditorClassIdentifier: 
+  inheritedVariables: []
+  overrideVariables: []
   declaredVariables:
   - name: MyObject
     guid: f5ad0a85e4208674b93be9def659f0e2

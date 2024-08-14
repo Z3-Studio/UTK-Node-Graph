@@ -11,11 +11,11 @@ namespace Z3.NodeGraph.Core
     {
         [SerializeField] protected GraphVariables referenceVariables;
         [Hide]
-        [SerializeField] protected List<Variable> localVariables;
+        [SerializeField] protected List<Variable> localVariables = new();
         [Hide]
         [SerializeField] protected Node startNode;
         [Hide]
-        [SerializeField] protected List<GraphSubAsset> subAssets = new List<GraphSubAsset>();
+        [SerializeField] protected List<GraphSubAsset> subAssets = new();
 
         public const string ReferenceVariablesField = nameof(referenceVariables);
         public Node StartNode => startNode;

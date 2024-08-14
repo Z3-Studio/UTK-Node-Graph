@@ -4,6 +4,7 @@ using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Core
 {
+    [AddComponentMenu(GraphPath.ComponentMenu + "Mono Event Dispatcher")]
     public class MonoEventDispatcher : MonoBehaviour
     {
         // Trigger 2D

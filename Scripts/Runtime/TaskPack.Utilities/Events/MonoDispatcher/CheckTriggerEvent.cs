@@ -1,4 +1,4 @@
-using Z3.NodeGraph.Core;
+﻿using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 using UnityEngine;
 using Z3.Utils.ExtensionMethods;
@@ -7,7 +7,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Events)]
     [NodeDescription("Wait until anything is inside the Trigger area and return the Transform.")]
-    public class WaitUntilTrigger : ActionTask
+    public class CheckTriggerEvent : EventConditionTask
     {
         [ParameterDefinition(AutoBindType.SelfBind)]
         [SerializeField] private Parameter<GameObject> target;
@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         private MonoEventDispatcher monoEvents;
 
-        protected override void StartAction()
+        protected override void Subscribe()
         {
             monoEvents = MonoEventDispatcher.ValidateEmmiter(monoEvents, target.Value);
 
@@ -29,7 +29,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 monoEvents.OnTriggerExitEvent += OnTrigger;
         }
 
-        protected override void StopAction()
+        protected override void Unsubscribe()
         {
             monoEvents.OnTriggerEnterEvent -= OnTrigger;
             monoEvents.OnTriggerExitEvent -= OnTrigger;
@@ -38,7 +38,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         private void OnTrigger(Collider collider)
         {
             returnedCollider.Value = collider;
-            EndAction();
+            EndEventCondition();
         }
     }
 }

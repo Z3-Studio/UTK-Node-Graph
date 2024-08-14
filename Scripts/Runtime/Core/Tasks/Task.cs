@@ -6,9 +6,10 @@ namespace Z3.NodeGraph.Tasks
 {
     public abstract class Task : GraphSubAsset
     {
-        protected GraphEvents Events => GraphController.Events;
-        protected CachedComponents Components => GraphController.CachedComponents;
-        protected GameObject GameObject => Components.GameObject;
-        protected Transform Transform => GameObject.transform;
+        protected GameObject GameObject => GraphRunner.Component.gameObject;
+        protected Transform Transform => GraphRunner.Component.transform;
+        protected CachedComponents CachedComponents => GraphRunner.CachedComponents;
+        protected StringEventDispatcher StringEvents => CachedComponents.GetOrAddCachedComponent<StringEventDispatcher>();
+        protected MonoEventDispatcher MonoEvents => CachedComponents.GetOrAddCachedComponent<MonoEventDispatcher>();
     }
 }

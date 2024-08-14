@@ -29,7 +29,8 @@ namespace Z3.NodeGraph.Core
             }
         }
 
-        public float DeltaTime => GraphController.DeltaTime;
+        protected float DeltaTime => GraphRunner.DeltaTime;
+        protected IGraphRunner GraphRunner => GraphController.Runner;
         protected GraphController GraphController { get; private set; }
 
         public void SetGuid(string newGuid, string parent = "")

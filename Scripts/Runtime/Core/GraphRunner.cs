@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Z3.Utils;
 
 namespace Z3.NodeGraph.Core
 {
@@ -11,7 +12,7 @@ namespace Z3.NodeGraph.Core
     }
 
     /// <summary>
-    /// Implementatio to run any GraphData
+    /// Generic implementation to run any GraphData
     /// </summary>
     [AddComponentMenu(GraphPath.ComponentMenu + "Graph Runner")]
     public sealed class GraphRunner : MonoBehaviour, IGraphRunner
@@ -20,20 +21,20 @@ namespace Z3.NodeGraph.Core
         [SerializeField] private GraphVariablesComponent graphVariablesComponent;
         [SerializeField] private UpdateMethod updateMethod = UpdateMethod.FixedUpdate;
 
-        // Editor variables
+        // Editor properties
         public GraphData GraphData => graphData;
-        public VariableInstanceList ReferenceVariables => graphVariablesComponent.ReferenceVariables;
-        public Component Component => this;
-
-        /// <summary> Instance created from <see cref="graphData"/></summary>
         public GraphController RootController { get; private set; }
-        public GraphEvents Events { get; private set; }
+
+        // Interface properties
+        public Component Component => this;
+        public VariableInstanceList ReferenceVariables => graphVariablesComponent.ReferenceVariables;
+        public CachedComponents CachedComponents { get; private set; }
         public float OwnerActivationTime { get; private set; }
         public float DeltaTime { get ; private set; }
 
         private void Awake()
         {
-            Events = new(this);
+            CachedComponents = new CachedComponents(this);
             graphVariablesComponent.InitReferenceVariables();
             RootController = graphData.CreateInstance(this);
         }

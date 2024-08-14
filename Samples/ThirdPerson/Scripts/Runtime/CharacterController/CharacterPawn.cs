@@ -38,7 +38,7 @@ namespace Z3.NodeGraph.Sample.ThirdPerson.Character
 
         private void FixedUpdate()
         {
-            graphRunner.ManualUpdate(Time.fixedDeltaTime);
+            graphRunner.ManualFixedUpdate();
             characterPhysics.Update();
             characterCamera.Update();
         }

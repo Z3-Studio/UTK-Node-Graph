@@ -1,31 +1,23 @@
 ﻿using System.Collections.Generic;
-using Z3.Utils;
 using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Core
 {
     /// <summary>
-    /// Used to reference
+    /// Base class that contains the logic of how to execute a GraphData
     /// </summary>
     public abstract class GraphController
     {
-        /// <summary> Clone </summary>
+        /// <summary> Clone, used only for editor classes </summary>
         public GraphData GraphData { get; }
-        /// <summary> Components from GraphRunner </summary>
-        public CachedComponents CachedComponents { get; }
-        /// <summary> Events from GraphRunner </summary>
-        public GraphEvents Events => Runner.Events;
 
-        public float DeltaTime => Runner.DeltaTime;
+        public IGraphRunner Runner { get; }
         public VariableInstanceList LocalVariables { get; }
         public VariableInstanceList ReferenceVariables => Runner.ReferenceVariables;
-
-        private IGraphRunner Runner { get; }
 
         protected internal GraphController(IGraphRunner runner, GraphData originalData)
         {
             Runner = runner;
-            CachedComponents = new CachedComponents(runner.Component);
 
             // Clone Local Variables
             LocalVariables = VariableInstanceList.CloneVariables(originalData.LocalVariables);

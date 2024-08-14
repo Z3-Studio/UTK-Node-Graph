@@ -99,7 +99,7 @@ namespace Z3.NodeGraph.Core
         {
             if (IsSelfBinding)
             {
-                Get = graphController.CachedComponents.CreateGetter(GenericType);
+                Get = graphController.Runner.CachedComponents.CreateGetter(GenericType);
                 Set = (newValue) => throw new InvalidOperationException("You cannot set a component using SelfBind, is only get. Consider using GameObject.AddComponent<T>() or Destroy()");
                 return;
             }

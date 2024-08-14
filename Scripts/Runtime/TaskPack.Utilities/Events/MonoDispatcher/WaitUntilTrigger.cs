@@ -9,31 +9,35 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class WaitUntilTrigger : ActionTask
     {
         [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [SerializeField] private Parameter<GameObject> target;
 
         [SerializeField] private Parameter<bool> triggerExit;
         [SerializeField] private Parameter<Collider> returnedCollider;
 
         public override string Info => $"Wait Until Trigger {(triggerExit.Value ? "Exit" : "Enter")} 'AgentInfo'";
 
+        private MonoEventDispatcher monoEvents;
+
         protected override void StartAction()
         {
-            //if (!triggerExit.Value)
-            //    router.onTriggerEnter += OnTrigger;
-            //else
-            //    router.onTriggerExit += OnTrigger;
+            monoEvents = MonoEventDispatcher.ValidateEmmiter(monoEvents, target.Value);
+
+            if (!triggerExit.Value)
+                monoEvents.OnTriggerEnterEvent += OnTrigger;
+            else
+                monoEvents.OnTriggerExitEvent += OnTrigger;
         }
 
         protected override void StopAction()
         {
-            //router.onTriggerExit -= OnTrigger;
-            //router.onTriggerEnter -= OnTrigger;
+            monoEvents.OnTriggerEnterEvent -= OnTrigger;
+            monoEvents.OnTriggerExitEvent -= OnTrigger;
         }
 
-        //private void OnTrigger(EventData<Collider> data)
-        //{
-        //    returnedCollider.Value = data.Value;
-        //    EndAction();
-        //}
+        private void OnTrigger(Collider collider)
+        {
+            returnedCollider.Value = collider;
+            EndAction();
+        }
     }
 }

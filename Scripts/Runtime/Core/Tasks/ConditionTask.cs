@@ -29,6 +29,10 @@ namespace Z3.NodeGraph.Tasks
         public virtual void StopCondition() { }
     }
 
+    /// <summary>
+    /// Event Conditions are more efficient and powerful in StateMachines.
+    /// Not recommended for use in BehaviourTrees
+    /// </summary>
     public abstract class EventConditionTask : ConditionTask
     {
         private bool actionCalled;

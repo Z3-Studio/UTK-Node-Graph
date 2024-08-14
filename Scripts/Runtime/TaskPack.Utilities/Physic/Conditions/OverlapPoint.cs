@@ -17,10 +17,5 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
         {
             return Physics.CheckSphere(data.Value.position + offset.Value, float.MinValue, layerMask.Value);
         }
-
-        //public override void OnDrawGizmosSelected() {
-        //    Gizmos.color = Color.green;
-        //    Gizmos.DrawWireSphere(Agent.position + offset.Value, .2f);
-        //}
     }
 }

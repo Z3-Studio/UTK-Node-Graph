@@ -109,7 +109,7 @@ namespace Z3.NodeGraph.StateMachine
             afterFailTransition();
         }
 
-        public void TryTransitionNew(StateMachineController graphController)
+        public bool TryTransitionNew(StateMachineController graphController)
         {
             foreach (Transition transition in transitions.Where(t => t.Connection != graphController.CurrentState))
             {
@@ -117,9 +117,11 @@ namespace Z3.NodeGraph.StateMachine
                 if (success)
                 {
                     graphController.SetNextState(transition.Connection);
-                    return;
+                    return true;
                 }
             }
+
+            return false;
         }
 
         // IList implementation

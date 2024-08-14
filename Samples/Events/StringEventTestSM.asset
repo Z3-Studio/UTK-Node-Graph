@@ -1,0 +1,225 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8080089194506657048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb4fd9f679a4ee4fb68331da2db0573, type: 3}
+  m_Name: 'AnyState [c14544efaa88a9f43b275b927d606d65]/Transition [2be5ceb60b1b34842acc9bc6dff4f287]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 2be5ceb60b1b34842acc9bc6dff4f287
+  connection: {fileID: -2611903812057482710}
+  conditions:
+    taskList:
+    - {fileID: 2849710416592515173}
+--- !u!114 &-7938711710344037174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2985adac49a2564b88f64ecdefcbd9f, type: 3}
+  m_Name: 'AnyState [c14544efaa88a9f43b275b927d606d65]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: c14544efaa88a9f43b275b927d606d65
+  position: {x: -87.988594, y: 46.93186}
+  priority: -1
+  transitions:
+    transitions:
+    - {fileID: -2778646827715992995}
+    - {fileID: -8080089194506657048}
+--- !u!114 &-2778646827715992995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb4fd9f679a4ee4fb68331da2db0573, type: 3}
+  m_Name: 'AnyState [c14544efaa88a9f43b275b927d606d65]/Transition [b716a5408ab6392468baa91abf7ceebe]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: b716a5408ab6392468baa91abf7ceebe
+  connection: {fileID: 1998818166581877889}
+  conditions:
+    taskList:
+    - {fileID: 1309719594513408318}
+--- !u!114 &-2611903812057482710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af8295c7e11e1444b9a81b37e7812ad2, type: 3}
+  m_Name: 'ActionState [ea71f39a15740574cbc0616bb556ffe4]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: ea71f39a15740574cbc0616bb556ffe4
+  position: {x: 44.27256, y: 344.00006}
+  transitionCheck: 2
+  repeat: 0
+  transitions:
+    transitions: []
+  executionPolicy: 0
+  taskList:
+    taskList:
+    - {fileID: 9045804183280227139}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679e7903e013c2144af81ecd0b8c19e4, type: 3}
+  m_Name: StringEventTestSM
+  m_EditorClassIdentifier: 
+  referenceVariables: {fileID: 0}
+  localVariables: []
+  startNode: {fileID: 6369435162605860176}
+  subAssets:
+  - {fileID: -7938711710344037174}
+  - {fileID: 1998818166581877889}
+  - {fileID: -2611903812057482710}
+  - {fileID: -2778646827715992995}
+  - {fileID: -8080089194506657048}
+  - {fileID: 2849710416592515173}
+  - {fileID: 1309719594513408318}
+  - {fileID: 9045804183280227139}
+  - {fileID: 8853981130924072856}
+  - {fileID: 6369435162605860176}
+--- !u!114 &1309719594513408318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 336cc7f26aa84874abd0cc28351644ad, type: 3}
+  m_Name: 'AnyState [c14544efaa88a9f43b275b927d606d65]/Transition [b716a5408ab6392468baa91abf7ceebe]/CheckStringEvent
+    [d696c367437afb048acddf80df0fb982]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: d696c367437afb048acddf80df0fb982
+  invertCondition: 0
+  eventName:
+    guid: 
+    value: EnterEvent
+--- !u!114 &1998818166581877889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af8295c7e11e1444b9a81b37e7812ad2, type: 3}
+  m_Name: 'ActionState [be46eb25de210ce4b9d7e154a7c8d280]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: be46eb25de210ce4b9d7e154a7c8d280
+  position: {x: -277.3273, y: 344.0567}
+  transitionCheck: 2
+  repeat: 0
+  transitions:
+    transitions: []
+  executionPolicy: 0
+  taskList:
+    taskList:
+    - {fileID: 8853981130924072856}
+--- !u!114 &2849710416592515173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 336cc7f26aa84874abd0cc28351644ad, type: 3}
+  m_Name: 'AnyState [c14544efaa88a9f43b275b927d606d65]/Transition [2be5ceb60b1b34842acc9bc6dff4f287]/CheckStringEvent
+    [5e54d2de2a1de264a93a8189625e5e5d]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 5e54d2de2a1de264a93a8189625e5e5d
+  invertCondition: 0
+  eventName:
+    guid: 
+    value: ExitEvent
+--- !u!114 &6369435162605860176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8e0a9e264fa6c478b1d43795689003, type: 3}
+  m_Name: 'Pass [3ce592ebfd6caaf438a66ace912454bf]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 3ce592ebfd6caaf438a66ace912454bf
+  position: {x: -88.000015, y: -320.8994}
+  transitions:
+    transitions: []
+--- !u!114 &8853981130924072856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 867e3d04a7360834893faf7312a089f3, type: 3}
+  m_Name: 'ActionState [be46eb25de210ce4b9d7e154a7c8d280]/DebugLog [5c7a109707d642b41945703d7004cbb7]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 5c7a109707d642b41945703d7004cbb7
+  message:
+    guid: 
+    value: Enter
+  logType:
+    guid: 
+    value: 3
+--- !u!114 &9045804183280227139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 867e3d04a7360834893faf7312a089f3, type: 3}
+  m_Name: 'ActionState [ea71f39a15740574cbc0616bb556ffe4]/DebugLog [4362b5cb85309194a95583422e7b5bd1]'
+  m_EditorClassIdentifier: 
+  title: 
+  guid: 4362b5cb85309194a95583422e7b5bd1
+  message:
+    guid: 
+    value: Exit
+  logType:
+    guid: 
+    value: 3

@@ -32,7 +32,12 @@ namespace Z3.NodeGraph.StateMachine
 
         public void UpdateParallel()
         {
-            transitions.TryTransitionNew(GraphController);
+            bool changeState = transitions.TryTransitionNew(GraphController);
+            if (changeState)
+            {
+                transitions.StopTransitions();
+                transitions.StartTransition();
+            }
         }
 
         public override void StopGraph()

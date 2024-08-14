@@ -175,21 +175,21 @@ namespace Z3.NodeGraph.Editor
                 variables.Add((SelfBind, null));
             }
 
-            variables.Add((NewLocalVariable, null));
-
             // Promote variable
             if (data.ReferenceVariables != null)
             {
                 variables.Add((NewReferenceVariable, null));
             }
 
-            // Variable list
-            variables.AddRange(CreatePath("Local Variables", data.LocalVariables));
+            variables.Add((NewLocalVariable, null));
 
+            // Variable list
             if (data.ReferenceVariables != null)
             {
                 variables.AddRange(CreatePath("Reference Variables", data.ReferenceVariables.GetAllVariables()));
             }
+
+            variables.AddRange(CreatePath("Local Variables", data.LocalVariables));
 
             SelectorPopup<Variable>.OpenWindow("Select Variable", variables, OnBind, false);
         }

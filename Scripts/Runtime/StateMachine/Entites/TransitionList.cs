@@ -109,9 +109,9 @@ namespace Z3.NodeGraph.StateMachine
             afterFailTransition();
         }
 
-        public bool TryTransitionNew(StateMachineController graphController)
+        public bool TryTransitionNew(StateMachineController graphController, bool canTransitionToSelf)
         {
-            foreach (Transition transition in transitions.Where(t => t.Connection != graphController.CurrentState))
+            foreach (Transition transition in transitions.Where(t => canTransitionToSelf || t.Connection != graphController.CurrentState))
             {
                 bool success = transition.CheckTransitions();
                 if (success)

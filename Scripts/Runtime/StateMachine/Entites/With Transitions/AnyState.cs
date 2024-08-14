@@ -11,6 +11,7 @@ namespace Z3.NodeGraph.StateMachine
     {
         [Tooltip("Thiink about it")]
         [SerializeField] private int priority = -1;
+        [SerializeField] private bool canTransitionToSelf;
 
         [HideInGraphInspector, ReadOnly]
         [SerializeField] protected TransitionList transitions = new();
@@ -32,7 +33,7 @@ namespace Z3.NodeGraph.StateMachine
 
         public void UpdateParallel()
         {
-            bool changeState = transitions.TryTransitionNew(GraphController);
+            bool changeState = transitions.TryTransitionNew(GraphController, canTransitionToSelf);
             if (changeState)
             {
                 transitions.StopTransitions();

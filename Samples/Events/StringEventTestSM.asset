@@ -50,8 +50,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 
   guid: c14544efaa88a9f43b275b927d606d65
-  position: {x: -87.988594, y: 46.93186}
+  position: {x: -86.677284, y: 47.00001}
   priority: -1
+  canTransitionToSelf: 1
   transitions:
     transitions:
     - {fileID: -2778646827715992995}

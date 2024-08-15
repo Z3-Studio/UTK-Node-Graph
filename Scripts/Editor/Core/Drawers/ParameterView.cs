@@ -209,7 +209,7 @@ namespace Z3.NodeGraph.Editor
                 }
                 else if (name == NewReferenceVariable && data.ReferenceVariables != null)
                 {
-                    variable = Variable.CreateVariable(GenericType, data.ReferenceVariables.GetAllVariables(), displayName.Replace(" ", string.Empty));
+                    variable = Variable.CreateVariable(GenericType, data.ReferenceVariables.DeclaredVariables, displayName.Replace(" ", string.Empty));
                     NodeGraphWindow.ForceRedrawVariables(data);
                 }
                 else

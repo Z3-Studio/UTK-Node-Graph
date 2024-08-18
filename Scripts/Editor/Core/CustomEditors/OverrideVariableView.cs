@@ -60,7 +60,6 @@ namespace Z3.NodeGraph.Editor
             }
 
             // Menu
-
             IBaseFieldReader baseField;
             if (OverrideVariable)
             {
@@ -80,10 +79,38 @@ namespace Z3.NodeGraph.Editor
                 actionsButton.text = "+";
             }
 
-            baseField.SetLabel(string.Empty);
+            VisualElement valueField;
+            if (baseField.TwoWay)
+            {
+                baseField.SetLabel(string.Empty);
+                valueField = baseField.VisualElement;
+            }
+            else
+            {
+                // TODO: Check if is override, if isn't, show as readonly
+                if (Variable.value == null)
+                {
+                    valueField = new Button(() =>
+                    {
+                        Variable.value = Activator.CreateInstance(Variable.OriginalType);
+
+                    })
+                    { text = "Create Instance" };
+                }
+                else
+                {
+                    valueField = new Button(() =>
+                    {
+                        PropertyWindow.OpenWindow(Variable.Name, Variable.value);
+
+                    })
+                    { text = "Show Instance" };
+                }
+            }
+
 
             // Set Style
-            propertyContainer.Add(baseField.VisualElement);
+            propertyContainer.Add(valueField);
         }
 
         [UIElement("actions-button")]

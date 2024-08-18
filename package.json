@@ -1,7 +1,7 @@
 {
   "name": "com.z3.node-graph",
   "displayName": "Z3 Node Graph",
-  "version": "0.4.1-beta",
+  "version": "0.4.2-beta",
   "description": "Provides solutions to Unity.",
   "unity": "2021.3",
   "documentationUrl": "https://z3-studio.com/docs",

@@ -1,22 +1,7 @@
-﻿using CodiceApp.EventTracking.Plastic;
-using UnityEngine;
+﻿using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 
-/*
-Box Collider envia sinal para MonoBehaviour do mesmo objeto
-Todos MonoBehaviour que implementarem on Trigger, vão receber o eventos.
-
-MonoEvent distruibui o evento para quem queira ouvir
-Task ao iniciar, adiciona ou get MonoEvent pra ouvir seus eventos
-
--------
-
-Task envia sinal adiciona ou get em um NamedEvent, enviando self GraphRunner/GameObject como argumento
-
-A outra Task que está interessada em ouvir, adiciona ou get em um NamedEvent
-
-*/
 namespace Z3.NodeGraph.TaskPack.Utilities.Utils
 {
     [NodeCategory(Categories.Events)]

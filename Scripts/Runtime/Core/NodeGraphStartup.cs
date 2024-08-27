@@ -1,4 +1,6 @@
-﻿namespace Z3.NodeGraph.Core
+﻿using UnityEngine; // Using inside of directive
+
+namespace Z3.NodeGraph.Core
 {
     /// <summary>
     /// Initialize depedencies in runtime

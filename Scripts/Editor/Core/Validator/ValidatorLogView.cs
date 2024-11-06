@@ -55,6 +55,12 @@ namespace Z3.NodeGraph.Editor
             Populate();
         }
 
+        [UIElement("open-graph")]
+        private void OnOpenGraph()
+        {
+            NodeGraphWindow.OpenGraph(analyzer.GraphData);
+        }
+
         private void Populate()
         {
             errorsContainer.Clear();

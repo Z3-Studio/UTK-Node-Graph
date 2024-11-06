@@ -123,6 +123,15 @@ namespace Z3.NodeGraph.Editor
             Populate();
         }
 
+        [UIElement("open-graph")]
+        private void OnOpenGraph()
+        {
+            if (!analyzer)
+                return;
+
+            NodeGraphWindow.OpenGraph(analyzer.GraphData);
+        }
+
         [UIElement("fix-errors-button")]
         private void OnFixErrors()
         {

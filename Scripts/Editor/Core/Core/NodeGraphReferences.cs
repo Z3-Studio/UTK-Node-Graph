@@ -47,7 +47,7 @@ namespace Z3.NodeGraph.Editor
             SetGraphData(Data, GraphController);
         }
 
-        public void OpenGraphData(GraphData graphData, GraphController graphController)
+        public void OpenGraphData(GraphData graphData, GraphController graphController = null)
         {
             BuildBreadcrumb(graphData);
             SetGraphData(graphData, graphController);

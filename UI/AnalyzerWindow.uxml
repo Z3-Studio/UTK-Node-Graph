@@ -1,6 +1,7 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Packages/com.z3.node-graph/UI/AnalyzeStyle.uss?fileID=7433441132597879392&amp;guid=8eaf824a3e2adef458462edf1dbac5be&amp;type=3#AnalyzeStyle" />
     <editor:Toolbar>
+        <editor:ToolbarButton text="Open Graph" name="open-graph" />
         <editor:ToolbarButton text="Refresh" name="refresh-button" />
         <editor:ToolbarButton text="Fix Errors" name="fix-errors-button" />
         <editor:ToolbarSpacer style="flex-grow: 1;" />

@@ -21,7 +21,16 @@ namespace Z3.NodeGraph.Editor
         [SerializeField] private List<GraphPreference> graphPreferences = new();
 
         public static AutoBindType DefaultAutoBindType => Instance.defaultAutoBindType;
-        public static bool OpenWelcome { get => Instance.openWelcome; set => Instance.openWelcome = value; }
+
+        public static bool OpenWelcome
+        {
+            get => Instance.openWelcome;
+            set
+            {
+                Instance.openWelcome = value;
+                EditorUtility.SetDirty(Instance);
+            }
+        }
 
         private static UserPreferences Instance { get; set; }
 

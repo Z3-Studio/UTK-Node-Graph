@@ -1,13 +1,13 @@
 ﻿using System;
-using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Z3.NodeGraph.Core;
+using UnityEditor;
+using UnityEditor.Callbacks;
 using Z3.UIBuilder;
 using Z3.UIBuilder.Core;
 using Z3.UIBuilder.ExtensionMethods;
 using Z3.Utils.ExtensionMethods;
+using Z3.NodeGraph.Core;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -46,6 +46,12 @@ namespace Z3.NodeGraph.Editor
             }
 
             return false;
+        }
+
+        public static void OpenGraph(GraphData graphData)
+        {
+            NodeGraphWindow window = GetWindow<NodeGraphWindow>(NodeGraphs);
+            window.nodeGraphReferences.OpenGraphData(graphData);
         }
 
         private void OnEnable()
@@ -168,7 +174,7 @@ namespace Z3.NodeGraph.Editor
         }
 
         /// <summary> Menu Context </summary>
-        public void AddItemsToMenu(GenericMenu menu)
+        void IHasCustomMenu.AddItemsToMenu(GenericMenu menu)
         {
             menu.AddItem(new GUIContent("Lock"), locked, () =>
             {

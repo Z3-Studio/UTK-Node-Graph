@@ -2,7 +2,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Z3.Utils.Editor;
+using Z3.Utils.Editor.ExtensionMethods;
 using Capacity = UnityEditor.Experimental.GraphView.Port.Capacity;
 
 namespace Z3.NodeGraph.Editor

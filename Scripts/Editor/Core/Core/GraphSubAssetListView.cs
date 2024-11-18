@@ -10,6 +10,7 @@ using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Editor;
 using Z3.Utils.ExtensionMethods;
 using Z3.Utils;
+using System.Collections;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -50,7 +51,7 @@ namespace Z3.NodeGraph.Editor
             if (listConfig.showAddBtn)
                 listConfig.addEvent = () => TypeSelectorPopup<T>.OpenWindow(OnAdd);
 
-            customListView = new ListViewBuilder<T, LabelView>(taskList, listConfig);
+            customListView = new ListViewBuilder<T, LabelView>((IList)taskList, listConfig); // TODO: Review this cast
             customListView.style.marginBottom = 8f;
             customListView.onBind += OnBind;
 

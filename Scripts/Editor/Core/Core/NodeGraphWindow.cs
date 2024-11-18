@@ -174,7 +174,7 @@ namespace Z3.NodeGraph.Editor
         }
 
         /// <summary> Menu Context </summary>
-        public void AddItemsToMenu(GenericMenu menu)
+        void IHasCustomMenu.AddItemsToMenu(GenericMenu menu)
         {
             menu.AddItem(new GUIContent("Lock"), locked, () =>
             {

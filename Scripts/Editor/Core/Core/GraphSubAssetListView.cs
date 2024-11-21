@@ -106,51 +106,7 @@ namespace Z3.NodeGraph.Editor
 
             foreach (FieldInfo field in fields)
             {
-                IParameter parameter = field.GetValue(newActionTask) as IParameter;
-                if (parameter == null)
-                {
-                    parameter = Activator.CreateInstance(field.FieldType) as IParameter;
-                    field.SetValue(newActionTask, parameter);
-                }
-
-                ParameterDefinitionAttribute attribute = field.GetCustomAttribute<ParameterDefinitionAttribute>();
-                AutoBindType bindType = UserPreferences.DefaultAutoBindType;
-
-                if (attribute != null)
-                {
-                    bindType = attribute.AutoBindType;
-                }
-
-                if (bindType == AutoBindType.SelfBind)
-                {
-                    if (parameter.CanSelfBind())
-                    {
-                        parameter.SelfBind();
-                    }
-                    else
-                    {
-                        Debug.LogError($"Self-binding is not supported for type '{parameter.GenericType.Name}'. Check the '{nameof(ParameterDefinitionAttribute)}' in class '{type.Name}'.");
-                    }
-                }
-                else if (bindType == AutoBindType.FindSameVariable)
-                {
-                    Variable variable = graphData.GetVariables().FirstOrDefault(v => v.name == field.Name);
-
-                    if (variable != null && TypeResolver.CanConvert(parameter, variable))
-                    {
-                        parameter.Bind(variable);
-                    }
-                }
-                else if (bindType == AutoBindType.FindSimilarVariable)
-                {
-                    string similarName = field.Name.ToLower().Replace(" ", string.Empty);
-                    Variable variable = graphData.GetVariables().FirstOrDefault(v => v.name.ToLower().Replace(" ", string.Empty) == similarName);
-
-                    if (variable != null && TypeResolver.CanConvert(parameter, variable))
-                    {
-                        parameter.Bind(variable);
-                    }
-                }
+                NodeGraphEditorUtils.TryAutoBind(graphData, newActionTask, field);
             }
 
             source.Add(newActionTask);

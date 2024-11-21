@@ -8,6 +8,7 @@ using Z3.NodeGraph.Tasks;
 using Z3.Utils;
 using Z3.Utils.ExtensionMethods;
 using Object = UnityEngine.Object;
+using UnityEngine;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -209,6 +210,55 @@ namespace Z3.NodeGraph.Editor
 
             UndoRecorder.AddCreation(cloneAsset, "Copy Assets using Context");
             AssetDatabase.SaveAssetIfDirty(graphData);
+        }
+
+        public static void TryAutoBind(GraphData graph, GraphSubAsset subAsset, FieldInfo field)
+        {
+            IParameter parameter = field.GetValue(subAsset) as IParameter;
+            if (parameter == null)
+            {
+                parameter = Activator.CreateInstance(field.FieldType) as IParameter;
+                field.SetValue(subAsset, parameter);
+            }
+
+            ParameterDefinitionAttribute attribute = field.GetCustomAttribute<ParameterDefinitionAttribute>();
+            AutoBindType bindType = UserPreferences.DefaultAutoBindType;
+
+            if (attribute != null)
+            {
+                bindType = attribute.AutoBindType;
+            }
+
+            if (bindType == AutoBindType.SelfBind)
+            {
+                if (parameter.CanSelfBind())
+                {
+                    parameter.SelfBind();
+                }
+                else
+                {
+                    Debug.LogError($"Self-binding is not supported for type '{parameter.GenericType.Name}'. Check the '{nameof(ParameterDefinitionAttribute)}' in class '{subAsset.GetType().Name}'.");
+                }
+            }
+            else if (bindType == AutoBindType.FindSameVariable)
+            {
+                Variable variable = graph.GetVariables().FirstOrDefault(v => v.name == field.Name);
+
+                if (variable != null && TypeResolver.CanConvert(parameter, variable))
+                {
+                    parameter.Bind(variable);
+                }
+            }
+            else if (bindType == AutoBindType.FindSimilarVariable)
+            {
+                string similarName = field.Name.ToLower().Replace(" ", string.Empty);
+                Variable variable = graph.GetVariables().FirstOrDefault(v => v.name.ToLower().Replace(" ", string.Empty) == similarName);
+
+                if (variable != null && TypeResolver.CanConvert(parameter, variable))
+                {
+                    parameter.Bind(variable);
+                }
+            }
         }
 
         // Replace values of: Parameters, List<SubAsset>, SubAsset, ISubAssetList (taskList, transitions)

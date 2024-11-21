@@ -9,8 +9,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Play animation by random state name")]
     public class PlayRandomAnimation : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Animator> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Animator> animator;
         [SerializeField] private Parameter<bool> waitUntilFinish;
         [SerializeField] private Parameter<List<string>> stateNames;
 
@@ -44,7 +44,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             
             int index = Random.Range(0, stateNames.Value.Count);
             selectedStateName = stateNames.Value[index];
-            data.Value.Play(selectedStateName);
+            animator.Value.Play(selectedStateName);
 
             if (!waitUntilFinish.Value)
             {
@@ -54,12 +54,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void UpdateAction()
         {
-            stateInfo = data.Value.GetCurrentAnimatorStateInfo(0);
+            stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
 
             if (stateInfo.IsName(selectedStateName))
             {
                 played = true;
-                if (NodeRunningTime >= (stateInfo.length / data.Value.speed))
+                if (NodeRunningTime >= (stateInfo.length / animator.Value.speed))
                 {
                     EndAction();
                 }

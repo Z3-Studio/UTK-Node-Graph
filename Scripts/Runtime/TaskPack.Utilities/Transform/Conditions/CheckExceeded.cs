@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Compare the agent passed the target + offset.")]
     public class CheckExceed : ConditionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
         [SerializeField] private Parameter<Axis3> axis;
         [SerializeField] private Parameter<Vector3> target;
         [SerializeField] private Parameter<float> offset;
@@ -20,7 +20,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         public override bool CheckCondition() 
         {
-            Vector3 inverse = data.Value.InverseTransformPoint(target.Value);
+            Vector3 inverse = transform.Value.InverseTransformPoint(target.Value);
             
             return offset.Value > axis.Value switch
             {

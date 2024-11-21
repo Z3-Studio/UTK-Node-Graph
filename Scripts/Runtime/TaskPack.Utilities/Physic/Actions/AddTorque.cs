@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Set the torque of a Rigidbody.")]
     public class AddTorque : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Rigidbody> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Rigidbody> rigidbody;
         [SerializeField] private Parameter<Vector3> torque;
         [SerializeField] private Parameter<ForceMode> forceMode;
 
@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void StartAction()
         {
-            data.Value.AddTorque(torque.Value, forceMode.Value);
+            rigidbody.Value.AddTorque(torque.Value, forceMode.Value);
             EndAction();
         }        
     }

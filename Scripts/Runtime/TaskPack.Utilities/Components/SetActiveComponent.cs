@@ -8,15 +8,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("MonoBehaviour.enable = active")]
     public class SetActiveComponent : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Behaviour> agent;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Behaviour> component;
         [SerializeField] private Parameter<bool> active;
 
-        public override string Info => $"{agent}.enable = {active}";
+        public override string Info => $"{component}.enable = {active}";
 
         protected override void StartAction() 
         {
-            agent.Value.enabled = active.Value;
+            component.Value.enabled = active.Value;
             EndAction();
         }
     }

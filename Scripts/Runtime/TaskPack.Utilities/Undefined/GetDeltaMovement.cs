@@ -8,26 +8,26 @@ namespace Z3.NodeGraph.TaskPack.Utilities.AI
     [NodeDescription("TODO")]
     public class GetDeltaMovement : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> velocity;
 
-        public override string Info => $"Get {data} AI Velocity";
+        public override string Info => $"Get {transform} AI Velocity";
 
         private Vector3 previousPosition;
         private int previousFrame;
         protected override void StartAction()
         {
             previousFrame = Time.frameCount;
-            previousPosition = data.Value.position;
+            previousPosition = transform.Value.position;
         }
 
         protected override void UpdateAction()
         {
             if (Time.frameCount > previousFrame)
             {
-                velocity.Value = (data.Value.position - previousPosition) / DeltaTime;
+                velocity.Value = (transform.Value.position - previousPosition) / DeltaTime;
                 EndAction();
             }
         }

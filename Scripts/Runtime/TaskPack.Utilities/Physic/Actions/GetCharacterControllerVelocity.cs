@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Get Character Controller Velocity")]
     public class GetCharacterControllerVelocity : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<CharacterController> characterController;
         [SerializeField] private Parameter<Vector3> velocity;
 

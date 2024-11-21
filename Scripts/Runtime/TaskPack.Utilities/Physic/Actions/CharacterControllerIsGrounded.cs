@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Check if Character Controller is Grounded")]
     public class CharacterControllerIsGrounded : ConditionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<CharacterController> characterController;
 
         public override string Info => $"{characterController}.isGrounded";

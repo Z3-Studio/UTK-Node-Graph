@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
     [NodeDescription("Add Force")]
     public class AddForce : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Rigidbody> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Rigidbody> rigidbody;
         [SerializeField] private Parameter<Vector3> force;
         [SerializeField] private Parameter<ForceMode> forceMode = ForceMode.Force;
 
@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
 
         protected override void StartAction()
         {
-            data.Value.AddForce(force.Value, forceMode.Value);
+            rigidbody.Value.AddForce(force.Value, forceMode.Value);
             EndAction();
         }
     }

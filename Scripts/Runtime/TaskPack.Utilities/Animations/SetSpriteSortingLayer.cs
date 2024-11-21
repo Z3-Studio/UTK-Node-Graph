@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Sets the sprite layer")]
     public class SetSpriteSortingLayer : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<SpriteRenderer> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<SpriteRenderer> spriteRenderer;
 
         [Header("Layer")]
         [SerializeField] private Parameter<int> sortingLayerIndex;
@@ -33,7 +33,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 EndAction(false);
             }
             
-            data.Value.sortingLayerID = layerID;
+            spriteRenderer.Value.sortingLayerID = layerID;
             EndAction();
         }
     }

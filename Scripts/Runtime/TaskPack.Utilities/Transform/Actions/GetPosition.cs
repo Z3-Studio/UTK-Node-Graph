@@ -9,7 +9,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class GetPosition : ActionTask
     {
         [Header("In")]
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Transform> transform;
 
         [Header("Out")]

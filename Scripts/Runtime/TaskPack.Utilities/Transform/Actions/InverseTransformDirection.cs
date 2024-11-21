@@ -8,17 +8,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Get Character Controller Velocity")]
     public class InverseTransformDirection : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> direction;
         [SerializeField] private Parameter<Vector3> inverse;
 
-        public override string Info => $"Get {data} Velocity";
+        public override string Info => $"Get {transform} Velocity";
 
         protected override void StartAction()
         {
-            inverse.Value = data.Value.InverseTransformDirection(direction.Value);
+            inverse.Value = transform.Value.InverseTransformDirection(direction.Value);
             EndAction();
         }
     }

@@ -8,15 +8,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Check the current animation by state name")]
     public class CheckAnimation : ConditionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Animator> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Animator> animator;
         [SerializeField] private Parameter<string> stateName;
 
         public override string Info => $"Animation == {stateName}";
 
         public override bool CheckCondition()
         {
-            AnimatorStateInfo stateInfo = data.Value.GetCurrentAnimatorStateInfo(0);
+            AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
             return stateInfo.IsName(stateName.Value);
         }
     }

@@ -9,7 +9,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("TODO")]
     public class CheckTargetAngle : ConditionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> target;

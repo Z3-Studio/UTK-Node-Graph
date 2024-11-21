@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Play animation by state name in all layers")]
     public class PlayAnimationAllLayers : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Animator> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Animator> animator;
         [SerializeField] private Parameter<string> stateName;
         //[Range(0, 1)]
         [SerializeField] private Parameter<float> transition = 0.25f;
@@ -27,10 +27,10 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             played = false;
 
-            for (int i = 0; i <= data.Value.layerCount; i++)
+            for (int i = 0; i <= animator.Value.layerCount; i++)
             {
-                AnimatorStateInfo current = data.Value.GetCurrentAnimatorStateInfo(i);
-                data.Value.CrossFade(stateName.Value, transition.Value / current.length, i);
+                AnimatorStateInfo current = animator.Value.GetCurrentAnimatorStateInfo(i);
+                animator.Value.CrossFade(stateName.Value, transition.Value / current.length, i);
             }
 
             if (!waitUntilFinish.Value)
@@ -41,13 +41,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void UpdateAction()
         {
-            stateInfo = data.Value.GetCurrentAnimatorStateInfo(waitLayer.Value);
+            stateInfo = animator.Value.GetCurrentAnimatorStateInfo(waitLayer.Value);
 
             if (stateInfo.IsName(stateName.Value))
             {
 
                 played = true;
-                if (NodeRunningTime >= (stateInfo.length / data.Value.speed))
+                if (NodeRunningTime >= (stateInfo.length / animator.Value.speed))
                 {
                     EndAction();
                 }

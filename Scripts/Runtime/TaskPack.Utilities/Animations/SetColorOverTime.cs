@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Change Sprite Renderer Color Over Time")]
     public class SetColorOverTime : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<SpriteRenderer> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<SpriteRenderer> spriteRenderer;
 
         [Header("Input")]
         [SerializeField] private Parameter<float> duration;
@@ -23,16 +23,16 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void StartAction()
         {
-            startColor = data.Value.color;
+            startColor = spriteRenderer.Value.color;
             timeStep = 0f;
         }
 
         protected override void UpdateAction()
         {
-            if (data.Value.color != endColor.Value && duration.Value != 0f)
+            if (spriteRenderer.Value.color != endColor.Value && duration.Value != 0f)
             {
                 timeStep += DeltaTime / duration.Value;
-                data.Value.color = Color.Lerp(startColor, endColor.Value, timeStep);
+                spriteRenderer.Value.color = Color.Lerp(startColor, endColor.Value, timeStep);
             }
             else
             {

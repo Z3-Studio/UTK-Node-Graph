@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("GameObject.SetActive(active)")]
     public class SetActiveGameObject : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<GameObject> gameObject;
         [SerializeField] private Parameter<bool> active;
 

@@ -8,14 +8,14 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
     [NodeDescription("Set transform.localScale")]
     public class SetScale : ActionTask 
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> scale;
 
         protected override void StartAction() 
         {
-            data.Value.localScale = scale.Value;
+            transform.Value.localScale = scale.Value;
             EndAction();
         }
     }

@@ -165,28 +165,52 @@ namespace Z3.NodeGraph.Editor
 
             actionsButton.clicked += () =>
             {
-                DropdownMenu menu = new DropdownMenu();
-                menu.AppendAction(typeName, null, DropdownMenuAction.Status.Disabled);
-                menu.AppendSeparator();
+                //DropdownMenu menu = new DropdownMenu();
+                //menu.AppendAction(typeName, null, DropdownMenuAction.Status.Disabled);
+                //menu.AppendSeparator();
 
-                menu.AppendAction("Duplicate", action =>
+                //menu.AppendAction("Duplicate", action =>
+                //{
+                //    OnDuplicateVariable.Invoke(Variable);
+                //});
+
+                //menu.AppendAction($"Change Type", action =>
+                //{
+                //    List<(string, Type)> types = TypeResolver.CachedVariables;
+                //    SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, actionsButton.contentRect.position);
+                //});
+
+                //menu.AppendAction("Delete", action =>
+                //{
+                //    OnDelete.Invoke(Variable);
+                //});
+
+                //Rect rect = new Rect(Event.current.mousePosition.x , Event.current.mousePosition.y, 0, 0);
+                //menu.DisplayEditorMenu(rect);
+
+                GenericMenu menu = new GenericMenu(); // You can use GenericDropdownMenu
+
+                menu.AddDisabledItem(new GUIContent(typeName));
+                menu.AddSeparator(string.Empty);
+
+                menu.AddItem(new GUIContent("Duplicate"), false, () =>
                 {
                     OnDuplicateVariable.Invoke(Variable);
                 });
 
-                menu.AppendAction($"Change Type", action =>
+                menu.AddItem(new("Change Type"), false, () =>
                 {
                     List<(string, Type)> types = TypeResolver.CachedVariables;
                     SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, actionsButton.contentRect.position);
                 });
 
-                menu.AppendAction("Delete", action =>
+                menu.AddItem(new("Delete"), false, () =>
                 {
                     OnDelete.Invoke(Variable);
                 });
 
-                Rect rect = new Rect(Event.current.mousePosition.x , Event.current.mousePosition.y, 0, 0);
-                menu.DisplayEditorMenu(rect);
+                Rect rect = new Rect(Event.current.mousePosition, Vector2.zero);
+                menu.DropDown(rect);
             };
 
             propertyContainer.Add(valueField);

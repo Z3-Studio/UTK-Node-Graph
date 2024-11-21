@@ -9,8 +9,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Return a Vector2 with the velocity for the oblique throw of a projectile. yLimits controls the min/max range of the throw.")]
     public class GetObliqueThrowVelocity : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Rigidbody> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Rigidbody> rigidbody;
         [Header("In")]
         [SerializeField] private Parameter<Vector3> targetDistance;
         [SerializeField] private Parameter<float> forwardSpeed;
@@ -21,7 +21,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void StartAction()
         {
-            returnedVelocity.Value = MathUtils.ObliqueThrowX(targetDistance.Value, data.Value.mass, forwardSpeed.Value, speedYLimits.Value);
+            returnedVelocity.Value = MathUtils.ObliqueThrowX(targetDistance.Value, rigidbody.Value.mass, forwardSpeed.Value, speedYLimits.Value);
             EndAction();
         }
     }

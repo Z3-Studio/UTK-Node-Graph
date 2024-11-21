@@ -8,18 +8,18 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
     [NodeDescription("Clamp Velocity to a set of values")]
     public class ClampVelocity : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Rigidbody> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Rigidbody> rigidbody;
         [Header("Inputs")]
         [SerializeField] private Parameter<Vector2> range;
         public override string Info => $"Clamp Velocity, Range: {range}";
         protected override void StartAction()
         {
-            data.Value.velocity = new Vector3()
+            rigidbody.Value.linearVelocity = new Vector3()
             {
-                x = Mathf.Clamp(data.Value.velocity.x, range.Value.x, range.Value.y),
-                y = Mathf.Clamp(data.Value.velocity.y, range.Value.x, range.Value.y),
-                z = Mathf.Clamp(data.Value.velocity.z, range.Value.x, range.Value.y)
+                x = Mathf.Clamp(rigidbody.Value.linearVelocity.x, range.Value.x, range.Value.y),
+                y = Mathf.Clamp(rigidbody.Value.linearVelocity.y, range.Value.x, range.Value.y),
+                z = Mathf.Clamp(rigidbody.Value.linearVelocity.z, range.Value.x, range.Value.y)
             };
             EndAction();
         }

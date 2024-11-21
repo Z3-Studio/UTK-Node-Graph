@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Set Transform.localRotation using Euler")]
     public class SetLocalEulerRotation : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> rotation;
 
@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void StartAction()
         {
-            data.Value.localRotation = Quaternion.Euler(rotation.Value);
+            transform.Value.localRotation = Quaternion.Euler(rotation.Value);
             EndAction();
         }
     }

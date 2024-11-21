@@ -7,7 +7,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeCategory(Categories.Components)]
     public class SetColliderEnabled : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Collider> collider;
         [SerializeField] private Parameter<bool> enabled;
 

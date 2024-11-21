@@ -9,8 +9,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Set Rigidbody velocity by angle")]
     public class SetVelocityAngle : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Rigidbody> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Rigidbody> rigidbody;
 
         [SerializeField] private Parameter<Axis3> axis = Axis3.Z;
         [SerializeField] private Parameter<float> velocity;
@@ -19,11 +19,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         protected override void StartAction()
         {
             // TODO: Review, use axis?
-            Quaternion redAxisRotation = Quaternion.AngleAxis(angle.Value, data.Value.transform.right);
+            Quaternion redAxisRotation = Quaternion.AngleAxis(angle.Value, rigidbody.Value.transform.right);
 
-            float finalAngle = redAxisRotation.eulerAngles.x + data.Value.transform.eulerAngles.y;
+            float finalAngle = redAxisRotation.eulerAngles.x + rigidbody.Value.transform.eulerAngles.y;
 
-            data.Value.velocity = MathUtils.AngleToDirection(finalAngle, velocity.Value);
+            rigidbody.Value.linearVelocity = MathUtils.AngleToDirection(finalAngle, velocity.Value);
             EndAction();
         }
     }

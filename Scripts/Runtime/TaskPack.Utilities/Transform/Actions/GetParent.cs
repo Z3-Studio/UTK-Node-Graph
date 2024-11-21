@@ -8,14 +8,14 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Return the parent's transform from the Agent.")]
     public class GetParent : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Transform> returnParent;
 
         protected override void StartAction()
         {
-            returnParent.Value = data.Value.parent;
+            returnParent.Value = transform.Value.parent;
             EndAction();
         }
     }

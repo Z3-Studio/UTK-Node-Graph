@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Move a GameObject to the target from the Agent position.")]
     public class MoveTowardReferenced : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> targetPosition;
         [SerializeField] private Parameter<float> speed;
@@ -23,17 +23,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             target = new Vector3()
             {
-                x = data.Value.right.x * targetPosition.Value.x + data.Value.position.x,
-                y = data.Value.up.y * targetPosition.Value.y + data.Value.position.y,
-                z = data.Value.forward.z * targetPosition.Value.z + data.Value.position.z
+                x = transform.Value.right.x * targetPosition.Value.x + transform.Value.position.x,
+                y = transform.Value.up.y * targetPosition.Value.y + transform.Value.position.y,
+                z = transform.Value.forward.z * targetPosition.Value.z + transform.Value.position.z
             };
         }
 
         protected override void UpdateAction() 
         {
-            data.Value.position = Vector3.MoveTowards(data.Value.position, target, DeltaTime * speed.Value);
+            transform.Value.position = Vector3.MoveTowards(transform.Value.position, target, DeltaTime * speed.Value);
 
-            if (Vector3.Distance(data.Value.position, target) < ThresholdDistance) 
+            if (Vector3.Distance(transform.Value.position, target) < ThresholdDistance) 
             {
                 EndAction();
             }

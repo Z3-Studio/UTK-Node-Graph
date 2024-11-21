@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Convert the global velocity to the velocity the transform is directed")]
     public class ConvertGlobalVelocityToLocal : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> globalVelocity;
         [SerializeField] private Parameter<Vector3> localVelocity;
@@ -20,9 +20,9 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             localVelocity.Value = new Vector3()
             {
-                x = Vector3.Dot(data.Value.right, globalVelocity.Value),
-                y = Vector3.Dot(data.Value.up, globalVelocity.Value),
-                z = Vector3.Dot(data.Value.forward, globalVelocity.Value)
+                x = Vector3.Dot(transform.Value.right, globalVelocity.Value),
+                y = Vector3.Dot(transform.Value.up, globalVelocity.Value),
+                z = Vector3.Dot(transform.Value.forward, globalVelocity.Value)
             };
 
             EndAction();

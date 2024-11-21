@@ -7,8 +7,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities.AI
     [NodeCategory(Categories.Transform)]
     public class GetDistance : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Transform> target;        
         [SerializeField] private Parameter<float> result;
@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.AI
 
         protected override void StartAction()
         {
-            result.Value = Vector3.Distance(data.Value.position, target.Value.position);
+            result.Value = Vector3.Distance(transform.Value.position, target.Value.position);
             EndAction();
         }
     }

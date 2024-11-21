@@ -10,8 +10,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class CheckChildCount : ConditionTask
     {
 
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
         public CompareMethod checkType = CompareMethod.EqualTo;
         [SerializeField] private Parameter<int> value;
 
@@ -22,7 +22,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         public override bool CheckCondition()
         {
-            return checkType.Compare(data.Value.childCount, value.Value);
+            return checkType.Compare(transform.Value.childCount, value.Value);
         }
     }
 }

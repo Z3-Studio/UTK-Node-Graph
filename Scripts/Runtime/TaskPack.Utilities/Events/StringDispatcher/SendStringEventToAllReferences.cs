@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     [NodeDescription("Sends an event to all Dispatcher References")]
     public class SendStringEventToAllReferences : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<StringDispatcherReferences> dispatcherReferences;
         [SerializeField] private Parameter<string> eventName;
 
@@ -25,7 +25,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     [NodeDescription("Sends an event to all Dispatcher References with payload")]
     public class SendStringEventToAllReferences<T> : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<StringDispatcherReferences> dispatcherReferences;
         [SerializeField] private Parameter<string> eventName;
         [SerializeField] private Parameter<T> valueToSend;

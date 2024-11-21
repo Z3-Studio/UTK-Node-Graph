@@ -9,7 +9,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Set Renderer Material Color")]
     public class SetRendererMaterialColor : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] protected Parameter<Renderer> renderer;
 
         [SerializeField] private Parameter<string> property = "_Color"; // You can see properties in inspector by debug like "_UnlitColor"

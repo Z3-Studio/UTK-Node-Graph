@@ -10,8 +10,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Play animation by state name")]
     public class PlayAnimation : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] protected Parameter<Animator> animator;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Animator> animator;
 
         [SerializeField] private Parameter<string> stateName;
         [Slider(0, 1)]

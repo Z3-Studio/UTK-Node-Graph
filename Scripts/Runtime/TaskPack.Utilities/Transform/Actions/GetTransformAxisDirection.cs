@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
     [NodeDescription("Get transform.axis")]
     public class GetTransformAxisDirection : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [Header("In")]
         [SerializeField] private Parameter<Direction> axisDirecition = Direction.Right;
@@ -23,12 +23,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
         {
             returnedValue.Value = axisDirecition.Value switch
             {
-                Direction.Left => -data.Value.transform.right,
-                Direction.Right => data.Value.transform.right,
-                Direction.Up => data.Value.transform.up,
-                Direction.Down => -data.Value.transform.up,
-                Direction.Forward => data.Value.transform.forward,
-                Direction.Back => -data.Value.transform.forward,
+                Direction.Left => -transform.Value.transform.right,
+                Direction.Right => transform.Value.transform.right,
+                Direction.Up => transform.Value.transform.up,
+                Direction.Down => -transform.Value.transform.up,
+                Direction.Forward => transform.Value.transform.forward,
+                Direction.Back => -transform.Value.transform.forward,
                 _ => throw new System.NotImplementedException(),
             };
 

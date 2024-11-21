@@ -8,8 +8,7 @@ namespace Z3.NodeGraph.Tasks
         [ParameterDefinition(AutoBindType.SelfBind)]
         [SerializeField] protected Parameter<T> data;
 
-        public T Agent => data.Value;
-        public string AgentInfo => data.ToString();
+        protected T Agent => data.Value;
     }
 
     public abstract class ConditionTask : Task

@@ -8,16 +8,16 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Get the transform.rotation.")]
     public class GetRotation : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [Header("Out")]
         [SerializeField] private Parameter<Quaternion> rotation;
 
-        public override string Info => $"Get {data} Rotation";
+        public override string Info => $"Get {transform} Rotation";
         protected override void StartAction()
         {
-            rotation.Value = data.Value.rotation;
+            rotation.Value = transform.Value.rotation;
             EndAction();
         }
     }

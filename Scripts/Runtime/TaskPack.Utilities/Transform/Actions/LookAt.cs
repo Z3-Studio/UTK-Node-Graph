@@ -9,7 +9,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Rotate axis of a GameObject")]
     public class LookAt : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Transform> transform;
 
         public bool useSpeed = true;

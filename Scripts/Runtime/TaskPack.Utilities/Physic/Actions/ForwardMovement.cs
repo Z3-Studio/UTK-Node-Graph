@@ -8,14 +8,14 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
     [NodeDescription("Moves a rigidbody in the Transform.Forward direction. This movement preserves the current speed in Y.")]
     public class ForwardMovement : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Rigidbody> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Rigidbody> rigidbody;
         [SerializeField] private Parameter<float> speed;
         public override string Info => $"Forward Movement = {speed}";
         protected override void StartAction()
         {
-            Vector3 forward = data.Value.transform.forward * speed.Value;
-            data.Value.velocity = new Vector3(forward.x, data.Value.velocity.y, forward.z);
+            Vector3 forward = rigidbody.Value.transform.forward * speed.Value;
+            rigidbody.Value.linearVelocity = new Vector3(forward.x, rigidbody.Value.linearVelocity.y, forward.z);
             EndAction();
         }
     }

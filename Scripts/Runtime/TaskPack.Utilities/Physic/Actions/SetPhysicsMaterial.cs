@@ -8,15 +8,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Change the PhysicsMaterial of a Rigidbody.")]
     public class SetPhysicsMaterial : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Collider> data;
-        [SerializeField] private Parameter<PhysicMaterial> physicsMaterial;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Collider> collider;
+        [SerializeField] private Parameter<PhysicsMaterial> physicsMaterial;
 
         public override string Info => $"Set PhysicsMaterial to {physicsMaterial}";
 
         protected override void StartAction()
         {
-            data.Value.sharedMaterial = physicsMaterial.Value;
+            collider.Value.sharedMaterial = physicsMaterial.Value;
             EndAction();
         }
     }

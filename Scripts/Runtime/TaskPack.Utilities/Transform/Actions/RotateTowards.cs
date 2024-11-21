@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Rotate the agent towards the target per frame")]
     public class RotateTowards : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> target;
         [SerializeField] private Parameter<float> speed = 2;
@@ -18,11 +18,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void UpdateAction()
         {
-            Vector3 lookPos = target.Value - data.Value.position;
+            Vector3 lookPos = target.Value - transform.Value.position;
             Quaternion rotation = Quaternion.LookRotation(lookPos);
-            data.Value.rotation = Quaternion.Slerp(data.Value.rotation, rotation, DeltaTime * speed.Value);
+            transform.Value.rotation = Quaternion.Slerp(transform.Value.rotation, rotation, DeltaTime * speed.Value);
 
-            if (Vector3.Angle(lookPos, data.Value.forward) <= angleDifference.Value)
+            if (Vector3.Angle(lookPos, transform.Value.forward) <= angleDifference.Value)
             {
                 EndAction();
             }

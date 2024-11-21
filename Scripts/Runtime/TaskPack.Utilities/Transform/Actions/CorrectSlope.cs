@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
     [NodeDescription("Correct a body based on current slope")]
     public class CorrectSlope : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [Header("Inputs")]
         [SerializeField] private Parameter<Vector3> slopeCheckPoint;
@@ -21,8 +21,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
         protected override void StartAction()
         {
             float slopeDownAngle = CheckSlope();
-            float currentDegrees = Mathf.MoveTowardsAngle(data.Value.eulerAngles.z, slopeDownAngle, DeltaTime * speed.Value);
-            data.Value.rotation = Quaternion.Euler(data.Value.eulerAngles.x, data.Value.eulerAngles.y, currentDegrees);
+            float currentDegrees = Mathf.MoveTowardsAngle(transform.Value.eulerAngles.z, slopeDownAngle, DeltaTime * speed.Value);
+            transform.Value.rotation = Quaternion.Euler(transform.Value.eulerAngles.x, transform.Value.eulerAngles.y, currentDegrees);
             
             EndAction();
         }
@@ -38,7 +38,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
 
                 if (Mathf.Abs(slopeAngle) <= maxSlopeAngle.Value)
                 {
-                    return data.Value.right.x > 0 ? slopeAngle : -slopeAngle;
+                    return transform.Value.right.x > 0 ? slopeAngle : -slopeAngle;
                 }
             }
 

@@ -9,8 +9,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Move a GameObject to the target position.")]
     public class MoveTowardAngle : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Axis3> axis = Axis3.Z;
         [SerializeField] private Parameter<float> speed;
@@ -21,7 +21,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         private const float ThresholdDistance = 0.02f;
 
         public override string Info => $"Move To {angle} Angleº";
-        private Vector2 Target => MathUtils.AngleToDirection(angle.Value, distance.Value) + (Vector2)data.Value.position;
+        private Vector2 Target => MathUtils.AngleToDirection(angle.Value, distance.Value) + (Vector2)transform.Value.position;
 
         protected override void StartAction()
         {
@@ -30,11 +30,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         protected override void UpdateAction()
         {
-            data.Value.position = Vector3.MoveTowards(data.Value.position, target, DeltaTime * speed.Value);
+            transform.Value.position = Vector3.MoveTowards(transform.Value.position, target, DeltaTime * speed.Value);
 
-            if (Vector3.Distance(data.Value.position, target) < ThresholdDistance)
+            if (Vector3.Distance(transform.Value.position, target) < ThresholdDistance)
             {
-                data.Value.position = target;
+                transform.Value.position = target;
                 EndAction();
             }
         }

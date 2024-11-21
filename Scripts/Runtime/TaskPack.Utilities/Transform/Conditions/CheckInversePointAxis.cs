@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Compare the Inverse Transform Point to target + offset.")]
     public class CheckInversePointAxis : ConditionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Axis3> axis;

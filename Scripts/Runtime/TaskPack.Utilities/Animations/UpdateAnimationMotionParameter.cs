@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Play animation by state name")]
     public class UpdateAnimationMotionParameter : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Animator> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Animator> animator;
 
         [Header("Variables")]
         [SerializeField] private Parameter<Vector3> currentVelocity;
@@ -39,7 +39,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         private void SetFloat(string parameter, float value)
         {
-            float currentValue = data.Value.GetFloat(parameter);
+            float currentValue = animator.Value.GetFloat(parameter);
             float finalValue = Mathf.Lerp(currentValue, value, DeltaTime * animationBlendDamp.Value);
 
             if (finalValue <= 0.01f)
@@ -47,7 +47,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 finalValue = 0;
             }
 
-            data.Value.SetFloat(parameter, finalValue);
+            animator.Value.SetFloat(parameter, finalValue);
         }
     }
 }

@@ -8,13 +8,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
     [NodeDescription("Set Rigidbody velocity")]
     public class SetVelocity : ActionTask 
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Rigidbody> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Rigidbody> rigidbody;
 
         [SerializeField] private Parameter<Vector3> velocity;
         public override string Info => $"Velocity = {velocity}";
         protected override void StartAction() {
-            data.Value.velocity = velocity.Value;
+            rigidbody.Value.linearVelocity = velocity.Value;
             EndAction();
         }
     }

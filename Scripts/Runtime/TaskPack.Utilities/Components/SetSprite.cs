@@ -8,13 +8,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Sets a Sprite Renderer Sprite")]
     public class SetSprite : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<SpriteRenderer> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<SpriteRenderer> spriteRenderer;
         [SerializeField] private Parameter<Sprite> sprite;
 
         protected override void StartAction()
         {
-            data.Value.sprite = sprite.Value;
+            spriteRenderer.Value.sprite = sprite.Value;
             EndAction();
         }
     }

@@ -9,15 +9,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Stop a particle system.")]
     public class StopParticleSystem : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<ParticleSystem> data;
-        public override string Info => $"Stop {data}";
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<ParticleSystem> particleSystem;
+        public override string Info => $"Stop {particleSystem}";
 
         [SerializeField] private Parameter<bool> stopChildren;
 
         protected override void StartAction()
         {
-            data.Value.Stop(stopChildren.Value);
+            particleSystem.Value.Stop(stopChildren.Value);
             EndAction();
         }
     }

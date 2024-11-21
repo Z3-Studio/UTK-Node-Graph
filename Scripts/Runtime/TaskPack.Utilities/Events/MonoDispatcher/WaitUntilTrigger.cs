@@ -10,7 +10,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Wait until anything is inside the Trigger area and return the Transform.")]
     public class WaitUntilTrigger : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<GameObject> target;
 
         [SerializeField] private Parameter<bool> triggerEnter = true;

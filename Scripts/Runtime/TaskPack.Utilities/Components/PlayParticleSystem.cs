@@ -8,15 +8,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Play a particle system.")]
     public class PlayParticleSystem : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<ParticleSystem> data;
-        public override string Info => $"Play {data}";
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<ParticleSystem> particleSystem;
+        public override string Info => $"Play {particleSystem}";
 
         [SerializeField] private Parameter<bool> playChildren;
 
         protected override void StartAction()
         {
-            data.Value.Play(playChildren.Value);
+            particleSystem.Value.Play(playChildren.Value);
             EndAction();
         }
     }

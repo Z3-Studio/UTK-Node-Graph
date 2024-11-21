@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
     [NodeDescription("Move a GameObject to the target position.")]
     public class MoveToward : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> targetPosition;
         [SerializeField] private Parameter<float> speed;
@@ -20,9 +20,9 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
 
         protected override void UpdateAction() 
         {
-            data.Value.position = Vector3.MoveTowards(data.Value.position, targetPosition.Value, DeltaTime * speed.Value);
+            transform.Value.position = Vector3.MoveTowards(transform.Value.position, targetPosition.Value, DeltaTime * speed.Value);
 
-            if (Vector3.Distance(data.Value.position, targetPosition.Value) < ThresholdDistance) 
+            if (Vector3.Distance(transform.Value.position, targetPosition.Value) < ThresholdDistance) 
             {
                 EndAction();
             }

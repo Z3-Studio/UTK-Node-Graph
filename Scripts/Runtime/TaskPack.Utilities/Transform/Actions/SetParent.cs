@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Set the Transform Parent")]
     public class SetParent : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Transform> target;
         [SerializeField] private Parameter<Transform> parent;
 

@@ -8,8 +8,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
     [NodeDescription("Change the Y rotation based on target")]
     public class FlipToTarget : ActionTask
     {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] private Parameter<Transform> data;
+        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [SerializeField] private Parameter<Transform> transform;
 
         [SerializeField] private Parameter<Vector3> target;
 
@@ -21,11 +21,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
         }
 
         private void LookAtTarget() {
-            bool lookingRight = data.Value.right.x > 0;
-            bool targetRight = data.Value.position.x < target.Value.x;
+            bool lookingRight = transform.Value.right.x > 0;
+            bool targetRight = transform.Value.position.x < target.Value.x;
 
             if (lookingRight != targetRight) {
-                data.Value.Rotate(0f, 180f, 0f);
+                transform.Value.Rotate(0f, 180f, 0f);
             }
         }
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Z3.NodeGraph.Core
 {
-    public static class DebugLogger
+    public static class DebugLogger // TODO: NgLogger
     {
         public static void Log(string message, GraphSubAsset context, bool force = false)
         {

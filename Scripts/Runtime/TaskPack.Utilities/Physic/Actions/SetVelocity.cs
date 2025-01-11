@@ -13,8 +13,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities {
 
         [SerializeField] private Parameter<Vector3> velocity;
         public override string Info => $"Velocity = {velocity}";
-        protected override void StartAction() {
+        protected override void StartAction() 
+        {
+#if UNITY_6000_0_OR_NEWER
             rigidbody.Value.linearVelocity = velocity.Value;
+#else
+            rigidbody.Value.velocity = velocity.Value;
+#endif
             EndAction();
         }
     }

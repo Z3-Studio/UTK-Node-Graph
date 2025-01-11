@@ -80,6 +80,7 @@ namespace Z3.NodeGraph.Editor
             CreateButtons(Items);
 
             searchField.RegisterCallback<ChangeEvent<string>>(OnSearchFieldChanged);
+            searchField.ExecuteWhenAttach(searchField.Focus);
         }
 
         protected virtual void CreateButtons(List<(string, T)> items)

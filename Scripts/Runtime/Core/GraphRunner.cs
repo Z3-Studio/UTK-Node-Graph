@@ -11,6 +11,13 @@ namespace Z3.NodeGraph.Core
         Manual
     }
 
+    public enum ActivationMethod
+    {
+        AwakeDestroy,
+        EnableDisable,
+        Manual
+    }
+
     /// <summary>
     /// Generic implementation to run any GraphData
     /// </summary>
@@ -19,6 +26,7 @@ namespace Z3.NodeGraph.Core
     {
         [SerializeField] private GraphData graphData;
         [SerializeField] private GraphVariablesComponent graphVariablesComponent;
+        [SerializeField] private ActivationMethod activationMethod = ActivationMethod.EnableDisable;
         [SerializeField] private UpdateMethod updateMethod = UpdateMethod.FixedUpdate;
 
         // Editor properties
@@ -31,6 +39,7 @@ namespace Z3.NodeGraph.Core
         public CachedComponents CachedComponents { get; private set; }
         public float OwnerActivationTime { get; private set; }
         public float DeltaTime { get ; private set; }
+        public bool Active { get ; private set; }
 
         private void Reset() => TryGetComponent(out graphVariablesComponent);
 
@@ -39,16 +48,71 @@ namespace Z3.NodeGraph.Core
             CachedComponents = new CachedComponents(this);
             graphVariablesComponent.InitReferenceVariables();
             RootController = graphData.CreateInstance(this);
+
+            if (activationMethod != ActivationMethod.AwakeDestroy)
+                return;
+
+            ManualActivation();
+        }
+
+        private void OnDestroy()
+        {
+            if (activationMethod != ActivationMethod.AwakeDestroy)
+                return;
+
+            ManualDeactivation();
         }
 
         private void OnEnable()
         {
-            OwnerActivationTime = Time.time;
-            RootController.StartGraph();
+            if (activationMethod != ActivationMethod.EnableDisable)
+                return;
+
+            ManualActivation();
         }
 
         private void OnDisable()
         {
+            if (activationMethod != ActivationMethod.EnableDisable)
+                return;
+
+            ManualDeactivation();
+        }
+
+        private void FixedUpdate()
+        {
+            if (updateMethod != UpdateMethod.FixedUpdate)
+                return;
+
+            ManualFixedUpdate();
+        }
+
+        private void Update()
+        {
+            if (updateMethod != UpdateMethod.Update)
+                return;
+
+            ManualUpdate();
+        }
+
+        private void LateUpdate()
+        {
+            if (updateMethod != UpdateMethod.LateUpdate)
+                return;
+
+            ManualUpdate();
+        }
+
+        public void ManualActivation()
+        {
+            Active = true;
+            OwnerActivationTime = Time.time;
+            RootController.StartGraph();
+        }
+
+        public void ManualDeactivation()
+        {
+            Active = false;
             RootController.StopGraph();
         }
 
@@ -58,39 +122,7 @@ namespace Z3.NodeGraph.Core
 
         public void ManualUpdate(float delta)
         {
-            if (updateMethod != UpdateMethod.Manual)
-                return;
-
-            UpdateGraph(delta);
-        }
-
-        private void FixedUpdate()
-        {
-            if (updateMethod != UpdateMethod.FixedUpdate)
-                return;
-
-            UpdateGraph(Time.fixedDeltaTime);
-        }
-
-        private void Update()
-        {
-            if (updateMethod != UpdateMethod.Update)
-                return;
-
-            UpdateGraph(Time.deltaTime);
-        }
-
-        private void LateUpdate()
-        {
-            if (updateMethod != UpdateMethod.LateUpdate)
-                return;
-
-            UpdateGraph(Time.deltaTime);
-        }
-
-        private void UpdateGraph(float deltaTime)
-        {
-            DeltaTime = deltaTime;
+            DeltaTime = delta;
             RootController.OnUpdate();
         }
     }

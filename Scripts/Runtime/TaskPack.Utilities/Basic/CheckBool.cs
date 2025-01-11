@@ -10,7 +10,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<bool> firstParameter;
         [SerializeField] private Parameter<bool> secondParameter;
 
-        public override string Info => $"{firstParameter} == {secondParameter}";
+        public override string InfoC => $"{firstParameter} == {secondParameter}";
 
         public override bool CheckCondition()
         {

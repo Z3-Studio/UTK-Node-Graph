@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<float> angle;
         public CompareMethod checkType = CompareMethod.LessThan;
 
-        public override string Info => $"{target} Angle {checkType.GetString()} {angle}";
+        public override string InfoC => $"{target} Angle {checkType.GetString()} {angle}";
 
         public override bool CheckCondition()
         {

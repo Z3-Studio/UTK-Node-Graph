@@ -38,7 +38,7 @@ namespace Z3.NodeGraph.Tasks
         public string GetLabel()
         {
             if (taskList.Count == 0)
-                return "Finish";
+                return "Finish".ToItalic();
 
             string text = string.Empty;
             string and = " && ".AddRichTextColor(Color.magenta);
@@ -48,10 +48,6 @@ namespace Z3.NodeGraph.Tasks
                 if (!task)
                 {
                     text += "Missing".AddRichTextColor(Color.red);
-                }
-                else if (task.InvertCondition)
-                {
-                    text += $"!({task})";
                 }
                 else
                 {

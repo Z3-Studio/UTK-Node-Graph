@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Z3.NodeGraph.Core;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Tasks
 {
@@ -15,7 +16,8 @@ namespace Z3.NodeGraph.Tasks
     {
         [SerializeField] private bool invertCondition;
 
-        public bool InvertCondition => invertCondition;
+        public sealed override string Info => invertCondition ? "! ".AddRichTextColor(Color.magenta).ToBold() + InfoC : InfoC;
+        public virtual string InfoC => base.Info;
 
         public bool EvaluateCondition()
         {

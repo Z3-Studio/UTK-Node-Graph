@@ -22,11 +22,21 @@ namespace Z3.NodeGraph.Core
     {
         private Action<IStringEvent> callbacks;
         private readonly Dictionary<Type, Action<IStringEvent>> callbackWithPayload = new();
+        private readonly Dictionary<string, Action> eventCallbacks = new();
 
         #region Local Events
         public void SendEvent(IStringEvent evt)
         {
             callbacks?.Invoke(evt);
+
+            foreach ((string eventName, Action callback) in eventCallbacks)
+            {
+                if (eventName == evt.EventName)
+                {
+                    callback();
+                    break;
+                }
+            }
         }
 
         public void SendEvent<T>(IStringEvent<T> evt)
@@ -49,6 +59,29 @@ namespace Z3.NodeGraph.Core
         public void UnregisterCallback(Action<IStringEvent> callback)
         {
             callbacks -= callback;
+        }
+
+        public void RegisterCallback(string eventName, Action callback)
+        {
+            if (!eventCallbacks.ContainsKey(eventName))
+            {
+                eventCallbacks.Add(eventName, null);
+            }
+
+            eventCallbacks[eventName] += callback;
+        }
+
+        public void UnregisterCallback(string eventName, Action callback)
+        {
+            if (!eventCallbacks.ContainsKey(eventName))
+                return;
+
+            eventCallbacks[eventName] -= callback;
+
+            if (eventCallbacks[eventName] == null)
+            {
+                eventCallbacks.Remove(eventName);
+            }
         }
 
         public void RegisterCallback<T>(Action<IStringEvent<T>> callback)

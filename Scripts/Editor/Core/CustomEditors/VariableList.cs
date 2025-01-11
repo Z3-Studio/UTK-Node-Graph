@@ -59,11 +59,8 @@ namespace Z3.NodeGraph.Editor
 
         private void OnAddNewVariable(string _, Type type)
         {
-            Variable.CreateVariable(type, targetList);
+            Variable.CreateVariable(target, type, targetList);
             customListView.Rebuild();
-
-            EditorUtility.SetDirty(target);
-            AssetDatabase.SaveAssets();
         }
 
         private VariableView OnMake()
@@ -97,11 +94,8 @@ namespace Z3.NodeGraph.Editor
 
         private void OnDuplicateVariable(Variable variable)
         {
-            Variable.CreateVariable(variable.OriginalType, targetList, variable.Name);
+            Variable.CreateVariable(target, variable.OriginalType, targetList, variable.Name);
             customListView.Rebuild();
-
-            EditorUtility.SetDirty(target);
-            AssetDatabase.SaveAssets();
         }
 
         private void OnDeleteVariable(Variable variable)

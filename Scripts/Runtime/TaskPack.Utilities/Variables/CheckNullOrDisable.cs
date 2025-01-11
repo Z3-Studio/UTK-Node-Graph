@@ -11,7 +11,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     {
         [SerializeField] private Parameter<GameObject> variable;
 
-        public override string Info => $"{variable} is Null or Disabled";
+        public override string InfoC => $"{variable} is Null or Disabled";
 
         public override bool CheckCondition()
         {

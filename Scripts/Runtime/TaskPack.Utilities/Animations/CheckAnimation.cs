@@ -1,6 +1,7 @@
 ﻿using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 using UnityEngine;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
@@ -11,13 +12,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Animator> animator;
         [SerializeField] private Parameter<string> stateName;
+        [SerializeField] private Parameter<int> layerIndex;
 
-        public override string Info => $"Animation == {stateName}";
+        public override string InfoC => $"Animation == {stateName}";
 
         public override bool CheckCondition()
         {
-            AnimatorStateInfo stateInfo = animator.Value.GetCurrentAnimatorStateInfo(0);
-            return stateInfo.IsName(stateName.Value);
+            return animator.Value.IsState(stateName, layerIndex);
         }
     }
 }

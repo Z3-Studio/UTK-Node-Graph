@@ -8,12 +8,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     public class SetFloatTime : ActionTask
     {
         [SerializeField] private Parameter<float> value;
+        [SerializeField] private Parameter<float> extra;
 
-        public override string Info => $"{value} = Time.time";
+        public override string Info => $"{value} = Time.time {(extra.IsBinding ? extra : extra.Value == 0 ? string.Empty : $"+ ({extra})")}";
 
         protected override void StartAction()
         {
-            value.Value = Time.time;
+            value.Value = Time.time + extra.Value;
             EndAction();
         }
     }

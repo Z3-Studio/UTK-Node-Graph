@@ -29,6 +29,12 @@ namespace Z3.NodeGraph.Core
         string IParameter.Guid => guid;
         object IParameter.Value { get => Value; set => Value = (T)value; }
         public Type GenericType => typeof(T);
+
+        //public T Value // TODO: Use it, inside of BuildBind you can set to skip the null check
+        //{
+        //    get => (T)Get();    // Get = () => value;
+        //    set => Set(value);  // Set = newValue => value = (T)newValue;
+        //}
         public T Value
         {
             get
@@ -176,7 +182,7 @@ namespace Z3.NodeGraph.Core
         /// <summary> Used to define the default value </summary>
         public static implicit operator Parameter<T>(T value)
         {
-            return new Parameter<T> { Value = value };
+            return new Parameter<T> { value = value };
         }
 
         /// <summary> Used to get Value </summary>

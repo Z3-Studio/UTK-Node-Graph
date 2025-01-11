@@ -20,7 +20,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<Vector2> range;
         [SerializeField] private Parameter<RangeCompareMethod> checkType = RangeCompareMethod.Inside;
 
-        public override string Info
+        public override string InfoC
         {
             get => checkType.Value switch
             {

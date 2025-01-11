@@ -9,14 +9,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Components
     public class DestroyComponent : ActionTask
     {
         [Header("Spawn Pooled Object")]
-        [SerializeField] private Parameter<Component> prefab;
+        [SerializeField] private Parameter<Object> unityObject;
 
-        public override string Info => prefab.Value == null ?
-            base.Info : $"Destroy {prefab}";
+        public override string Info => $"Destroy {unityObject}";
 
         protected override void StartAction()
         {
-            Destroy(prefab.Value);
+            Destroy(unityObject.Value);
             EndAction();
         }
     }

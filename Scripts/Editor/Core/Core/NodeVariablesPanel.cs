@@ -7,10 +7,9 @@ using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
-    public class NodeVariablesPanel : VisualElement
+    [UxmlElement]
+    public partial class NodeVariablesPanel : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<NodeVariablesPanel, UxmlTraits> { }
-
         private NodeGraphReferences references;
 
         internal void Init(NodeGraphReferences nodeGraphReferences)

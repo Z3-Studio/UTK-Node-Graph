@@ -350,14 +350,7 @@ namespace Z3.NodeGraph.Core
                 }
                 else if (interfaceType.GetGenericTypeDefinition() == typeof(ITypeConveterCreator<,>))
                 {
-                    InterfaceMapping map = objectType.GetInterfaceMap(interfaceType);
-
-                    Type[] genericArguments = interfaceType.GetGenericArguments();
-
-                    (Type, Type) key = (genericArguments[0], genericArguments[1]);
-                    MethodInfo method = map.TargetMethods[0]; // Could exist a better way
-
-                    AddConverter(converter, key, method);
+                    AddConverterFromCreator(converter, objectType, interfaceType);
                 }
             }
         }
@@ -370,18 +363,55 @@ namespace Z3.NodeGraph.Core
             AddConverter(converter, key, method);
         }
 
+        /// <summary> Use <see cref="ITypeConverter{TOut, TIn}"/> </summary>
         private static void AddConverter(ITypeConverter converter, (Type, Type) key, MethodInfo method)
         {
             DescriptionAttribute attribute = method.GetCustomAttribute<DescriptionAttribute>();
 
             converters[key] = new Converter(ConvertionType.TypeConverter)
             {
-                Method = (input) => method.Invoke(converter, new object[] { input }),
+                Method = Method,
                 Description = attribute != null ? attribute.Description : "Empty description",
                 OutType = key.Item1,
                 InType = key.Item2
             };
+
+            object Method(object input)
+            {
+                return method.Invoke(converter, new object[] { input });
+            }
         }
+
+        /// <summary> Use <see cref="ITypeConveterCreator{TOut, TIn}"/> </summary>
+        private static void AddConverterFromCreator(ITypeConverter converter, Type objectType, Type interfaceType)
+        {
+            InterfaceMapping map = objectType.GetInterfaceMap(interfaceType);
+
+            Type[] genericArguments = interfaceType.GetGenericArguments();
+
+            (Type, Type) key = (genericArguments[0], genericArguments[1]);
+            MethodInfo method = map.TargetMethods[0]; // Could exist a better way
+
+            return; // TODO: Add different list
+            DescriptionAttribute attribute = method.GetCustomAttribute<DescriptionAttribute>();
+
+            Delegate func = method.Invoke(converter, new object[] { key.Item2, key.Item1 }) as Delegate;
+
+            converters[key] = new Converter(ConvertionType.TypeConverter)
+            {
+                Method = Method,
+                Description = attribute != null ? attribute.Description : "Empty description",
+                OutType = key.Item1,
+                InType = key.Item2
+            };
+
+            object Method(object input)
+            {
+                var r = func.DynamicInvoke(input);
+                return r;
+            }
+        }
+    
 
         #endregion
 

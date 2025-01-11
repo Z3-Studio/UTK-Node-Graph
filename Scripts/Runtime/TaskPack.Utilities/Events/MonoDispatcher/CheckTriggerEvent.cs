@@ -16,7 +16,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<bool> triggerEnter = true;
         [SerializeField] private Parameter<Collider> returnedCollider;
 
-        public override string Info => $"Wait Until {target} Trigger {(triggerEnter.IsBinding ? triggerEnter.ToString() : triggerEnter.Value ? "Enter" : "Exit").ToBold()}";
+        public override string InfoC => $"Wait Until {target} Trigger {(triggerEnter.IsBinding ? triggerEnter.ToString() : triggerEnter.Value ? "Enter" : "Exit").ToBold()}";
 
         private MonoEventDispatcher monoEvents;
 

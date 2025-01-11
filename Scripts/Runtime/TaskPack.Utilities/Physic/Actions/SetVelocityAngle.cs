@@ -23,7 +23,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
             float finalAngle = redAxisRotation.eulerAngles.x + rigidbody.Value.transform.eulerAngles.y;
 
+#if UNITY_6000_0_OR_NEWER
             rigidbody.Value.linearVelocity = MathUtils.AngleToDirection(finalAngle, velocity.Value);
+#else
+            rigidbody.Value.velocity = MathUtils.AngleToDirection(finalAngle, velocity.Value);
+#endif
+
             EndAction();
         }
     }

@@ -15,7 +15,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<float> distance;
         public CompareMethod checkType = CompareMethod.LessOrEqualTo;
 
-        public override string Info => $"{transform}.X - {target}.X" + checkType.GetString() + distance;
+        public override string InfoC => $"{transform}.X - {target}.X" + checkType.GetString() + distance;
 
         public override bool CheckCondition()
         {

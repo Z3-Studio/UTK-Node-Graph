@@ -15,7 +15,13 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
         protected override void StartAction()
         {
             Vector3 forward = rigidbody.Value.transform.forward * speed.Value;
+
+#if UNITY_6000_0_OR_NEWER
             rigidbody.Value.linearVelocity = new Vector3(forward.x, rigidbody.Value.linearVelocity.y, forward.z);
+#else
+            rigidbody.Value.velocity = new Vector3(forward.x, rigidbody.Value.velocity.y, forward.z);
+#endif
+
             EndAction();
         }
     }

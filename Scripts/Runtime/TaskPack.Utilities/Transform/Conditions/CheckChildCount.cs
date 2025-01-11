@@ -15,7 +15,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         public CompareMethod checkType = CompareMethod.EqualTo;
         [SerializeField] private Parameter<int> value;
 
-        public override string Info
+        public override string InfoC
         {
             get { return "Child Count" + checkType.GetString() + value; }
         }

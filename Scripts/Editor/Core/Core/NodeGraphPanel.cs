@@ -28,10 +28,9 @@ namespace Z3.NodeGraph.Editor
     /// <summary>
     /// Simplifies GraphView to create more efficient callbacks to simplify implementation of the new NodeGraphModule
     /// </summary>
-    public sealed class NodeGraphPanel : GraphPanel, IDisposable
+    [UxmlElement]
+    public partial class NodeGraphPanel : GraphPanel, IDisposable
     {
-        public new class UxmlFactory : UxmlFactory<NodeGraphPanel, UxmlTraits> { }
-
         private NodeGraphModule Module => references.Module;
         private GraphData CurrentGraph => references.Data;
 

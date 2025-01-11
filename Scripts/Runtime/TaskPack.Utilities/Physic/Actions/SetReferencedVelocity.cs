@@ -14,12 +14,19 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         public override string Info => $"Referenced velocity = {velocity}";
         protected override void StartAction() 
         {
-            rigidbody.Value.linearVelocity = new Vector3()
+            Vector3 result = new Vector3()
             {
                 x = rigidbody.Value.transform.right.x * velocity.Value.x,
                 y = rigidbody.Value.transform.up.y * velocity.Value.y,
                 z = rigidbody.Value.transform.forward.z * velocity.Value.z
             };
+
+#if UNITY_6000_0_OR_NEWER
+            rigidbody.Value.linearVelocity = result;
+#else
+            rigidbody.Value.velocity = result;
+#endif
+
             EndAction();
         }
     }

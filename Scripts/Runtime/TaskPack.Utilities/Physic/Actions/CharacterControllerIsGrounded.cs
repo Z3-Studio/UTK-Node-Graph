@@ -11,7 +11,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<CharacterController> characterController;
 
-        public override string Info => $"{characterController}.isGrounded";
+        public override string InfoC => $"{characterController}.isGrounded";
 
         public override bool CheckCondition()
         {

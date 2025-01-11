@@ -10,7 +10,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     {
         [SerializeField] private Parameter<EventMediator> eventMediator;
 
-        public override string Info => $"{base.Info}: {eventMediator}";
+        public override string InfoC => $"{base.Info}: {eventMediator}";
 
         protected override void Subscribe()
         {
@@ -30,7 +30,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
         [SerializeField] private Parameter<EventMediator> eventMediator;
         [SerializeField] private Parameter<T> value;
 
-        public override string Info => $"{base.Info}: {eventMediator} with {value}";
+        public override string InfoC => $"{base.Info}: {eventMediator} with {value}";
 
         protected override void Subscribe()
         {

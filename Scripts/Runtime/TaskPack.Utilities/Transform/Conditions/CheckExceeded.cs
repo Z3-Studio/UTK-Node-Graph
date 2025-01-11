@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<Vector3> target;
         [SerializeField] private Parameter<float> offset;
 
-        public override string Info => offset.Value == 0 ?
+        public override string InfoC => offset.Value == 0 ?
             $"Exceeded {axis} {target}":
             $"Exceeded {axis} {target} {offset}";
 

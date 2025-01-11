@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<float> value;
         public CompareMethod checkType = CompareMethod.EqualTo;
 
-        public override string Info => $"Inverse Point {axis} {target} {checkType.GetString()} {value}";
+        public override string InfoC => $"Inverse Point {axis} {target} {checkType.GetString()} {value}";
 
         public override bool CheckCondition()
         {

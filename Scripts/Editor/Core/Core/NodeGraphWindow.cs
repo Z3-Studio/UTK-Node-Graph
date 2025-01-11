@@ -51,7 +51,7 @@ namespace Z3.NodeGraph.Editor
         public static void OpenGraph(GraphData graphData)
         {
             NodeGraphWindow window = GetWindow<NodeGraphWindow>(NodeGraphs);
-            window.nodeGraphReferences.OpenGraphData(graphData);
+            window.SelectGraph(graphData);
         }
 
         private void OnEnable()
@@ -71,7 +71,7 @@ namespace Z3.NodeGraph.Editor
 
         private void OnPlayModeStageChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.EnteredEditMode)
+            if (state == PlayModeStateChange.EnteredEditMode && !GraphData)
             {
                 rootVisualElement.Clear();
                 CreateGUI();
@@ -130,15 +130,19 @@ namespace Z3.NodeGraph.Editor
             
             if (graph && graph != GraphData)
             {
-                selectGraphContainer.style.SetDisplay(false);
-
                 // RootNodeBug? After create a soon as possible
                 // TODO: Understand why and when this is necessary and document it
                 if (checkId && !AssetDatabase.CanOpenAssetInEditor(graph.GetInstanceID())) 
                     return;
 
-                nodeGraphReferences.OpenGraphData(graph, controller);
+                SelectGraph(graph, controller);
             }
+        }
+
+        private void SelectGraph(GraphData graph, GraphController controller = null)
+        {
+            selectGraphContainer.style.SetDisplay(false);
+            nodeGraphReferences.OpenGraphData(graph, controller);
         }
 
         [UIElement("open-in-analyzer-button")]

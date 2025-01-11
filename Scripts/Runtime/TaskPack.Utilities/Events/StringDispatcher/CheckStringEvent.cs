@@ -10,7 +10,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     {
         [SerializeField] private Parameter<string> eventName;
 
-        public override string Info => $"{base.Info}: {eventName}";
+        public override string InfoC => $"{base.InfoC}: {eventName}";
 
         protected override void Subscribe()
         {
@@ -38,7 +38,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
         [SerializeField] private Parameter<string> eventName;
         [SerializeField] private Parameter<T> returnedValue;
 
-        public override string Info => $"{base.Info}: {eventName}";
+        public override string InfoC => $"{base.InfoC}: {eventName}";
 
         protected override void Subscribe()
         {

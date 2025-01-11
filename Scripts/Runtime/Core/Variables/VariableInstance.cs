@@ -43,6 +43,30 @@ namespace Z3.NodeGraph.Core
             set => pair[index] = value;
         }
 
+        /// <summary> Find first Variable with type of T </summary>
+        public VariableReference<T> GetVariable<T>()
+        {
+            Type type = typeof(T);
+            VariableInstance variable = Values.First(v => type.IsAssignableFrom(v.OriginalType));
+            return new VariableReference<T>(variable);
+        }
+
+        /// <summary> Find first Variable with type of T and name </summary>
+        public VariableReference<T> GetVariable<T>(string variableName)
+        {
+            Type type = typeof(T);
+            VariableInstance variable = Values.First(v => v.Name == variableName && type.IsAssignableFrom(v.OriginalType));
+            return new VariableReference<T>(variable);
+        }
+
+        /// <summary> Find first Variable with type of T and guid </summary>
+        public VariableReference<T> GetVariableFromGuid<T>(string guid)
+        {
+            Type type = typeof(T);
+            VariableInstance variable = Values.First(v => v.Guid == guid);
+            return new VariableReference<T>(variable);
+        }
+
         public static VariableInstanceList CloneVariables(List<Variable> variablesToClone)
         {
             VariableInstanceList dic = new();

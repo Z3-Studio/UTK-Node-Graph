@@ -12,7 +12,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Math
         [SerializeField] private CompareMethod comparison = CompareMethod.EqualTo;
         [SerializeField] private Parameter<float> distance;
 
-        public override string Info => $"Distance ({vectorA}, {vectorB}) {comparison.GetString()} {distance}";
+        public override string InfoC => $"Distance ({vectorA}, {vectorB}) {comparison.GetString()} {distance}";
 
         public override bool CheckCondition()
         {

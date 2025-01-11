@@ -7,13 +7,16 @@ namespace Z3.NodeGraph.StateMachine
 {
     public class StateMachineController : GraphController<StateMachineData>
     {
+        public event Action OnChangeStage;
+
+        public TransitableStateNode CurrentState { get; private set; }
+
         private readonly List<IParallelState> enterStates = new();
         private readonly List<IParallelState> beforeUpdateState = new();
         private readonly List<IParallelState> afterUpdateState = new();
         private readonly List<IParallelState> exitStates = new();
         private readonly List<StateMachineNode> nodes = new();
 
-        public TransitableStateNode CurrentState { get; private set; }
         private State state = State.Ready;
 
         public StateMachineController(IGraphRunner runner, StateMachineData data) : base(runner, data)
@@ -21,7 +24,7 @@ namespace Z3.NodeGraph.StateMachine
             nodes = GraphData.SubAssets.OfType<StateMachineNode>().ToList();
 
             IEnumerable<IGrouping<ParallelExecution, IParallelState>> groups = nodes.OfType<IParallelState>()
-                .OrderBy(a => a.Priority)
+                .OrderByDescending(a => a.Priority)
                 .GroupBy(a => a.ParallelExecution);
 
             foreach (IGrouping<ParallelExecution, IParallelState> group in groups)
@@ -70,6 +73,7 @@ namespace Z3.NodeGraph.StateMachine
         {
             CurrentState.StopState();
             CurrentState = nextState;
+            OnChangeStage?.Invoke(); // Used in AnyState
             CurrentState.StartState();
         }
 

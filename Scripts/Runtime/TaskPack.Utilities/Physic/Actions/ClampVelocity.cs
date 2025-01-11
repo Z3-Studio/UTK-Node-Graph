@@ -15,12 +15,22 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Physic
         public override string Info => $"Clamp Velocity, Range: {range}";
         protected override void StartAction()
         {
+#if UNITY_6000_0_OR_NEWER
             rigidbody.Value.linearVelocity = new Vector3()
             {
                 x = Mathf.Clamp(rigidbody.Value.linearVelocity.x, range.Value.x, range.Value.y),
                 y = Mathf.Clamp(rigidbody.Value.linearVelocity.y, range.Value.x, range.Value.y),
                 z = Mathf.Clamp(rigidbody.Value.linearVelocity.z, range.Value.x, range.Value.y)
             };
+#else
+            rigidbody.Value.velocity = new Vector3()
+            {
+                x = Mathf.Clamp(rigidbody.Value.velocity.x, range.Value.x, range.Value.y),
+                y = Mathf.Clamp(rigidbody.Value.velocity.y, range.Value.x, range.Value.y),
+                z = Mathf.Clamp(rigidbody.Value.velocity.z, range.Value.x, range.Value.y)
+            };
+#endif
+
             EndAction();
         }
     }

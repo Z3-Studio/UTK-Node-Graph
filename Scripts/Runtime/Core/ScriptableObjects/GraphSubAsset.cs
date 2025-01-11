@@ -29,6 +29,7 @@ namespace Z3.NodeGraph.Core
             }
         }
 
+        // TODO: Elapsed From Delta
         protected float DeltaTime => GraphRunner.DeltaTime;
         protected IGraphRunner GraphRunner => GraphController.Runner;
         protected GraphController GraphController { get; private set; }

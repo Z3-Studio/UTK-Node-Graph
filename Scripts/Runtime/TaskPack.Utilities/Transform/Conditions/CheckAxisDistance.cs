@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<Axis3Flags> axis;
         public CompareMethod checkType = CompareMethod.LessOrEqualTo;
 
-        public override string Info
+        public override string InfoC
         {
             get
             {

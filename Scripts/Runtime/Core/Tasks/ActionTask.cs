@@ -19,14 +19,26 @@ namespace Z3.NodeGraph.Tasks
         protected float NodeActivationTime { get; private set; }
         public float NodeRunningTime => Time.time - NodeActivationTime;
 
+        // TODO: Review it
+        // If a event call this method, before the UpdateActionTask, it will reset and call Start again
+        private bool forceStop;
+
         public State UpdateActionTask()
         {
+            if (forceStop)
+            {
+                forceStop = false;
+                StopAction();
+                return State;
+            }
+
             // Update if is running
             if (State == State.Running)
             {
                 UpdateAction();
                 if (State != State.Running)
                 {
+                    forceStop = false;
                     StopAction();
                 }
                 return State;
@@ -40,6 +52,7 @@ namespace Z3.NodeGraph.Tasks
             // Check state
             if (State != State.Running)
             {
+                forceStop = false;
                 StopAction();
                 return State;
             }
@@ -50,6 +63,7 @@ namespace Z3.NodeGraph.Tasks
                 UpdateAction();
                 if (State != State.Running)
                 {
+                    forceStop = false;
                     StopAction();
                 }
                 return State;
@@ -62,6 +76,7 @@ namespace Z3.NodeGraph.Tasks
             if (State != State.Running)
                 return;
 
+            forceStop = false;
             StopAction();
             State = State.Resting;
         }
@@ -70,6 +85,7 @@ namespace Z3.NodeGraph.Tasks
 
         protected void EndAction(bool success)
         {
+            forceStop = true;            
             State = success ? State.Success : State.Failure;
         }
 

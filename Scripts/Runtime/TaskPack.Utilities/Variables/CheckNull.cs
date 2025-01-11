@@ -11,7 +11,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     {
         [SerializeField] private Parameter<object> variable;
 
-        public override string Info  => $"{variable} == null";
+        public override string InfoC => $"{variable} == null";
 
         public override bool CheckCondition() 
         {

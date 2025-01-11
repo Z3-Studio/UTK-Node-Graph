@@ -71,34 +71,37 @@ namespace Z3.NodeGraph.StateMachine
 
         public void TryTransition(StateMachineController graphController)
         {
-            TryTransition(graphController, delegate { });
+            TryTransition(graphController, delegate { }, State.Success);
         }
 
         // TODO: Improve the arguments
-        public void TryTransition(StateMachineController graphController, TransitionCheckType transitionCheckType, Func<State> state, Action callback)
+        public void TryTransition(StateMachineController graphController, TransitionCheckType transitionCheckType, Func<State> getState, Action onUpdate)
         {
+            State state = getState();
             if (transitionCheckType == TransitionCheckType.BeforeUpdate)
             {
-                TryTransition(graphController, callback);
+                TryTransition(graphController, onUpdate, state);
                 return;
             }
 
-            if (state() == State.Running)
+            if (state == State.Running)
             {
-                callback();
+                onUpdate();
             }
 
-            if (transitionCheckType == TransitionCheckType.OnlyWhenFinished && state() == State.Running)
+            state = getState();
+            if (transitionCheckType == TransitionCheckType.OnlyWhenFinished && state == State.Running)
                 return;
 
-            TryTransition(graphController, delegate { });
+            TryTransition(graphController, delegate { }, state);
         }
 
-        private void TryTransition(StateMachineController graphController, Action afterFailTransition)
+        /// <param name="onUpdate"> Called only if transition fail </param>
+        private void TryTransition(StateMachineController graphController, Action onUpdate, State state)
         {
             foreach (Transition transition in transitions)
             {
-                bool success = transition.CheckTransitions();
+                bool success = transition.CheckTransitions(state);
                 if (success)
                 {
                     graphController.SetNextState(transition.Connection);
@@ -106,21 +109,23 @@ namespace Z3.NodeGraph.StateMachine
                 }
             }
 
-            afterFailTransition();
+            onUpdate();
         }
 
-        public bool TryTransitionNew(StateMachineController graphController, bool canTransitionToSelf)
+        public bool TryTransitionNew(StateMachineController graphController, out Transition transitionUsed)
         {
-            foreach (Transition transition in transitions.Where(t => canTransitionToSelf || t.Connection != graphController.CurrentState))
+            foreach (Transition transition in transitions.Where(t => t.State != State.Resting))
             {
-                bool success = transition.CheckTransitions();
+                bool success = transition.CheckTransitions(State.Success);
                 if (success)
                 {
                     graphController.SetNextState(transition.Connection);
+                    transitionUsed = transition;
                     return true;
                 }
             }
 
+            transitionUsed = null;
             return false;
         }
 

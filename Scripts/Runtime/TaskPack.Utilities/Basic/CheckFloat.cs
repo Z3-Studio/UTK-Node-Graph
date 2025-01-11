@@ -11,7 +11,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<float> secondParameter;
         [SerializeField] private CompareMethod compare = CompareMethod.EqualTo;
 
-        public override string Info => $"{firstParameter} {compare.GetString()} {secondParameter}";
+        public override string InfoC => $"{firstParameter} {compare.GetString()} {secondParameter}";
 
         public override bool CheckCondition()
         {

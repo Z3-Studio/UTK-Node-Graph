@@ -53,6 +53,8 @@ namespace Z3.NodeGraph.Editor
             parameterSlot.Clear();
 
             parameterT = property.GetValue<IParameter>();
+            if (parameterT == null)
+                throw new System.NotImplementedException();
 
             SerializedProperty serializedProp = property.FindPropertyRelative(Parameter<object>.ValueField);
 
@@ -127,11 +129,12 @@ namespace Z3.NodeGraph.Editor
                 
                 menu.AppendAction("Try Auto Bind", actionEvent =>
                 {
-                    // data
+                    string oldGuid = parameterT.Guid;
                     NodeGraphEditorUtils.TryAutoBind(data, targetObject, fieldInfo);
-                    if (parameterT.IsBinding)
+                    if (oldGuid != parameterT.Guid)
                     {
                         bindToggle.value = true;
+                        EditorUtility.SetDirty(targetObject);
                     }
                 });
             }));
@@ -215,12 +218,12 @@ namespace Z3.NodeGraph.Editor
                 }
                 else if (name == NewLocalVariable)
                 {
-                    variable = Variable.CreateVariable(GenericType, data.LocalVariables, displayName.Replace(" ", string.Empty));
+                    variable = Variable.CreateVariable(targetObject, GenericType, data.LocalVariables, displayName.Replace(" ", string.Empty));
                     NodeGraphWindow.ForceRedrawVariables(data);
                 }
                 else if (name == NewReferenceVariable && data.ReferenceVariables != null)
                 {
-                    variable = Variable.CreateVariable(GenericType, data.ReferenceVariables.DeclaredVariables, displayName.Replace(" ", string.Empty));
+                    variable = Variable.CreateVariable(data.ReferenceVariables, GenericType, data.ReferenceVariables.DeclaredVariables, displayName.Replace(" ", string.Empty));
                     NodeGraphWindow.ForceRedrawVariables(data);
                 }
                 else

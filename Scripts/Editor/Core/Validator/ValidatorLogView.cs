@@ -2,7 +2,6 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Core;
 using Z3.UIBuilder.Editor;
 using Z3.UIBuilder.ExtensionMethods;
@@ -55,7 +54,7 @@ namespace Z3.NodeGraph.Editor
             Populate();
         }
 
-        [UIElement("open-graph")]
+        [UIElement("open-graph-button")]
         private void OnOpenGraph()
         {
             NodeGraphWindow.OpenGraph(analyzer.GraphData);

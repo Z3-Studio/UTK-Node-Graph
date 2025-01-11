@@ -104,7 +104,7 @@ namespace Z3.NodeGraph.Core
         }
 
         #if UNITY_EDITOR
-        public static Variable CreateVariable(Type type, List<Variable> targetList, string variableName = "NewVariable")
+        public static Variable CreateVariable(ScriptableObject asset, Type type, List<Variable> targetList, string variableName = "NewVariable")
         {
             const int MaxInteractions = 100;
             string name = variableName;
@@ -127,6 +127,8 @@ namespace Z3.NodeGraph.Core
 
             targetList.Add(newVariable);
 
+            UnityEditor.EditorUtility.SetDirty(asset);
+            UnityEditor.AssetDatabase.SaveAssetIfDirty(asset);
             return newVariable;
         }
         #endif

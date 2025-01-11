@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
@@ -6,8 +7,17 @@ using Z3.UIBuilder.Core;
 
 namespace Z3.NodeGraph.StateMachine
 {
+    [Flags]
+    public enum AllowedTransitionStates
+    {
+        Failure = 1,
+        Success = 2,
+        Running = 4,
+    }
+
     public class Transition : GraphSubAsset
     {
+        [SerializeField] private AllowedTransitionStates allowedTransitionStates = (AllowedTransitionStates)7;
         [HideInGraphInspector, ReadOnly]
         [SerializeField] private TransitableStateNode connection;
         [SerializeField] private ConditionTaskList conditions = new();
@@ -28,8 +38,26 @@ namespace Z3.NodeGraph.StateMachine
             State = State.Running;
         }
 
-        public bool CheckTransitions()
+        public bool CheckTransitions(State state)
         {
+            switch (state)
+            {
+                case State.Failure:
+                    if (!allowedTransitionStates.HasFlag(AllowedTransitionStates.Failure))
+                        return false;
+                    break;
+
+                case State.Success:
+                    if (!allowedTransitionStates.HasFlag(AllowedTransitionStates.Success))
+                        return false;
+                    break;
+
+                default:
+                    if (!allowedTransitionStates.HasFlag(AllowedTransitionStates.Running))
+                        return false;
+                    break;
+            }
+
             bool result = conditions.CheckConditions();
 
             #if UNITY_EDITOR
@@ -41,13 +69,7 @@ namespace Z3.NodeGraph.StateMachine
 
         public void StopTransitions()
         {
-            #if UNITY_EDITOR
-            if (State == State.Running)
-            {
-                State = State.Resting;
-            }
-            #endif
-
+            State = State.Resting;
             conditions.StopTaskList();
         }
 

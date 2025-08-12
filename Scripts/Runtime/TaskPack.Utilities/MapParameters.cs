@@ -8,15 +8,36 @@ using Z3.Utils;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
+    public interface IUpdateParameters
+    {
+        event Action OnUpdateParameters;
+    }
+
     [NodeCategory(Categories.Miscellaneous)]
     [NodeDescription("Auto Mapper copy all Properties from 'data' and paste to 'ReferenceVariables'")]
     public class MapParameters : ActionTask
     {
         [SerializeField] protected Parameter<ScriptableObject> data;
 
+        private IUpdateParameters updateParameters;
+
         public override string Info => $"Map Parameters {data}";
 
         protected override void StartAction()
+        {
+            updateParameters = data.Value as IUpdateParameters;
+
+            if (updateParameters != null)
+            {
+                updateParameters.OnUpdateParameters += OnDataChanged;
+            }
+
+            UpdateParameters();
+
+            EndAction();
+        }
+
+        private void UpdateParameters()
         {
             //if (!Mapper.HasMap(data.GenericType, GraphRunner.ReferenceVariables.GetType()))
             //{
@@ -69,8 +90,18 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                     variable.Value = fieldInfo.GetValue(data.Value);
                 }
             }
+        }
 
-            EndAction();
+        private void OnDataChanged()
+        {
+            if (GraphRunner?.Component && GameObject.activeSelf)
+            {
+                UpdateParameters();
+            }
+            else
+            {
+                updateParameters.OnUpdateParameters -= OnDataChanged;
+            }
         }
     }
 

@@ -78,5 +78,8 @@ namespace Z3.NodeGraph.Core
         public static bool operator !=(OverrideVariable a, Variable b) => !(a == b);
         public static bool operator ==(Variable b, OverrideVariable a) => a == b;
         public static bool operator !=(Variable b, OverrideVariable a) => !(a == b);
+
+        public override bool Equals(object obj) => base.Equals(obj);
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

@@ -45,7 +45,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
                 if (string.IsNullOrEmpty(info))
                 {
-                    return name;
+                    return base.Info;
                 }
 
                 return info;

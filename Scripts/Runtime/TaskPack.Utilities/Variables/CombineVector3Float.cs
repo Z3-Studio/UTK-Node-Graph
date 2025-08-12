@@ -11,9 +11,9 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     {
         [Header("In")]
         [SerializeField] private Parameter<Vector3> initialVector;
-        [SerializeField] private Parameter<float> xPosition;
-        [SerializeField] private Parameter<float> yPosition;
-        [SerializeField] private Parameter<float> zPosition;
+        [SerializeField] private Parameter<float> x;
+        [SerializeField] private Parameter<float> y;
+        [SerializeField] private Parameter<float> z;
 
         [Header("Config")]
         [SerializeField] private Parameter<bool> useFloatX;
@@ -44,28 +44,29 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                     initialZ = $"<b>{initialVector.Value.z}</b>";
                 }
 
-                string x = useFloatX.Value ? xPosition.ToString() : initialX;
-                string y = useFloatY.Value ? yPosition.ToString() : initialY;
-                string z = useFloatZ.Value ? zPosition.ToString() : initialZ;
+                string xText = useFloatX.Value ? x.ToString() : initialX;
+                string yText = useFloatY.Value ? y.ToString() : initialY;
+                string zText = useFloatZ.Value ? z.ToString() : initialZ;
 
-                return $"{returnedVector} = ({x}, {y}, {z})";
+                return $"{returnedVector} = ({xText}, {yText}, {zText})";
             } 
         }
 
-        protected override void StartAction() {
+        protected override void StartAction() 
+        {
             Vector3 newVector = initialVector.Value;
 
             if (useFloatX.Value)
             {
-                newVector.x = xPosition.Value;
+                newVector.x = x.Value;
             }
             if (useFloatY.Value)
             {
-                newVector.y = yPosition.Value;
+                newVector.y = y.Value;
             }
             if (useFloatZ.Value)
             {
-                newVector.z = zPosition.Value;
+                newVector.z = z.Value;
             }
 
             returnedVector.Value = newVector;

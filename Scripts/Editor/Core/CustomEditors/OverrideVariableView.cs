@@ -63,7 +63,7 @@ namespace Z3.NodeGraph.Editor
             IBaseFieldReader baseField;
             if (OverrideVariable)
             {
-                FieldInfo field = OverrideVariable.GetType().GetField(nameof(OverrideVariable.value));
+                FieldInfo field = OverrideVariable.GetType().GetField(nameof(OverrideVariable.Value));
 
                 baseField = EditorBuilder.GetElement(OverrideVariable, field, type);
                 baseField.OnValueChangedAfterBlur += OnUpdateValue;
@@ -72,7 +72,7 @@ namespace Z3.NodeGraph.Editor
             }
             else
             {
-                FieldInfo field = Variable.GetType().GetField(nameof(Variable.value));
+                FieldInfo field = Variable.GetType().GetField(nameof(Variable.Value));
                 baseField = EditorBuilder.GetElement(Variable, field, type);
 
                 baseField.VisualElement.SetEnabled(false);
@@ -88,11 +88,11 @@ namespace Z3.NodeGraph.Editor
             else
             {
                 // TODO: Check if is override, if isn't, show as readonly
-                if (Variable.value == null)
+                if (Variable.Value == null)
                 {
                     valueField = new Button(() =>
                     {
-                        Variable.value = Activator.CreateInstance(Variable.OriginalType);
+                        Variable.Value = Activator.CreateInstance(Variable.OriginalType);
 
                     })
                     { text = "Create Instance" };
@@ -101,7 +101,7 @@ namespace Z3.NodeGraph.Editor
                 {
                     valueField = new Button(() =>
                     {
-                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, Variable.value, type);
+                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, Variable.Value, type);
 
                         EventCallback<DetachFromPanelEvent> closeEvent = _ =>
                         {
@@ -133,7 +133,7 @@ namespace Z3.NodeGraph.Editor
                 OverrideVariable newOverrideVariable = new OverrideVariable()
                 {
                     guid = Variable.guid,
-                    value = Variable.value
+                    Value = Variable.Value
                 };
 
                 OnCreate(newOverrideVariable);

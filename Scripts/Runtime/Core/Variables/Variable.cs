@@ -15,11 +15,11 @@ namespace Z3.NodeGraph.Core
     public class Variable : ISerializationCallbackReceiver, IVariable
     {
         // Serialized fields
-        public string name;
-        public string guid;
-        public string type = "";
-        public string serializedValue;
-        public List<Object> serializedObjects;
+        [SerializeField] public string name;
+        [SerializeField] public string guid;
+        [SerializeField] public string type = "";
+        [SerializeField] public string serializedValue;
+        [SerializeField] public List<Object> serializedObjects;
 
         // Interface
         public string Name => name;
@@ -83,7 +83,7 @@ namespace Z3.NodeGraph.Core
         public static Variable Clone(Variable variable, OverrideVariable overrideVariable)
         {
             Variable newVariable = Clone(variable);
-            newVariable.value = overrideVariable.value;
+            newVariable.value = overrideVariable.Value;
             return newVariable;
         }
 

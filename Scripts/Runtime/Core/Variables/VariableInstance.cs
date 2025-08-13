@@ -17,14 +17,14 @@ namespace Z3.NodeGraph.Core
         public VariableInstance(Variable variable)
         {
             Name = variable.name;
-            Value = variable.value;
+            Value = variable.Value;
             Guid = variable.guid;
             OriginalType = variable.OriginalType;
         }
 
         public VariableInstance(Variable variable, OverrideVariable overrideVariable) : this(variable)
         {
-            Value = overrideVariable.value;
+            Value = overrideVariable.Value;
         }
     }
 

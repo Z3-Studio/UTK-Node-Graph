@@ -4,50 +4,38 @@ using System.Linq;
 using UnityEngine;
 using Z3.Utils;
 using Z3.Utils.ExtensionMethods;
+using Object = UnityEngine.Object;
 
 namespace Z3.NodeGraph.Core
 {
     [Serializable]
     public class OverrideVariable : ISerializationCallbackReceiver, IVariable
     {
-        public string guid;
-        public object value;
+        // Serialized fields
+        [SerializeField] public string name;
+        [SerializeField] public string guid;
+        [SerializeField] public string type = "";
+        [SerializeField] public string serializedValue;
+        [SerializeField] public List<Object> serializedObjects;
 
-        public UnityEngine.Object serializedObject;
-        public string serializedValue;
-
-        public string Name => throw new NotImplementedException();
+        // Interface
+        public string Name => throw new InvalidOperationException("Get from original");
         public object Value { get => value; set => this.value = value; }
         public string Guid => guid;
-        public Type OriginalType => throw new NotImplementedException(); // Check Variable.cs implementation
+        public Type OriginalType => throw new InvalidOperationException("Get from original"); // Check Variable.cs implementation
+
+        // Deserialized value
+        private object value;
 
         public void OnAfterDeserialize()
         {
-            if (!string.IsNullOrEmpty(serializedValue))
-            {
-                value = Serializer.FromJson(serializedValue);
-            }
-            else
-            {
-                value = serializedObject;
-            }
+            value = Serializer.FromJson(serializedValue, OriginalType, serializedObjects);
         }
 
         public void OnBeforeSerialize()
         {
-            if (IsUnityObject(value))
-            {
-                serializedObject = value as UnityEngine.Object;
-                serializedValue = null;
-            }
-            else
-            {
-                serializedValue = Serializer.ToJson(value);
-                serializedObject = null;
-            }
+            serializedValue = Serializer.ToJson(value, OriginalType, serializedObjects);
         }
-
-        private bool IsUnityObject(object obj) => obj != null && typeof(UnityEngine.Object).IsAssignableFrom(obj.GetType());
 
         public static void Validate(List<Variable> originalVariables, List<OverrideVariable> overrideVariables) 
         {

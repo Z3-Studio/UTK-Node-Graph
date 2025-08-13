@@ -106,7 +106,7 @@ namespace Z3.NodeGraph.Editor
             string typeName = type != null ? type.Name : "Null Type";
 
             // Variable Value
-            FieldInfo field = Variable.GetType().GetField(nameof(Variable.value));
+            FieldInfo field = Variable.GetType().GetField(nameof(Variable.Value));
 
             IBaseFieldReader baseField = EditorBuilder.GetElement(type);
             VisualElement valueField = baseField.VisualElement;
@@ -117,17 +117,17 @@ namespace Z3.NodeGraph.Editor
                 // Bind
                 baseField.CreateGetSet
                 (
-                    () => Variable.value,
-                    newValue => Variable.value = newValue
+                    () => Variable.Value,
+                    newValue => Variable.Value = newValue
                 );
 
                 // Save changes
                 baseField.OnValueChangedAfterBlur += () =>
                 {
-                    if (Variable.value == baseField.Value)
+                    if (Variable.Value == baseField.Value)
                         return;
 
-                    Variable.value = baseField.Value;
+                    Variable.Value = baseField.Value;
                     OnChangeVariable?.Invoke(Variable);
                 };
 
@@ -137,11 +137,11 @@ namespace Z3.NodeGraph.Editor
             else
             {
                 // Create buttons for serialized properties
-                if (Variable.value == null)
+                if (Variable.Value == null)
                 {
                     valueField = new Button(() =>
                     {
-                        Variable.value = Activator.CreateInstance(Variable.OriginalType);
+                        Variable.Value = Activator.CreateInstance(Variable.OriginalType);
 
                     }) { text = "Create Instance" };
                 }
@@ -149,7 +149,7 @@ namespace Z3.NodeGraph.Editor
                 {
                     valueField = new Button(() =>
                     {
-                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, Variable.value, type);
+                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, Variable.Value, type);
 
                         EventCallback<DetachFromPanelEvent> closeEvent = _ =>
                         {
@@ -237,14 +237,14 @@ namespace Z3.NodeGraph.Editor
         private void Validate()
         {
             Type baseType = Variable.OriginalType;
-            Type valueType = Variable.value?.GetType();
+            Type valueType = Variable.Value?.GetType();
 
             // Unspecified type in both side, impossible to fix
             if (baseType == null && valueType == null)
             {
                 Debug.LogError("Parameter Type and value is null");
                 Variable.type = typeof(Object).AssemblyQualifiedName;
-                Variable.value = null;
+                Variable.Value = null;
                 return;
             }
 
@@ -255,7 +255,7 @@ namespace Z3.NodeGraph.Editor
                 if (!baseType.IsNullable())
                 {
                     Debug.LogError($"Value typeof '{baseType.Name}' is not nullable, fixing...");
-                    Variable.value = baseType.GetDefaultValueForType();
+                    Variable.Value = baseType.GetDefaultValueForType();
                 }
 
                 return;
@@ -272,7 +272,7 @@ namespace Z3.NodeGraph.Editor
             if (!baseType.IsAssignableFrom(valueType))
             {
                 Debug.LogError($"Invalid value type of '{valueType}', the base type is '{baseType}'");
-                Variable.value = baseType.GetDefaultValueForType();
+                Variable.Value = baseType.GetDefaultValueForType();
             }
         }
     }

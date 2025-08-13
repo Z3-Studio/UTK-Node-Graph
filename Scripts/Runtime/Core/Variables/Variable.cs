@@ -14,16 +14,14 @@ namespace Z3.NodeGraph.Core
     [Serializable]
     public class Variable : ISerializationCallbackReceiver, IVariable
     {
+        // Serialized fields
         public string name;
         public string guid;
         public string type = "";
-        public object value;
-
-        public Object serializedObject;
         public string serializedValue;
+        public List<Object> serializedObjects;
 
-        private Type originalType;
-
+        // Interface
         public string Name => name;
         public object Value { get => value; set => this.value = value; }
         public string Guid => guid;
@@ -36,6 +34,12 @@ namespace Z3.NodeGraph.Core
             }
         }
 
+        // Deserialized value
+        private object value;
+        private Type originalType;
+
+        private object lastValue; // TEMP
+
         public void SetType(Type newType)
         {
             originalType = newType;
@@ -43,19 +47,9 @@ namespace Z3.NodeGraph.Core
             value = newType.GetDefaultValueForType();
         }
 
-        private object lastValue; // TEMP
-
         public void OnAfterDeserialize()
         {
-            if (!string.IsNullOrEmpty(serializedValue))
-            {
-                value = Serializer.FromJson(serializedValue);
-            }
-            else
-            {
-                value = serializedObject;
-            }
-
+            value = Serializer.FromJson(serializedValue, OriginalType, serializedObjects);
             lastValue = value;
         }
 
@@ -64,18 +58,13 @@ namespace Z3.NodeGraph.Core
             if (lastValue == value) // TODO: Fix it
                 return;
 
-            lastValue = value;
+            ForceSave();
+        }
 
-            if (value is Object obj)
-            {
-                serializedObject = obj;
-                serializedValue = null;
-            }
-            else
-            {
-                serializedValue = Serializer.ToJson(value);
-                serializedObject = null;
-            }
+        public void ForceSave() // TODO: Review it
+        {
+            lastValue = value;
+            serializedValue = Serializer.ToJson(value, OriginalType, serializedObjects);
         }
 
         public static Variable Clone(Variable variable)
@@ -86,7 +75,7 @@ namespace Z3.NodeGraph.Core
                 guid = variable.guid,
                 type = variable.type,
                 value = variable.value,
-                serializedObject = variable.serializedObject,
+                serializedObjects = variable.serializedObjects,
                 serializedValue = variable.serializedValue,
             };
         }

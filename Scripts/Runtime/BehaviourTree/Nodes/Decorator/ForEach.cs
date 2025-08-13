@@ -28,7 +28,7 @@ namespace Z3.NodeGraph.BehaviourTree
             if (pickElement)
             {
                 pickElement = false;
-                element.Value = list.Value[index];
+                element.Value = list.Value[index.Value];
             }
 
             State result = child.Update();
@@ -51,6 +51,11 @@ namespace Z3.NodeGraph.BehaviourTree
 
             // Continue processing child
             return State.Running;
+        }
+
+        protected override void StopNode()
+        {
+            index.Value = 0;
         }
     }
 }

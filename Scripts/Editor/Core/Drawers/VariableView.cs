@@ -149,7 +149,15 @@ namespace Z3.NodeGraph.Editor
                 {
                     valueField = new Button(() =>
                     {
-                        PropertyWindow.OpenWindow(Variable.Name, Variable.value);
+                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, Variable.value, type);
+
+                        EventCallback<DetachFromPanelEvent> closeEvent = _ =>
+                        {
+                            Variable.ForceSave();
+                            OnChangeVariable?.Invoke(Variable);
+                        };
+
+                        window.rootVisualElement.RegisterCallback(closeEvent);
 
                     }) { text = "Show Instance" };
                 }

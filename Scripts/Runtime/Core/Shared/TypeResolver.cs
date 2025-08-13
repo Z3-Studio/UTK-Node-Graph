@@ -275,6 +275,18 @@ namespace Z3.NodeGraph.Core
                 return (newValue) => v.Value = converter.Method(newValue);
             }
 
+            // Try cast object, example, foreach decorator
+            if (p.GenericType == typeof(object))
+            {
+                return (newValue) => 
+                {
+                    if (!(newValue == null ? v.OriginalType.IsNullable() : v.OriginalType.IsAssignableFrom(newValue.GetType())))
+                        throw new InvalidCastException($"Cannot assign value of type {newValue.GetType()} to variable of type {v.OriginalType}");
+
+                    v.Value = newValue;
+                };
+            }
+
             return null;
         }
 

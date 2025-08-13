@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Reflection;
 using UnityEngine.UIElements;
-using Z3.UIBuilder.Editor;
-using Z3.Utils.ExtensionMethods;
-using Z3.UIBuilder.ExtensionMethods;
-using Z3.UIBuilder.Core;
 using Z3.NodeGraph.Core;
+using Z3.UIBuilder.Core;
+using Z3.UIBuilder.Editor;
+using Z3.UIBuilder.ExtensionMethods;
+using Z3.Utils;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -63,7 +64,7 @@ namespace Z3.NodeGraph.Editor
             IBaseFieldReader baseField;
             if (OverrideVariable)
             {
-                FieldInfo field = OverrideVariable.GetType().GetField(nameof(OverrideVariable.Value));
+                FieldInfo field = OverrideVariable.GetType().GetField("value", ReflectionUtils.InstanceAccess);
 
                 baseField = EditorBuilder.GetElement(OverrideVariable, field, type);
                 baseField.OnValueChangedAfterBlur += OnUpdateValue;
@@ -72,7 +73,7 @@ namespace Z3.NodeGraph.Editor
             }
             else
             {
-                FieldInfo field = Variable.GetType().GetField(nameof(Variable.Value));
+                FieldInfo field = Variable.GetType().GetField("value", ReflectionUtils.InstanceAccess);
                 baseField = EditorBuilder.GetElement(Variable, field, type);
 
                 baseField.VisualElement.SetEnabled(false);
@@ -85,14 +86,30 @@ namespace Z3.NodeGraph.Editor
                 baseField.SetLabel(string.Empty);
                 valueField = baseField.VisualElement;
             }
-            else
+            else if (!OverrideVariable)
             {
-                // TODO: Check if is override, if isn't, show as readonly
                 if (Variable.Value == null)
+                {
+                    valueField = new Label(Variable.Value?.ToString() ?? "Null");
+                    valueField.SetEnabled(false);
+                }
+                else
                 {
                     valueField = new Button(() =>
                     {
-                        Variable.Value = Activator.CreateInstance(Variable.OriginalType);
+                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, Variable.Value, type);
+                        window.rootVisualElement.SetEnabled(false);
+                    })
+                    { text = "Show Instance (Original)" };
+                }
+            }
+            else
+            {
+                if (OverrideVariable.Value == null)
+                {
+                    valueField = new Button(() =>
+                    {
+                        OverrideVariable.Value = Activator.CreateInstance(Variable.OriginalType);
 
                     })
                     { text = "Create Instance" };
@@ -101,7 +118,7 @@ namespace Z3.NodeGraph.Editor
                 {
                     valueField = new Button(() =>
                     {
-                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, Variable.Value, type);
+                        PropertyWindow window = PropertyWindow.OpenWindow(Variable.Name, OverrideVariable.Value, type);
 
                         EventCallback<DetachFromPanelEvent> closeEvent = _ =>
                         {
@@ -109,13 +126,11 @@ namespace Z3.NodeGraph.Editor
                         };
 
                         window.rootVisualElement.RegisterCallback(closeEvent);
-                        window.rootVisualElement.SetEnabled(false);
 
                     })
                     { text = "Show Instance" };
                 }
             }
-
 
             // Set Style
             propertyContainer.Add(valueField);
@@ -130,11 +145,7 @@ namespace Z3.NodeGraph.Editor
             }
             else
             {
-                OverrideVariable newOverrideVariable = new OverrideVariable()
-                {
-                    guid = Variable.guid,
-                    Value = Variable.Value
-                };
+                OverrideVariable newOverrideVariable = new OverrideVariable(Variable);
 
                 OnCreate(newOverrideVariable);
             }

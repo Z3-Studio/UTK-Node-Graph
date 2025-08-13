@@ -16,7 +16,10 @@ namespace Z3.NodeGraph.Core
         [SerializeField] public string guid;
         [SerializeField] public string type = "";
         [SerializeField] public string serializedValue;
-        [SerializeField] public List<Object> serializedObjects;
+        [SerializeField] public List<Object> serializedObjects = new();
+
+        [Obsolete]
+        public Object serializedObject;
 
         // Interface
         public string Name => throw new InvalidOperationException("Get from original");
@@ -24,17 +27,41 @@ namespace Z3.NodeGraph.Core
         public string Guid => guid;
         public Type OriginalType => throw new InvalidOperationException("Get from original"); // Check Variable.cs implementation
 
+        [Obsolete]
+        private Type TempOriginalType
+        {
+            get
+            {
+                originalType ??= Type.GetType(type);
+                return originalType;
+            }
+        }
+
         // Deserialized value
         private object value;
+        [Obsolete]
+        private Type originalType;
+
+        public OverrideVariable(Variable original)
+        {
+            guid = original.guid;
+            Value = original.Value;
+            type = original.type;
+        }
+
+        public void SetType(Variable original)
+        {
+            type = original.type;
+        }
 
         public void OnAfterDeserialize()
         {
-            value = Serializer.FromJson(serializedValue, OriginalType, serializedObjects);
+            value = Serializer.FromJson(serializedValue, TempOriginalType, serializedObjects);
         }
 
         public void OnBeforeSerialize()
         {
-            serializedValue = Serializer.ToJson(value, OriginalType, serializedObjects);
+            serializedValue = Serializer.ToJson(value, TempOriginalType, serializedObjects);
         }
 
         public static void Validate(List<Variable> originalVariables, List<OverrideVariable> overrideVariables) 

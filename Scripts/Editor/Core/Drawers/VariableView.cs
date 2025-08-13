@@ -9,8 +9,9 @@ using Z3.NodeGraph.Core;
 using Z3.UIBuilder;
 using Z3.UIBuilder.Core;
 using Z3.UIBuilder.Editor;
-using Z3.Utils.ExtensionMethods;
 using Z3.UIBuilder.ExtensionMethods;
+using Z3.Utils;
+using Z3.Utils.ExtensionMethods;
 using Object = UnityEngine.Object;
 
 namespace Z3.NodeGraph.Editor
@@ -103,10 +104,8 @@ namespace Z3.NodeGraph.Editor
 
         private void DrawAsVariable(Type type)
         {
-            string typeName = type != null ? type.Name : "Null Type";
-
             // Variable Value
-            FieldInfo field = Variable.GetType().GetField(nameof(Variable.Value));
+            FieldInfo field = Variable.GetType().GetField("value", ReflectionUtils.InstanceAccess);
 
             IBaseFieldReader baseField = EditorBuilder.GetElement(type);
             VisualElement valueField = baseField.VisualElement;
@@ -198,6 +197,7 @@ namespace Z3.NodeGraph.Editor
 
                 GenericMenu menu = new GenericMenu(); // You can use GenericDropdownMenu
 
+                string typeName = ReflectionUtils.TypeToNiceString(type);
                 menu.AddDisabledItem(new GUIContent(typeName));
                 menu.AddSeparator(string.Empty);
 

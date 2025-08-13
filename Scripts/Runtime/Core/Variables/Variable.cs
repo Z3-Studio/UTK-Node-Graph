@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.Core
         [SerializeField] public string guid;
         [SerializeField] public string type = "";
         [SerializeField] public string serializedValue;
-        [SerializeField] public List<Object> serializedObjects;
+        [SerializeField] public List<Object> serializedObjects = new();
 
         // Interface
         public string Name => name;

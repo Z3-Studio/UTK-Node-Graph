@@ -121,5 +121,7 @@ namespace Z3.NodeGraph.Core
             return newVariable;
         }
         #endif
+
+        public override string ToString() => name;
     }
 }

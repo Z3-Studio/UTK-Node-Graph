@@ -24,7 +24,22 @@ namespace Z3.NodeGraph.BehaviourTree
         [Header("- Until Mode")]
         [SerializeField] private StateResult untilResult;
 
-        public override string SubInfo => $"Mode: {repeaterMode.ToStringBold()}";
+        public override string SubInfo
+        {
+            get
+            {
+                if (repeaterMode == RepeaterMode.Times)
+                {
+                    return $"Mode: {RepeaterMode.Times.ToStringBold()} {times}";
+                }
+                else if (repeaterMode == RepeaterMode.Until)
+                {
+                    return $"Mode: {RepeaterMode.Until.ToStringBold()} {untilResult}";
+                }
+
+                return $"Mode: {repeaterMode.ToStringBold()}";
+            }
+        }
 
         private Func<State> update;
         private int finishCounter;

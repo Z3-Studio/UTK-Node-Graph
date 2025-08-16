@@ -5,7 +5,7 @@ using Z3.NodeGraph.Tasks;
 namespace Z3.NodeGraph.TaskPack.Utilities.Utils
 {
     [NodeCategory(Categories.Events)]
-    public class SendEventoToMediator : ActionTask
+    public class SendEventToMediator : ActionTask
     {
         [SerializeField] private Parameter<EventMediator> eventMediator;
 
@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     }
 
     [NodeCategory(Categories.Events)]
-    public class SendEventoToMediator<T> : ActionTask
+    public class SendEventToMediator<T> : ActionTask
     {
         [SerializeField] private Parameter<EventMediator> eventMediator;
         [SerializeField] private Parameter<T> value;

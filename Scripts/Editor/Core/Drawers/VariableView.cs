@@ -141,6 +141,8 @@ namespace Z3.NodeGraph.Editor
                     valueField = new Button(() =>
                     {
                         Variable.Value = Activator.CreateInstance(Variable.OriginalType);
+                        OnChangeVariable?.Invoke(Variable);
+                        Rebuild();
 
                     }) { text = "Create Instance" };
                 }
@@ -217,6 +219,13 @@ namespace Z3.NodeGraph.Editor
                     OnDelete.Invoke(Variable);
                 });
 
+                menu.AddItem(new GUIContent("Reset as default value"), false, () =>
+                {
+                    Variable.Value = ReflectionUtils.GetDefaultValue(type);
+                    OnChangeVariable?.Invoke(Variable);
+                    Rebuild();
+                });
+
                 Rect rect = new Rect(Event.current.mousePosition, Vector2.zero);
                 menu.DropDown(rect);
             };
@@ -274,6 +283,12 @@ namespace Z3.NodeGraph.Editor
                 Debug.LogError($"Invalid value type of '{valueType}', the base type is '{baseType}'");
                 Variable.Value = baseType.GetDefaultValueForType();
             }
+        }
+
+        private void Rebuild()
+        {
+            Clear();
+            BuildElement();
         }
     }
 }

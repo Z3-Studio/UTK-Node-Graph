@@ -308,6 +308,8 @@ namespace Z3.NodeGraph.Editor // TODO: It should be editor class
                 }
             }
 
+            // TODO: Remove missing script / broken assets
+
             // 3.1 Add non listed assets
             IEnumerable<GraphSubAsset> allSubAssets = EditorUtils.GetAllSubAssets<GraphSubAsset>(GraphData);
             List<GraphSubAsset> missingSubAssets = allSubAssets.Except(GraphData.SubAssets).ToList();

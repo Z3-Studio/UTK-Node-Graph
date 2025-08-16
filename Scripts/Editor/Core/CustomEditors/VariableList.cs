@@ -59,7 +59,13 @@ namespace Z3.NodeGraph.Editor
 
         private void OnAddNewVariable(string _, Type type)
         {
-            Variable.CreateVariable(target, type, targetList);
+            Variable variable = Variable.CreateVariable(target, type, targetList);
+
+            if (type == typeof(Title))
+            {
+                variable.name = "- New Title";
+            }
+
             customListView.Rebuild();
         }
 

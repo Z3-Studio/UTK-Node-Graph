@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Z3.NodeGraph.Core;
 using Z3.Utils.ExtensionMethods;
 
@@ -12,64 +14,92 @@ namespace Z3.NodeGraph.BehaviourTree
             FirstStop,
             FirstSuccess,
             FirstFailure,
-            AllStop
+            AllStop,
         }
 
         public ParallelPolicy policy = ParallelPolicy.FirstStop;
 
-        private Func<State> updateMethod;
-
         public override string SubInfo => $"Mode {policy.ToStringBold()}";
+
+        private List<BehaviourTreeNode> executionList;
+        private Func<State> updateMethod;
 
         protected override void StartNode()
         {
+            executionList = new List<BehaviourTreeNode>(children);
+
             updateMethod = policy switch
             {
                 ParallelPolicy.AllStop => AllStop,
                 ParallelPolicy.FirstStop => FirstStop,
-                ParallelPolicy.FirstSuccess => FirstSuccess,
-                ParallelPolicy.FirstFailure => FirstFailure,
+                ParallelPolicy.FirstSuccess => () => FirstResult(State.Success),
+                ParallelPolicy.FirstFailure => () => FirstResult(State.Failure),
                 _ => throw new NotImplementedException(),
             };
         }
 
         protected override State UpdateNode() => updateMethod();
 
-        private State AllStop() // Return success if all is success
-        {
-            throw new NotImplementedException();
-        }
-
         private State FirstStop()
         {
             State finalResult = State.Success;
 
             // Parallel Execution
-            foreach (BehaviourTreeNode node in children)
+            foreach (BehaviourTreeNode node in executionList)
             {
                 finalResult = node.Update();
 
                 if (finalResult is State.Success or State.Failure)
                 {
-                    foreach (BehaviourTreeNode child in children)
+                    foreach (BehaviourTreeNode child in executionList)
                     {
                         child.Interrupt();
                     }
-                    break;
+                    return finalResult;
                 }
             }
 
             return finalResult;
         }
 
-        private State FirstSuccess()
+        private State FirstResult(State stopState)
         {
-            throw new NotImplementedException();
+            foreach (BehaviourTreeNode node in executionList.ToList())
+            {
+                State result = node.Update();
+
+                if (result == stopState)
+                {
+                    foreach (BehaviourTreeNode child in executionList)
+                    {
+                        child.Interrupt();
+                    }
+
+                    return State.Success;
+                }
+
+                if (result != State.Running)
+                {
+                    executionList.Remove(node);
+                }
+            }
+
+            return executionList.Count > 0 ? State.Running : State.Failure;
         }
 
-        private State FirstFailure()
+        private State AllStop()
         {
-            throw new NotImplementedException();
+            foreach (BehaviourTreeNode node in executionList.ToList())
+            {
+                State result = node.Update();
+
+                if (result != State.Running)
+                {
+                    executionList.Remove(node);
+                }
+            }
+
+            return executionList.Count > 0 ? State.Running : State.Success;
         }
     }
 }

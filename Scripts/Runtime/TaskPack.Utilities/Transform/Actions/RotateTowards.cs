@@ -13,7 +13,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         [SerializeField] private Parameter<Vector3> target;
         [SerializeField] private Parameter<float> speed = 2;
-        [Range(0, 180)]
+        //[Range(0, 180)]
         [SerializeField] private Parameter<float> angleDifference = 5;
 
         protected override void UpdateAction()

@@ -15,7 +15,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         [SerializeField] private Parameter<string> stateName;
         [Slider(0, 1)]
-        [SerializeField] private Parameter<float> transition = 0.25f;
+        [SerializeField] private Parameter<float> transition = 0.1f;
         [SerializeField] private Parameter<bool> waitUntilFinish;
         [SerializeField] private Parameter<int> layer;
 

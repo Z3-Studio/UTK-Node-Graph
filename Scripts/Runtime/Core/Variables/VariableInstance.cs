@@ -26,6 +26,8 @@ namespace Z3.NodeGraph.Core
         {
             Value = overrideVariable.Value;
         }
+
+        public override string ToString() => Name;
     }
 
     /// <summary>

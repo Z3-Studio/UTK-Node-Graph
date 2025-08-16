@@ -13,19 +13,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         event Action OnUpdateParameters;
     }
 
-    [NodeCategory(Categories.Miscellaneous)]
-    [NodeDescription("Auto Mapper copy all Properties from 'data' and paste to 'ReferenceVariables'")]
-    public class MapParameters : ActionTask
+    public abstract class MapParametersBase : ActionTask
     {
-        [SerializeField] protected Parameter<ScriptableObject> data;
+        protected abstract ScriptableObject Data { get; }
 
         private IUpdateParameters updateParameters;
 
-        public override string Info => $"Map Parameters {data}";
-
         protected override void StartAction()
         {
-            updateParameters = data.Value as IUpdateParameters;
+            updateParameters = Data as IUpdateParameters;
 
             if (updateParameters != null)
             {
@@ -44,7 +40,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
             //}
 
-            PropertyInfo[] originProperties = data.Value.GetType().GetProperties();
+            PropertyInfo[] originProperties = Data.GetType().GetProperties();
 
             Dictionary<string, PropertyInfo> propertyMap = new();
             foreach (PropertyInfo destinationProperty in originProperties)
@@ -61,7 +57,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 }
             }
 
-            List<FieldInfo> originFields = ReflectionUtils.GetAllFields(data.Value);
+            List<FieldInfo> originFields = ReflectionUtils.GetAllFields(Data);
 
             Dictionary<string, FieldInfo> fieldMap = new();
             foreach (FieldInfo destinationProperty in originFields)
@@ -82,12 +78,12 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             {
                 if (propertyMap.TryGetValue(variable.Name, out PropertyInfo propertyInfo) && variable.OriginalType == propertyInfo.PropertyType)
                 {
-                    variable.Value = propertyInfo.GetValue(data.Value);
+                    variable.Value = propertyInfo.GetValue(Data);
                     continue;
                 }
                 else if (fieldMap.TryGetValue(variable.Name, out FieldInfo fieldInfo) && variable.OriginalType == fieldInfo.FieldType)
                 {
-                    variable.Value = fieldInfo.GetValue(data.Value);
+                    variable.Value = fieldInfo.GetValue(Data);
                 }
             }
         }
@@ -103,6 +99,17 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 updateParameters.OnUpdateParameters -= OnDataChanged;
             }
         }
+    }
+
+    [NodeCategory(Categories.Miscellaneous)]
+    [NodeDescription("Auto Mapper copy all Properties from 'data' and paste to 'ReferenceVariables'")]
+    public sealed class MapParameters : MapParametersBase
+    {
+        [SerializeField] private Parameter<ScriptableObject> data;
+
+        protected override ScriptableObject Data => data;
+
+        public override string Info => $"Map Parameters {data}";
     }
 
     public class Mapper

@@ -1,7 +1,7 @@
-﻿using Z3.NodeGraph.Core;
-using Z3.NodeGraph.Tasks;
+﻿using System;
 using UnityEngine;
-using Z3.Utils.ExtensionMethods;
+using Z3.NodeGraph.Core;
+using Z3.NodeGraph.Tasks;
 
 namespace Z3.NodeGraph.TaskPack.Utilities.Utils
 {
@@ -9,55 +9,47 @@ namespace Z3.NodeGraph.TaskPack.Utilities.Utils
     [NodeDescription("Waits for a graph event")]
     public class WaitUntilStringEvent : ActionTask
     {
+        [SerializeField] private Parameter<StringEventDispatcher> stringEvent;
         [SerializeField] private Parameter<string> eventName;
 
-        public override string Info => $"Wait until [{eventName}]";
+        public override string Info => $"Wait Animation Event [{eventName}]";
 
         protected override void StartAction()
         {
-            StringEvents.RegisterCallback(OnStringEvent);
+            stringEvent.Value.RegisterCallback(OnEventTrigger);
         }
 
         protected override void StopAction()
         {
-            StringEvents.UnregisterCallback(OnStringEvent);
+            stringEvent.Value.UnregisterCallback(OnEventTrigger);
         }
 
-        private void OnStringEvent(IStringEvent evt)
+        private void OnEventTrigger(IStringEvent sentEventName)
         {
-            if (evt.EventName == eventName.Value)
-            {
-                EndAction();
-            }
+            if (!sentEventName.EventName.Equals(eventName.Value, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            EndAction();
         }
     }
 
     [NodeCategory(Categories.Events)]
     [NodeDescription("Waits for a graph event")]
-    public class WaitUntilStringEvent<T> : ActionTask
+    public class OnStringEvent : EventConditionTask
     {
+        [SerializeField] private Parameter<StringEventDispatcher> stringEvent;
         [SerializeField] private Parameter<string> eventName;
-        [SerializeField] private Parameter<T> outValue;
 
-        public override string Info => $"Wait until {outValue.GenericType.Name.ToBold()} [{eventName}]";
+        public override string InfoC => $"On String Event [{eventName}]";
 
-        protected override void StartAction()
+        protected override void Subscribe()
         {
-            StringEvents.RegisterCallback<T>(OnStringEvent);
+            stringEvent.Value.RegisterCallback(eventName, EndEventCondition);
         }
 
-        protected override void StopAction()
+        protected override void Unsubscribe()
         {
-            StringEvents.UnregisterCallback<T>(OnStringEvent);
-        }
-
-        private void OnStringEvent(IStringEvent<T> evt)
-        {
-            if (evt.EventName == eventName.Value)
-            {
-                outValue.Value = evt.Payload;
-                EndAction();
-            }
+            stringEvent.Value.UnregisterCallback(eventName, EndEventCondition);
         }
     }
 }

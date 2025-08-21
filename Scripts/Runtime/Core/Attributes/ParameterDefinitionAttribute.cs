@@ -7,7 +7,8 @@ namespace Z3.NodeGraph.Core
         None,
         SelfBind,
         FindSameVariable,
-        FindSimilarVariable
+        FindSimilarVariable,
+        AnyWithSameType,
     }
 
     /// <summary>

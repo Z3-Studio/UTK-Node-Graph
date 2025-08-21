@@ -42,6 +42,9 @@ namespace Z3.NodeGraph.Core
         [Obsolete]
         private Type originalType;
 
+        [Obsolete("TEMP: Used to improve optimization in inspector")]
+        private object lastValue;
+
         public OverrideVariable(Variable original)
         {
             guid = original.guid;
@@ -61,6 +64,10 @@ namespace Z3.NodeGraph.Core
 
         public void OnBeforeSerialize()
         {
+            if (lastValue == value)
+                return;
+
+            lastValue = value;
             serializedValue = Serializer.ToJson(value, TempOriginalType, serializedObjects);
         }
 

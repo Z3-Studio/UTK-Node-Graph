@@ -235,7 +235,7 @@ namespace Z3.NodeGraph.Core
 
         public static Converter GetSetConverterType(IParameter parameter, IVariable variable) // TODO: Review return
         {
-            if (parameter.GenericType.IsAssignableFrom(variable.OriginalType))
+            if (variable.OriginalType.IsAssignableFrom(parameter.GenericType))
                 return new Converter(ConvertionType.IsAssignableFrom);
 
             if (TryGetConverter(variable.OriginalType, parameter.GenericType, out Converter converter))
@@ -273,18 +273,6 @@ namespace Z3.NodeGraph.Core
             if (TryGetConverter(v.OriginalType, p.GenericType, out Converter converter))
             {
                 return (newValue) => v.Value = converter.Method(newValue);
-            }
-
-            // Try cast object, example, foreach decorator
-            if (p.GenericType == typeof(object))
-            {
-                return (newValue) => 
-                {
-                    if (!(newValue == null ? v.OriginalType.IsNullable() : v.OriginalType.IsAssignableFrom(newValue.GetType())))
-                        throw new InvalidCastException($"Cannot assign value of type {newValue.GetType()} to variable of type {v.OriginalType}");
-
-                    v.Value = newValue;
-                };
             }
 
             return null;
@@ -333,6 +321,46 @@ namespace Z3.NodeGraph.Core
                 }
             }
 
+            // TEMPORARY: Fix conversors
+            if (typeof(Component).IsAssignableFrom(typeOut) && typeof(Component).IsAssignableFrom(typeIn))
+            {
+                converter = new(ConvertionType.TypeConverter)
+                {
+                    Method = (v) =>
+                    {
+                        if (v is Component component)
+                            return component.GetComponent(typeOut);
+
+                        return null;
+                    },
+                    Description = "Get Component",
+                    OutType = typeOut,
+                    InType = typeIn
+                };
+                converters[key] = converter;
+                return converter;
+            }
+
+            // Try cast object, example, foreach decorator
+            if (typeIn == typeof(object))
+            {
+                converter = new(ConvertionType.TypeConverter)
+                {
+                    Method = (newValue) =>
+                    {
+                        if (!(newValue == null ? typeOut.IsNullable() : typeIn.IsAssignableFrom(newValue.GetType())))
+                            throw new InvalidCastException($"Cannot assign value of type {newValue?.GetType()} to variable of type {typeOut}");
+
+                        return newValue;
+                    },
+                    Description = "Cast Object",
+                    OutType = typeOut,
+                    InType = typeIn
+                };
+                converters[key] = converter;
+                return converter;
+            }
+
             // There is not convertion
             converters[key] = null;
             return null;
@@ -340,7 +368,7 @@ namespace Z3.NodeGraph.Core
         #endregion
 
         #region Conversor Registry
-        public static void GetAndCreateMaps(ITypeConverter converter)
+        private static void GetAndCreateMaps(ITypeConverter converter)
         {
             Type objectType = converter.GetType();
 
@@ -423,8 +451,6 @@ namespace Z3.NodeGraph.Core
                 return r;
             }
         }
-    
-
         #endregion
 
         private static void IncludeTypes(List<(string, Type)> types, string subName, List<Type> typesList)

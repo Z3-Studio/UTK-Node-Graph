@@ -259,6 +259,18 @@ namespace Z3.NodeGraph.Editor
                     parameter.Bind(variable);
                 }
             }
+            else if (bindType == AutoBindType.AnyWithSameType)
+            {
+                Type parameterType = field.FieldType.GetGenericArguments()[0];
+                Variable variable = graph.GetVariables().FirstOrDefault(v => v.OriginalType == parameterType);
+
+                if (variable != null && TypeResolver.CanConvert(parameter, variable))
+                {
+                    parameter.Bind(variable);
+                }
+            }
+            else
+                throw new NotImplementedException($"AutoBindType '{bindType}' is not implemented");
         }
 
         // Replace values of: Parameters, List<SubAsset>, SubAsset, ISubAssetList (taskList, transitions)

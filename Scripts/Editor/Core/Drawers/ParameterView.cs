@@ -248,12 +248,11 @@ namespace Z3.NodeGraph.Editor
             if (parameterT.IsBinding && parameterT.IsDefined)
             {
                 Converter getConverter = TypeResolver.GetGetConverterType(parameterT, parameterT.Variable);
+                Converter setConverter = TypeResolver.GetSetConverterType(parameterT, parameterT.Variable);
 
                 // TODO: null check
-                if (getConverter.type != ConvertionType.IsAssignableFrom)
+                if (getConverter.type != ConvertionType.IsAssignableFrom || setConverter.type != ConvertionType.IsAssignableFrom)
                 {
-                    Converter setConverter = TypeResolver.GetSetConverterType(parameterT, parameterT.Variable);
-
                     convertionContainer.style.SetDisplay(true);
 
                     string get = $"Get: {getConverter.Description}\nVariable: {getConverter.OutType?.Name}\nParameter: {getConverter.InType?.Name}";
@@ -261,12 +260,12 @@ namespace Z3.NodeGraph.Editor
                     convertionContainer.tooltip = $"{get}\n\n{set}";
 
                     string label = string.Empty;
-                    if (getConverter.type == ConvertionType.TypeConverter)
+                    if (getConverter.type is ConvertionType.TypeConverter or ConvertionType.IsAssignableFrom)
                     {
                         label += " get;";
                     }
 
-                    if (setConverter.type == ConvertionType.TypeConverter)
+                    if (setConverter.type is ConvertionType.TypeConverter or ConvertionType.IsAssignableFrom)
                     {
                         label += " set;";
                     }

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using UnityEngine.UIElements;
 using Z3.NodeGraph.Core;
-using Z3.UIBuilder.Editor;
-using System.Reflection;
-using Z3.Utils.ExtensionMethods;
 using Z3.UIBuilder.Core;
+using Z3.UIBuilder.Editor;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -32,14 +32,21 @@ namespace Z3.NodeGraph.Editor
 
             // Field
             PropertyInfo propertyInfo = variable.GetType().GetProperty(nameof(variable.Value));
-            IBaseFieldReader field = EditorBuilder.GetElement(variable, propertyInfo, type);
-            VisualElement valueField = field.VisualElement;
+            IBaseFieldReader baseField = EditorBuilder.GetElement(variable, propertyInfo, type);
+            VisualElement valueField;
 
-            // Remove Label of the value field
-            Label label = valueField.Q<Label>();
-            if (label != null && label.parent != null)
+            if (baseField.TwoWay)
             {
-                label.parent.Remove(label);
+                baseField.SetLabel(string.Empty);
+                valueField = baseField.VisualElement;
+            }
+            else
+            {
+                valueField = new Button(() =>
+                {
+                    PropertyWindow.OpenWindow(variable.Name, variable.Value, type);
+                })
+                { text = "Show Instance" };
             }
 
             // Set Style

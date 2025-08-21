@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Numerics;
+using UnityEngine;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
@@ -44,6 +45,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 _ => throw new NotImplementedException()
             };
         }
+
         public static Vector3 Operate(this OperationMethod operation, Vector3 a, Vector3 b)
         {
             return operation switch
@@ -51,8 +53,21 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 OperationMethod.Set => b,
                 OperationMethod.Add => a + b,
                 OperationMethod.Subtract => a - b,
-                OperationMethod.Multiply => a * b,
-                OperationMethod.Divide => a / b,
+                OperationMethod.Multiply => a.Multiply(b),
+                OperationMethod.Divide => a.Divide(b),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        public static string GetOperationString(this OperationMethod operation)
+        {
+            return operation switch
+            {
+                OperationMethod.Set => "=",
+                OperationMethod.Add => "+=",
+                OperationMethod.Subtract => "-=",
+                OperationMethod.Multiply => "*=",
+                OperationMethod.Divide => "/=",
                 _ => throw new NotImplementedException()
             };
         }
@@ -62,10 +77,10 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             return operation switch
             {
                 OperationMethod.Set => "=",
-                OperationMethod.Add => "+=",
-                OperationMethod.Subtract => "-=",
-                OperationMethod.Multiply => "*=",
-                OperationMethod.Divide => "/=",
+                OperationMethod.Add => "+",
+                OperationMethod.Subtract => "-",
+                OperationMethod.Multiply => "*",
+                OperationMethod.Divide => "/",
                 _ => throw new NotImplementedException()
             };
         }

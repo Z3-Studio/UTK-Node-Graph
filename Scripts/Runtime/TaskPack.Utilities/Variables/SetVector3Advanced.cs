@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<Vector3> otherVector;
 
         [Header("Config")]
-        public OperationMethod operation = OperationMethod.Set;
+        [SerializeField] private OperationMethod operation = OperationMethod.Set;
         [SerializeField] private Parameter<bool> setX;
         [SerializeField] private Parameter<bool> setY;
         [SerializeField] private Parameter<bool> setZ;
@@ -26,41 +26,60 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             get
             {
-                string info = string.Empty;
+                string initialX;
+                string initialY;
+                string initialZ;
 
-                if (setX.Value)
+                if (initialVector.IsBinding)
                 {
-                    info = AddText(info, "X");
+                    initialX = initialVector + ".X";
+                    initialY = initialVector + ".Y";
+                    initialZ = initialVector + ".Z";
+                }
+                else
+                {
+                    initialX = $"<b>{initialVector.Value.x}</b>";
+                    initialY = $"<b>{initialVector.Value.y}</b>";
+                    initialZ = $"<b>{initialVector.Value.z}</b>";
                 }
 
-                if (setY.Value)
+                string otherX;
+                string otherY;
+                string otherZ;
+                string operationS = operation.GetString();
+
+                if (otherVector.IsBinding)
                 {
-                    info = AddText(info, "Y");
+                    otherX = otherVector + ".X";
+                    otherY = otherVector + ".Y";
+                    otherZ = otherVector + ".Z";
+                }
+                else
+                {
+                    otherX = $"<b>{otherVector.Value.x}</b>";
+                    otherY = $"<b>{otherVector.Value.y}</b>";
+                    otherZ = $"<b>{otherVector.Value.z}</b>";
                 }
 
-                if (setZ.Value)
+                string xText;
+                string yText;
+                string zText;
+
+                if (operation == OperationMethod.Set)
                 {
-                    info = AddText(info, "Z");
+                    xText = setX.Value ? $"{otherX}" : initialX;
+                    yText = setY.Value ? $"{otherY}" : initialY;
+                    zText = setZ.Value ? $"{otherZ}" : initialZ;
+                }
+                else
+                {
+                    xText = setX.Value ? $"{initialX} {operationS} {otherX}" : initialX;
+                    yText = setY.Value ? $"{initialY} {operationS} {otherY}" : initialY;
+                    zText = setZ.Value ? $"{initialZ} {operationS} {otherZ}" : initialZ;
                 }
 
-                if (string.IsNullOrEmpty(info))
-                {
-                    return base.Info;
-                }
-
-                return info;
+                return $"{returnedVector} = ({xText}, {yText}, {zText})";
             }
-        }
-
-        private string AddText(string info, string axis)
-        {
-            axis = $"<b>{axis}</b>";
-            if (string.IsNullOrEmpty(info))
-            {
-                return $"{returnedVector} {operation} {axis}";
-            }
-
-            return info + $", {axis}";
         }
 
         protected override void StartAction()

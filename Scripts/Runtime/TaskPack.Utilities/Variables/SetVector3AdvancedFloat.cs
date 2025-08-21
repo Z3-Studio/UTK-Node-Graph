@@ -28,41 +28,29 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             get
             {
-                string info = string.Empty;
+                string initialX;
+                string initialY;
+                string initialZ;
 
-                if (setX.Value)
+                if (initialVector.IsBinding)
                 {
-                    info = AddText(info, "X");
+                    initialX = initialVector + ".X";
+                    initialY = initialVector + ".Y";
+                    initialZ = initialVector + ".Z";
+                }
+                else
+                {
+                    initialX = $"<b>{initialVector.Value.x}</b>";
+                    initialY = $"<b>{initialVector.Value.y}</b>";
+                    initialZ = $"<b>{initialVector.Value.z}</b>";
                 }
 
-                if (setY.Value)
-                {
-                    info = AddText(info, "Y");
-                }
+                string xText = setX.Value ? valueX.ToString() : initialX;
+                string yText = setY.Value ? valueY.ToString() : initialY;
+                string zText = setZ.Value ? valueZ.ToString() : initialZ;
 
-                if (setZ.Value)
-                {
-                    info = AddText(info, "Z");
-                }
-
-                if (string.IsNullOrEmpty(info))
-                {
-                    return name;
-                }
-
-                return info;
+                return $"{returnedVector} {operation.GetOperationString()} ({xText}, {yText}, {zText})";
             }
-        }
-
-        private string AddText(string info, string axis)
-        {
-            axis = $"<b>{axis}</b>";
-            if (string.IsNullOrEmpty(info))
-            {
-                return $"{returnedVector} {operation} {axis}";
-            }
-
-            return info + $", {axis}";
         }
 
         protected override void StartAction()

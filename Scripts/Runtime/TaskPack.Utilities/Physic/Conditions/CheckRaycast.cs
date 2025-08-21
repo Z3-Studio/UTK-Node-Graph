@@ -15,7 +15,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<float> distance;
         
         [Header("Out")]
-        [SerializeField] private Parameter<Vector2> positionHit;
+        [SerializeField] private Parameter<Vector3> positionHit;
 
         public override bool CheckCondition()
         {

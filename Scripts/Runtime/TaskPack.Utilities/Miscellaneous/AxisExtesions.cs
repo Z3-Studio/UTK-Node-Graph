@@ -29,5 +29,19 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
             return Mathf.Sqrt(squaredDifference);
         }
+
+        public static Vector3 GetDirection(this Direction direction, Transform transform)
+        {
+            return direction switch
+            {
+                Direction.Forward => transform.forward,
+                Direction.Back => -transform.forward,
+                Direction.Up => transform.up,
+                Direction.Down => -transform.up,
+                Direction.Right => transform.right,
+                Direction.Left => -transform.right,
+                _ => throw new NotImplementedException(),
+            };
+        }
     }
 }

@@ -1,11 +1,11 @@
 using Z3.NodeGraph.Core;
-using Z3.NodeGraph.Tasks;
+using UnityEngine;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
-    [NodeCategory(Categories.Operations)]
-    [NodeDescription("Please describe what this ActionTask does.")]
-    public class SetInt : SetOperation<int>
+    [NgName("Set Vector3 Advanced")]
+    [NodeDescription("Easy way to set a specific axis")]
+    public class SetVector2 : SetOperation2<Vector2>
     {
         protected override void StartAction()
         {

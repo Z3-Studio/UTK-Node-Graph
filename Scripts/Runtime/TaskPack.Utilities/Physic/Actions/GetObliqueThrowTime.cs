@@ -6,7 +6,7 @@ using Z3.Utils;
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Rigidbody)]
-    [NodeDescription("Return a Vector2 with the velocity for the oblique throw of a projectile. yLimits controls the min/max range of the throw.")]
+    [NodeDescription("Return a Vector3 with the velocity for the oblique throw of a projectile. yLimits controls the min/max range of the throw.")]
     public class GetObliqueThrowTime : ActionTask
     {
         [ParameterDefinition(AutoBindType.FindSimilarVariable)]

@@ -3,12 +3,11 @@ using UnityEngine;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
-
     public static class AxisExtesions
     {
         public static float Distance(this Axis3Flags axis, Vector3 a, Vector3 b)
         {
-            float squaredDifference = 0;
+            float squaredDifference = 0f;
 
             if (axis.HasFlag(Axis3Flags.X))
             {

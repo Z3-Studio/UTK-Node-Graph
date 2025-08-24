@@ -110,7 +110,7 @@ namespace Z3.NodeGraph.Editor
                     valueField = new Button(() =>
                     {
                         OverrideVariable.Value = Activator.CreateInstance(Variable.OriginalType);
-
+                        Rebuild();
                     })
                     { text = "Create Instance" };
                 }
@@ -123,6 +123,7 @@ namespace Z3.NodeGraph.Editor
                         EventCallback<DetachFromPanelEvent> closeEvent = _ =>
                         {
                             OnUpdateValue?.Invoke();
+                            OverrideVariable.ForceSave();
                         };
 
                         window.rootVisualElement.RegisterCallback(closeEvent);
@@ -150,7 +151,11 @@ namespace Z3.NodeGraph.Editor
                 OnCreate(newOverrideVariable);
             }
 
-            // Rebuild
+            Rebuild();
+        }
+
+        private void Rebuild()
+        {
             Clear();
             BuildElement();
         }

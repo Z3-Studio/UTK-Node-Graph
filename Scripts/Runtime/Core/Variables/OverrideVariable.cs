@@ -67,6 +67,11 @@ namespace Z3.NodeGraph.Core
             if (lastValue == value)
                 return;
 
+            ForceSave();
+        }
+
+        public void ForceSave()
+        {
             lastValue = value;
             serializedValue = Serializer.ToJson(value, TempOriginalType, serializedObjects);
         }

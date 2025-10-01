@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.Editor
 
         public VariableList(ScriptableObject so, List<Variable> source) : this("Variables", so, source) { }
 
-        public VariableList(string label, ScriptableObject so, List<Variable> source, bool showFoldout = false, string tooptip = "") 
+        public VariableList(string label, ScriptableObject so, List<Variable> source, bool showFoldout = false, string tooptip = "")
         {
             target = so;
             targetList = source;
@@ -108,17 +108,50 @@ namespace Z3.NodeGraph.Editor
         {
             if (variable.OriginalType != typeof(Title))
             {
-                // TODO: Local List: Get this GraphData and validate all dependencies
-                // TODO: Reference List: Get all GraphData in project using this graph using the GraphVariable list and validate all dependencies
+                Dictionary<GraphData, Dictionary<GraphSubAsset, List<IParameter>>> allParameters = NodeGraphEditorUtils.GetAllParameters();
+                Dictionary<GraphData, Dictionary<GraphSubAsset, List<IParameter>>> graphDependencies = new();
 
-                int ok = EditorUtility.DisplayDialogComplex($"Are you sure you want to delete '{variable.name}'?", "TODO: Display all dependency of the local list and reference list", "Confirm", "Cancel", "See dependencies");
-                if (ok == 1)
-                    return;
-
-                if (ok == 2)
+                int dependenciesCount = 0;
+                foreach ((GraphData data, Dictionary<GraphSubAsset, List<IParameter>> subAssets) in allParameters)
                 {
-                    Debug.Log("TODO: Display Validator Window");
-                    return;
+                    Dictionary<GraphSubAsset, List<IParameter>> subAssetDependencies = new();
+
+                    foreach ((GraphSubAsset subAsset, List<IParameter> parameter) in subAssets)
+                    {
+                        List<IParameter> parametersWithDependencies = parameter.Where(p => p.Guid == variable.Guid).ToList();
+                        if (parametersWithDependencies.Count == 0)
+                            continue;
+
+                        subAssetDependencies[subAsset] = parametersWithDependencies;
+                        dependenciesCount += parametersWithDependencies.Count;
+                    }
+
+                    if (subAssetDependencies.Count == 0)
+                        continue;
+
+                    graphDependencies[data] = subAssetDependencies;
+                }
+
+                if (dependenciesCount > 0)
+                {
+                    int result = EditorUtility.DisplayDialogComplex($"Are you sure you want to delete '{variable.name}'?", $"There is a total of '{dependenciesCount}' in project", "Confirm", "Cancel", "See dependencies");
+                    if (result == 1)
+                        return;
+
+                    if (result == 2)
+                    {
+                        EditorUtility.DisplayDialog("Not implemented", "TODO: Display all dependency of the local list and reference list. HOWEVER, check the console log", "ok");
+
+                        foreach ((GraphData data, Dictionary<GraphSubAsset, List<IParameter>> subAssets) in graphDependencies)
+                        {
+                            foreach ((GraphSubAsset subAsset, List<IParameter> parameter) in subAssets)
+                            {
+                                Debug.Log($"GraphSubAsset {subAsset}, Dependencies = {parameter.Count}", subAsset);
+                            }
+                        }
+
+                        return;
+                    }
                 }
             }
 

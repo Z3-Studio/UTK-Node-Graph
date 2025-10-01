@@ -61,6 +61,56 @@ namespace Z3.NodeGraph.Editor
             AssetDatabase.SaveAssets();
         }
 
+        public static List<IParameter> GetAllParameterAsList()
+        {
+            return GetAllParameters()
+                .SelectMany(p => p.Value)
+                .SelectMany(p => p.Value)
+                .ToList();
+        }
+
+        public static Dictionary<GraphData, Dictionary<GraphSubAsset, List<IParameter>>> GetAllParameters()
+        {
+            Dictionary<GraphData, Dictionary<GraphSubAsset, List<IParameter>>> subAssetsDic = new();
+            foreach ((GraphData data , List<GraphSubAsset> graphSubAssets) in GetAllGraphSubAssets())
+            {
+                Dictionary<GraphSubAsset, List<IParameter>> parametersDic = new();
+                foreach (GraphSubAsset graphSubAsset in graphSubAssets)
+                {
+                    IEnumerable<IParameter> parameters = ReflectionUtils.GetAllFieldAndPropertyValuesTypeOf<IParameter>(graphSubAsset);
+                    parametersDic[graphSubAsset] = parameters.ToList();
+                }
+
+                subAssetsDic[data] = parametersDic;
+            }
+
+            return subAssetsDic;
+        }
+
+        public static Dictionary<GraphData, List<GraphSubAsset>> GetAllGraphSubAssets()
+        {
+            Dictionary<GraphData, List<GraphSubAsset>> dictionary = new();
+            string[] allPaths = AssetDatabase.GetAllAssetPaths();
+
+            foreach (string path in allPaths)
+            {
+                if (!path.StartsWith("Assets/"))
+                    continue;
+
+                if (!path.EndsWith(".asset"))
+                    continue;
+
+                GraphData graphData = AssetDatabase.LoadAssetAtPath<GraphData>(path);
+                if (!graphData)
+                    continue;
+
+                dictionary[graphData] = AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
+                    .OfType<GraphSubAsset>()
+                    .ToList();
+            }
+
+            return dictionary;
+        }
 
         private static void DestroyAsset(GraphData graph, GraphSubAsset asset)
         {

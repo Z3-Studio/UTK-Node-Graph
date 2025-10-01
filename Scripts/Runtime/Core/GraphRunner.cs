@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Z3.UIBuilder.Core;
 using Z3.Utils;
 
 namespace Z3.NodeGraph.Core
@@ -24,8 +25,12 @@ namespace Z3.NodeGraph.Core
     [AddComponentMenu(GraphPath.ComponentMenu + "Graph Runner")]
     public sealed class GraphRunner : MonoBehaviour, IGraphRunner
     {
+        [Title("Dependencies")]
         [SerializeField] private GraphData graphData;
         [SerializeField] private GraphVariablesComponent graphVariablesComponent;
+
+        [Title("Settings")] // Maybe move it to the GraphData?
+        [SerializeField] private bool autoRepeat = true;
         [SerializeField] private ActivationMethod activationMethod = ActivationMethod.EnableDisable;
         [SerializeField] private UpdateMethod updateMethod = UpdateMethod.FixedUpdate;
 
@@ -122,8 +127,16 @@ namespace Z3.NodeGraph.Core
 
         public void ManualUpdate(float delta)
         {
+            if (!Active)
+                return;
+
             DeltaTime = delta;
-            RootController.OnUpdate();
+            State result = RootController.OnUpdate();
+
+            if (!autoRepeat && result != State.Running)
+            {
+                ManualDeactivation();
+            }
         }
     }
 }

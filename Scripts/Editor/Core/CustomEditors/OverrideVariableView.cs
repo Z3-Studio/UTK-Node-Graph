@@ -52,7 +52,7 @@ namespace Z3.NodeGraph.Editor
 
             variableName.text = Variable.name;
 
-            Type type = Type.GetType(Variable.type);
+            Type type = Variable.OriginalType;
             if (type == typeof(Title))
             {
                 propertyContainer.style.SetDisplay(false);

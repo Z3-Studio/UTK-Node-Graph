@@ -1,6 +1,6 @@
-﻿using Z3.NodeGraph.Core;
+﻿using UnityEngine;
+using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
-using UnityEngine;
 using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.TaskPack.Utilities

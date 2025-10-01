@@ -10,13 +10,15 @@ namespace Z3.NodeGraph.StateMachine
     {
         [DesignOnly]
         [SerializeField] private int priority;
+        [SerializeField] private bool autoRestart = true;
         [SerializeField] private ParallelUpdateMode updateMode;
         [SerializeField] private GraphData subGraph;
 
         public int Priority => priority;
         public ParallelExecution ParallelExecution => updateMode == ParallelUpdateMode.BeforeUpdate ? ParallelExecution.BeforeUpdate : ParallelExecution.AfterUpdate;
         public GraphData SubGraph => subGraph;
-        public GraphController SubController { get; private set; }
+        public GraphController SubController => subController ??= GraphController.BuildSubGraph(subGraph);
+        private GraphController subController;
 
         public override string SubInfo
         {
@@ -29,9 +31,39 @@ namespace Z3.NodeGraph.StateMachine
             }
         }
 
+        public override void StartGraph()
+        {
+            State = State.Running;
+
+            subController ??= GraphController.BuildSubGraph(subGraph);
+            subController.StartGraph();
+        }
+
         public void UpdateParallel()
         {
-            throw new System.NotImplementedException();
+            if (State != State.Running)
+                return;
+
+            State newState = subController.OnUpdate();
+            if (newState != State.Running && autoRestart)
+            {
+                subController.StopGraph();
+                subController.StartGraph();
+            }
+            else
+            {
+                State = newState;
+            }
+        }
+
+        public override void StopGraph()
+        {
+            subController.StopGraph();
+
+            if (State == State.Running)
+            {
+                State = State.Resting;
+            }
         }
     }
 }

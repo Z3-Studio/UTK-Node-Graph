@@ -15,6 +15,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
     public abstract class MapParametersBase : ActionTask
     {
+        // Note: Maybe add a feature to ignore override variables?
         protected abstract ScriptableObject Data { get; }
 
         private IUpdateParameters updateParameters;

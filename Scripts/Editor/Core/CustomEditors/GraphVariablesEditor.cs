@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.Editor
         public override VisualElement CreateInspectorGUI()
         {
             VisualElement root = new VisualElement();
-            root.Add(GetMonoScript());
+            AddMonoScript(root);
 
             TitleView.AddTitle(root, "Graph Variables");
 

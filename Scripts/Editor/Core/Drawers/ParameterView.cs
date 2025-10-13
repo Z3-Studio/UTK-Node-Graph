@@ -247,6 +247,13 @@ namespace Z3.NodeGraph.Editor
         {
             if (parameterT.IsBinding && parameterT.IsDefined)
             {
+                if (parameterT.IsSelfBinding)
+                {
+                    convertionLabel.text = "get;";
+                    convertionContainer.tooltip = $"Only GameObject and Components";
+                    return;
+                }
+
                 Converter getConverter = TypeResolver.GetGetConverterType(parameterT, parameterT.Variable);
                 Converter setConverter = TypeResolver.GetSetConverterType(parameterT, parameterT.Variable);
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Core
 {

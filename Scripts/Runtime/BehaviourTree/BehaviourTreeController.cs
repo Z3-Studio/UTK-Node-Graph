@@ -9,5 +9,10 @@ namespace Z3.NodeGraph.BehaviourTree
         public BehaviourTreeController(IGraphRunner runner, BehaviourTreeData data) : base(runner, data) { }
 
         public override State OnUpdate() => RootNode.Update();
+
+        public override void StopGraph()
+        {
+            RootNode.Interrupt();
+        }
     }
 }

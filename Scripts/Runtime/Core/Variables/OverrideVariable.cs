@@ -18,9 +18,6 @@ namespace Z3.NodeGraph.Core
         [SerializeField] public string serializedValue;
         [SerializeField] public List<Object> serializedObjects = new();
 
-        [Obsolete]
-        public Object serializedObject;
-
         // Interface
         public string Name => throw new InvalidOperationException("Get from original");
         public object Value { get => value; set => this.value = value; }

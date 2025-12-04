@@ -48,6 +48,12 @@ namespace Z3.NodeGraph.BehaviourTree
         {
             finishCounter = 0;
 
+            if (repeaterMode == RepeaterMode.Times && times.Value <= 0)
+            {
+                update = () => State.Success;
+                return;
+            }
+
             update = repeaterMode switch
             {
                 RepeaterMode.Forever => RepeatForever,
@@ -69,10 +75,8 @@ namespace Z3.NodeGraph.BehaviourTree
             if (result is State.Success or State.Failure)
             {
                 finishCounter++;
-                if (finishCounter > times.Value)
-                {
+                if (finishCounter >= times.Value)
                     return result;
-                }
             }
 
             return State.Running;

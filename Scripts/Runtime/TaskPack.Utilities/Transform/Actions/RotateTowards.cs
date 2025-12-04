@@ -16,6 +16,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         //[Range(0, 180)]
         [SerializeField] private Parameter<float> angleDifference = 5f;
 
+        public override string Info => $"Rotate Towards {target}";
+
         protected override void UpdateAction()
         {
             Vector3 lookPos = target.Value - transform.Value.position;

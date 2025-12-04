@@ -1,6 +1,6 @@
+using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
-using UnityEngine;
 using Z3.Utils.ExtensionMethods;
 using Z3.Utils;
 
@@ -25,15 +25,21 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             UnityUtils.AddComponentIfNeeded(ref monoEvents, target.Value);
 
             if (triggerEnter.Value)
+            {
                 monoEvents.OnTriggerEnterEvent += OnTrigger;
+                monoEvents.OnTriggerStayEvent += OnTrigger; // In case something is already inside the trigger
+            }
             else
+            {
                 monoEvents.OnTriggerExitEvent += OnTrigger;
+            }
         }
 
         protected override void StopAction()
         {
             monoEvents.OnTriggerEnterEvent -= OnTrigger;
             monoEvents.OnTriggerExitEvent -= OnTrigger;
+            monoEvents.OnTriggerStayEvent -= OnTrigger;
         }
 
         private void OnTrigger(Collider collider)

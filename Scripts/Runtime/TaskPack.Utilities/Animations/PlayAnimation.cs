@@ -10,7 +10,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Play animation by state name")]
     public class PlayAnimation : ActionTask
     {
-        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [ParameterDefinition(AutoBindType.AnyWithSameType)]
         [SerializeField] private Parameter<Animator> animator;
 
         [SerializeField] private Parameter<string> stateName;
@@ -30,7 +30,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             played = false;
 
-            animator.Value.PlayState(stateName.Value, transition.Value, layer.Value);
+            animator.Value.PlayOrResetState(stateName.Value, transition.Value, layer.Value);
 
             if (!waitUntilFinish.Value)
             {

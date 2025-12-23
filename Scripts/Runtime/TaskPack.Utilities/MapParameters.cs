@@ -77,6 +77,9 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
             foreach (VariableInstance variable in GraphController.ReferenceVariables.Values)
             {
+                if (variable.IsOverride)
+                    continue;
+
                 if (propertyMap.TryGetValue(variable.Name, out PropertyInfo propertyInfo) && variable.OriginalType == propertyInfo.PropertyType)
                 {
                     variable.Value = propertyInfo.GetValue(Data);
@@ -103,7 +106,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     }
 
     [NodeCategory(Categories.Miscellaneous)]
-    [NodeDescription("Auto Mapper copy all Properties from 'data' and paste to 'ReferenceVariables'")]
+    [NodeDescription("Auto Mapper copy all Properties from 'data' and paste to 'ReferenceVariables'. It will ignore Override variables")]
     public sealed class MapParameters : MapParametersBase
     {
         [SerializeField] private Parameter<ScriptableObject> data;

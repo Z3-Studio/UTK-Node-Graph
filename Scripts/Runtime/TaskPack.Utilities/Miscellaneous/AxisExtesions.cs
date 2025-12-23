@@ -5,6 +5,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     public static class AxisExtesions
     {
+                modified.z = original.z;
         public static float Distance(this Axis3Flags axis, Vector3 a, Vector3 b)
         {
             float squaredDifference = 0f;

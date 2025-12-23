@@ -13,6 +13,7 @@ namespace Z3.NodeGraph.Core
         public object Value { get; set; }
         public string Guid { get; }
         public Type OriginalType { get; }
+        public bool IsOverride { get; }
 
         public VariableInstance(Variable variable)
         {
@@ -25,6 +26,7 @@ namespace Z3.NodeGraph.Core
         public VariableInstance(Variable variable, OverrideVariable overrideVariable) : this(variable)
         {
             Value = overrideVariable.Value;
+            IsOverride = true;
         }
 
         public override string ToString() => Name;

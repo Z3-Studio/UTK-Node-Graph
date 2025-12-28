@@ -42,7 +42,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 CompareMethod.LessOrEqualTo => "<=",
                 CompareMethod.LessThan => "<",
                 CompareMethod.EqualTo => "==",
-                CompareMethod.BiggerOrEqualTo => "=>",
+                CompareMethod.BiggerOrEqualTo => ">=",
                 CompareMethod.BiggerThan => ">",
                 _ => throw new NotImplementedException()
             };

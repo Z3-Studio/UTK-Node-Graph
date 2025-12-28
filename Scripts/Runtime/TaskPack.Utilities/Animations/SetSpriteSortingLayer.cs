@@ -26,14 +26,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 ? sortingLayerName.Value 
                 : SortingLayer.layers[sortingLayerIndex.Value].name;
 
-            int layerID = SortingLayer.NameToID(layerName);
-            
-            if (!SortingLayer.IsValid(layerID))
-            {
-                EndAction(false);
-            }
-            
-            spriteRenderer.Value.sortingLayerID = layerID;
+            spriteRenderer.Value.sortingLayerID = SortingLayer.NameToID(layerName);
             EndAction();
         }
     }

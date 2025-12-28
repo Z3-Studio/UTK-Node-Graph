@@ -11,7 +11,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<float> extra;
         public CompareMethod compare = CompareMethod.EqualTo;
 
-        public override string InfoC => $"Time.time {compare.GetString()} {parameter} {(extra.IsBinding ? extra : extra.Value == 0 ? string.Empty : $"+ ({extra})")}";     
+        public override string InfoC => $"Time.time {compare.GetString()} {parameter} {(!extra.IsBinding && extra.Value == 0 ? string.Empty : $"+ {extra}")}";     
 
         public override bool CheckCondition()
         {

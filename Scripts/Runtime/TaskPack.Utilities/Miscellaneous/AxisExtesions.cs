@@ -5,7 +5,28 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     public static class AxisExtesions
     {
+        public static Vector3 Reset(this Axis3Flags axis, Vector3 vector) => PreserveOriginal(axis, vector, Vector3.zero);
+
+        public static Vector3 PreserveOriginal(this Axis3Flags axis, Vector3 modified, Vector3 original)
+        {
+            if (!axis.HasFlag(Axis3Flags.X))
+            {
+                modified.x = original.x;
+            }
+
+            if (!axis.HasFlag(Axis3Flags.Y))
+            {
+                original.y = modified.y;
+            }
+
+            if (!axis.HasFlag(Axis3Flags.Z))
+            {
                 modified.z = original.z;
+            }
+
+            return modified;
+        }
+
         public static float Distance(this Axis3Flags axis, Vector3 a, Vector3 b)
         {
             float squaredDifference = 0f;

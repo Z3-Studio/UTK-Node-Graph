@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<bool> waitUntilFinish;
         [SerializeField] private Parameter<int> layer;
 
-        public override string Info => waitUntilFinish.Value ?
+        public override string Info => !waitUntilFinish.IsBinding && waitUntilFinish.Value ?
             $"► Playing {stateName}" :
             $"► Play {stateName}";
 

@@ -18,7 +18,9 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         //[ShowIf(nameof(waitUntilFinish), 1)]
         [SerializeField] private Parameter<int> waitLayer;
 
-        public override string Info => $"► Play All: {stateName}";
+        public override string Info => !waitUntilFinish.IsBinding && waitUntilFinish.Value ?
+            $"► Playing All {stateName}" :
+            $"► Play All {stateName}";
 
         private AnimatorStateInfo stateInfo;
         private bool played;

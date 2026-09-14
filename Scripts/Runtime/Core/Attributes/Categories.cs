@@ -22,6 +22,7 @@
         public const string Physics = Utilities + "/Physics";
         public const string Rigidbody = Utilities + "/Rigidbody";
         public const string Transform = Utilities + "/Transform";
+        public const string Ui = Utilities + "/Ui";
         public const string Variables = Utilities + "/Variables";
 
         // Plugins Unity

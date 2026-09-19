@@ -68,6 +68,8 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     {
         X = 1,
         Y = 2,
-        Z = 4
+        Z = 4,
+
+        XYZ = X | Y | Z
     }
 }

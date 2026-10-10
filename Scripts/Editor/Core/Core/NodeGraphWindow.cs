@@ -37,12 +37,11 @@ namespace Z3.NodeGraph.Editor
         }
 
         [OnOpenAsset]
-        public static bool OpenEditor(int instanceId, int line)
+        public static bool OpenWindowByAsset(EntityId entityId, int line)
         {
-            if (EditorUtility.InstanceIDToObject(instanceId) is GraphData)
+            if (EditorUtility.EntityIdToObject(entityId) is GraphData)
             {
                 OpenWindow();
-                return false;
             }
 
             return false;
@@ -112,7 +111,7 @@ namespace Z3.NodeGraph.Editor
             if (Selection.activeGameObject && Selection.activeGameObject.TryGetComponent(out GraphRunner runner))
             {
                 // TODO: Review it
-                if (Application.isPlaying)
+                if (Application.isPlaying && runner.RootController != null)
                 {
                     graph = runner.RootController.GraphData;
                     controller = runner.RootController;
@@ -123,16 +122,16 @@ namespace Z3.NodeGraph.Editor
                     graph = runner.GraphData;
                 }
             }
-            else if (Selection.activeObject is GraphData)
+            else if (Selection.activeObject is GraphData data)
             {
-                graph = Selection.activeObject as GraphData;
+                graph = data;
             }
             
             if (graph && graph != GraphData)
             {
                 // RootNodeBug? After create a soon as possible
                 // TODO: Understand why and when this is necessary and document it
-                if (checkId && !AssetDatabase.CanOpenAssetInEditor(graph.GetInstanceID())) 
+                if (checkId && !AssetDatabase.CanOpenAssetInEditor(graph.GetEntityId()))
                     return;
 
                 SelectGraph(graph, controller);

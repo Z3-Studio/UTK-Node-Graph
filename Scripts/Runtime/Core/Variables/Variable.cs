@@ -109,7 +109,11 @@ namespace Z3.NodeGraph.Core
             Variable newVariable = new()
             {
                 name = name,
+#if UNITY_6000_4_OR_NEWER
+                guid = GUID.Generate().ToString(),
+#else
                 guid = UnityEditor.GUID.Generate().ToString(),
+#endif
                 type = type.AssemblyQualifiedName,
                 value = type.GetDefaultValueForType()
             };

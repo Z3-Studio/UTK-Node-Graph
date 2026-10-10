@@ -5,24 +5,30 @@ namespace Z3.NodeGraph.Core
 {
     public static class DebugLogger // TODO: NgLogger
     {
-        public static void Log(string message, GraphSubAsset context, bool force = false)
+        static readonly Regex TagPattern = new(@"\[.*?\]", RegexOptions.Compiled);
+
+        public static void Log(string message, GraphSubAsset context, bool force = false, LogType logType = LogType.Log)
         {
             if (!force)
                 return;
 
-            string pattern = @"\[.*?\]";
-            string nodeName = context.name;
-            if (Regex.IsMatch(nodeName, pattern))
-            {
-                nodeName = Regex.Replace(context.name, pattern, string.Empty);
-            }
-
-            LogObj($"{nodeName}: {message}", context);
+            string nodeName = TagPattern.Replace(context.name, string.Empty);
+            LogObj($"{nodeName}: {message}", context, logType);
         }
 
-        public static void LogObj(string message, GraphSubAsset context)
+        public static void LogWarning(string message, GraphSubAsset context, bool force = false)
         {
-            Debug.Log(message, context);
+            Log(message, context, force, LogType.Warning);
+        }
+
+        public static void LogError(string message, GraphSubAsset context, bool force = false)
+        {
+            Log(message, context, force, LogType.Error);
+        }
+
+        public static void LogObj(string message, GraphSubAsset context, LogType logType = LogType.Log)
+        {
+            Debug.unityLogger.Log(logType, (object)message, context);
         }
     }
 }

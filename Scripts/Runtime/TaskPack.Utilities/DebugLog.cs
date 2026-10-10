@@ -8,14 +8,14 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     [NodeDescription("Show log")]
     public class DebugLog : ActionTask
     {
-        [SerializeField] protected Parameter<string> message = "Hello World";
-        [SerializeField] protected Parameter<LogType> logType = LogType.Log;
+        [SerializeField] private Parameter<string> message = "Hello World";
+        [SerializeField] private Parameter<LogType> logType = LogType.Log;
 
         public override string Info => $"Debug {message}";
 
         protected override void StartAction()
         {
-            DebugLogger.Log(message.Value, this, true);
+            DebugLogger.Log(message.Value, this, true, logType.Value);
             EndAction();
         }
     }

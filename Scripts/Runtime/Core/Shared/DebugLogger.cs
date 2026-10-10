@@ -26,7 +26,7 @@ namespace Z3.NodeGraph.Core
             Log(message, context, force, LogType.Error);
         }
 
-        public static void LogObj(string message, GraphSubAsset context, LogType logType = LogType.Log)
+        private static void LogObj(string message, GraphSubAsset context, LogType logType = LogType.Log)
         {
             Debug.unityLogger.Log(logType, (object)message, context);
         }

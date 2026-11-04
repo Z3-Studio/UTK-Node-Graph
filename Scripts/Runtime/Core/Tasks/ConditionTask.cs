@@ -22,7 +22,7 @@ namespace Z3.NodeGraph.Tasks
         public bool EvaluateCondition()
         {
             bool conditionMet = CheckCondition();
-            return invertCondition ? !conditionMet : conditionMet;
+            return conditionMet != invertCondition;
         }
 
         public virtual void StartCondition() { }

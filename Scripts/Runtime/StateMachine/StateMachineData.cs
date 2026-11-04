@@ -36,7 +36,7 @@ namespace Z3.NodeGraph.StateMachine
 
             if (node is TransitableStateNode smNode && smNode == startNode)
             {
-                startNode = SubAssets.FirstOrDefault(x => x is Node) as Node;
+                startNode = SubAssets.FirstOrDefault(x => x is IOutputNode node && node.Startable) as Node;
             }
         }
 

@@ -44,6 +44,13 @@ namespace Z3.NodeGraph.Core
                 selfInstance.SetupDependencies(this, subAssetDic);
             }
 
+#if UNITY_EDITOR
+            if (!originalData.StartNode)
+            {
+                throw new System.InvalidOperationException($"Missing Start Node: {originalData.name}");
+            }
+#endif
+
             graph.SetStartNode(subAssetDic[graph.StartNode.Guid] as Node);
 
             GraphData = graph;

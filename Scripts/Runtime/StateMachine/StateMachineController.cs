@@ -84,6 +84,9 @@ namespace Z3.NodeGraph.StateMachine
 
         public override State OnUpdate()
         {
+            if (state is State.Failure or State.Success)
+                return state;
+
             ExecuteParallel(enterStates);
             ExecuteParallel(beforeUpdateState);
 

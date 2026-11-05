@@ -18,6 +18,7 @@ namespace Z3.NodeGraph.StateMachine
         private readonly List<StateMachineNode> nodes = new();
 
         private State state = State.Ready;
+        public bool ChangedStateThisFrame { get; private set; } // Used to avoid multiple any state transite
 
         public StateMachineController(IGraphRunner runner, StateMachineData data) : base(runner, data)
         {
@@ -74,6 +75,7 @@ namespace Z3.NodeGraph.StateMachine
             CurrentState.StopState();
             CurrentState = nextState;
             OnChangeStage?.Invoke(); // Used in AnyState
+            ChangedStateThisFrame = true;
             CurrentState.StartState();
         }
 
@@ -87,6 +89,7 @@ namespace Z3.NodeGraph.StateMachine
             if (state is State.Failure or State.Success)
                 return state;
 
+            ChangedStateThisFrame = false;
             ExecuteParallel(enterStates);
             ExecuteParallel(beforeUpdateState);
 

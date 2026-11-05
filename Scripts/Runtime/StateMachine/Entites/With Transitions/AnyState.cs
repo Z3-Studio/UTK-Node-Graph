@@ -38,6 +38,9 @@ namespace Z3.NodeGraph.StateMachine
 
         public void UpdateParallel()
         {
+            if (GraphController.ChangedStateThisFrame)
+                return;
+
             bool changeState = transitions.TryTransitionNew(GraphController, out Transition usedTransition);
             if (!changeState || canTransitionToSelf)
                 return;

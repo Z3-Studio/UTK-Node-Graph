@@ -29,7 +29,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         private void Check()
         {
-            if (animator.Value.IsState(stateName, layerIndex) == state.Value)
+            if (animator.Value.IsFullyInState(stateName, layerIndex) == state.Value)
             {
                 EndAction();
             }

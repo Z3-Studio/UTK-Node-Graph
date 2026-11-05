@@ -5,20 +5,20 @@ using Z3.NodeGraph.Tasks;
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Animations)]
-    [NodeDescription("Set Animator Float Parameter")]
-    public class SetAnimatorFloatParameter : ActionTask
+    [NodeDescription("Set Animator Bool Parameter")]
+    public class SetAnimatorBool : ActionTask
     {
         [ParameterDefinition(AutoBindType.AnyWithSameType)]
         [SerializeField] private Parameter<Animator> animator;
 
         [SerializeField] private Parameter<string> parameterName;
-        [SerializeField] private Parameter<float> value;
+        [SerializeField] private Parameter<bool> value;
 
-        public override string Info => $"Set {parameterName} = {value}";
+        public override string Info => $"Set Bool {parameterName} = {value}";
 
         protected override void StartAction()
         {
-            animator.Value.SetFloat(parameterName.Value, value.Value);
+            animator.Value.SetBool(parameterName.Value, value.Value);
             EndAction();
         }
     }

@@ -18,7 +18,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         public override bool CheckCondition()
         {
-            return animator.Value.IsState(stateName, layerIndex);
+            return animator.Value.IsFullyInState(stateName, layerIndex);
         }
     }
 }

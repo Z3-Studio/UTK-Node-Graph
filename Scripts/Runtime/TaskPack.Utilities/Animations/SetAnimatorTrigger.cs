@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<string> parameterName;
         [SerializeField] private Parameter<bool> set;
 
-        public override string Info => $"Set Trigger {parameterName}";
+        public override string Info => $"Set Trigger [{parameterName}]";
 
         protected override void StartAction()
         {

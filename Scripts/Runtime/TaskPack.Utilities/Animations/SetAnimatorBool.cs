@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<string> parameterName;
         [SerializeField] private Parameter<bool> value;
 
-        public override string Info => $"Set Bool {parameterName} = {value}";
+        public override string Info => $"Set Bool [{parameterName}] = {value}";
 
         protected override void StartAction()
         {

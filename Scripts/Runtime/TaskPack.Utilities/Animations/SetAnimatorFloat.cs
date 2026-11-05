@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<string> parameterName;
         [SerializeField] private Parameter<float> value;
 
-        public override string Info => $"Set Float {parameterName} = {value}";
+        public override string Info => $"Set Float [{parameterName}] = {value}";
 
         protected override void StartAction()
         {

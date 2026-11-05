@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         [SerializeField] private Parameter<string> parameterName;
         [SerializeField] private Parameter<int> value;
 
-        public override string Info => $"Set Int {parameterName} = {value}";
+        public override string Info => $"Set Int [{parameterName}] = {value}";
 
         protected override void StartAction()
         {

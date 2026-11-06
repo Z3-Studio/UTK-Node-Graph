@@ -17,6 +17,22 @@ namespace Z3.NodeGraph.Editor
         {
             List<StateMachineNode> nodeList = CurrentGraph.SubAssets.OfType<StateMachineNode>().ToList();
             InitializeNodes(nodeList);
+
+            Undo.undoRedoEvent += OnUndoRedo;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            Undo.undoRedoEvent -= OnUndoRedo;
+        }
+
+        private void OnUndoRedo(in UndoRedoInfo undo)
+        {
+            if (undo.undoName != UndoRecorder.Prefix + UndoRecorder.MoveTransition)
+                return;
+
+            References.Refresh();
         }
 
         protected override void OnEdgesToCreate(List<NGEdge> edgesToCreate)
@@ -31,7 +47,7 @@ namespace Z3.NodeGraph.Editor
                 Transition newTransition = ScriptableObject.CreateInstance(type) as Transition;
 
                 newTransition.SetGuid(GUID.Generate().ToString(), $"{parent.Node.name}/");
-                newTransition.Setup(child.Node);
+                newTransition.SetupConnection(child.Node);
 
                 // Before to add and remember
                 UndoRecorder.AddUndo(parent.Node, "Add Transition");
@@ -46,6 +62,51 @@ namespace Z3.NodeGraph.Editor
 
                 AssetDatabase.SaveAssets();
             });
+        }
+
+        /// <summary> Drag a node transition and drop to another node, replacing the incoming or outgoing target </summary>
+        public void MoveTransitions(StateMachineNode owner, List<Transition> transitions, StateMachineNode newNode, bool moveTarget)
+        {
+            Undo.IncrementCurrentGroup();
+            int undoGroup = Undo.GetCurrentGroup();
+
+            if (!moveTarget)
+            {
+                // Changed the incoming owner
+                List<Transition> ownerTransitions = owner.GetTransitions();
+                List<Transition> newOwnerTransitions = newNode.GetTransitions();
+
+                UndoRecorder.AddUndo(owner, UndoRecorder.MoveTransition);
+                UndoRecorder.AddUndo(newNode, UndoRecorder.MoveTransition);
+
+                foreach (Transition transition in transitions)
+                {
+                    ownerTransitions.Remove(transition);
+                    newOwnerTransitions.Add(transition);
+                    NodeGraphEditorUtils.UpdateSubAssetName(transition, newNode);
+                }
+
+                EditorUtility.SetDirty(owner);
+                EditorUtility.SetDirty(newNode);
+            }
+            else
+            {
+                // Changed the outgoing target
+                TransitableStateNode newTarget = (TransitableStateNode)newNode;
+
+                foreach (Transition transition in transitions)
+                {
+                    UndoRecorder.AddUndo(transition, UndoRecorder.MoveTransition);
+                    transition.SetupConnection(newTarget);
+                    EditorUtility.SetDirty(transition);
+                }
+            }
+
+            Undo.SetCurrentGroupName(UndoRecorder.Prefix + UndoRecorder.MoveTransition);
+            Undo.CollapseUndoOperations(undoGroup);
+
+            AssetDatabase.SaveAssets();
+            References.Refresh();
         }
 
         public override void BuildGraphMenu(ContextualMenuPopulateEvent evt)

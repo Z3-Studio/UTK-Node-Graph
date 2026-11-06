@@ -68,7 +68,7 @@ namespace Z3.NodeGraph.Editor
         /// <summary> Initialize new GraphData </summary>
         private void BuildView(GraphData graphData)
         {
-            Undo.undoRedoPerformed -= OnUndoRedo;
+            Undo.undoRedoEvent -= OnUndoRedo;
 
             // TODO: Display messagee when nothing is setted
             if (graphData == null)
@@ -78,7 +78,7 @@ namespace Z3.NodeGraph.Editor
             }
 
             visible = true;
-            Undo.undoRedoPerformed += OnUndoRedo;
+            Undo.undoRedoEvent += OnUndoRedo;
 
             viewTransform.position = references.Preferences.Position;
             viewTransform.scale = references.Preferences.Scale.ToVector3();
@@ -95,7 +95,7 @@ namespace Z3.NodeGraph.Editor
             UserPreferences.SetInstanceDirty();
         }
 
-        private void OnUndoRedo()
+        private void OnUndoRedo(in UndoRedoInfo undo)
         {
             BuildView(CurrentGraph);
             AssetDatabase.SaveAssets();

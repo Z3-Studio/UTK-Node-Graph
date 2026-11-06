@@ -19,6 +19,7 @@ namespace Z3.NodeGraph.Editor
         [UIElement] private VisualElement nodeState;
 
         public Rect Layout => contents.layout;
+        public Vector2 WorldCenter => contents.worldBound.center;
         public Color ColorState => nodeState.resolvedStyle.backgroundColor;
         public SMPort Output { get; }
 

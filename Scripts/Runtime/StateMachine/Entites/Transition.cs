@@ -27,9 +27,9 @@ namespace Z3.NodeGraph.StateMachine
 
         public override string Info => !string.IsNullOrEmpty(title) ? title : conditions.GetLabel();
 
-        public void Setup(TransitableStateNode child)
+        public void SetupConnection(TransitableStateNode targetNode)
         {
-            connection = child;
+            connection = targetNode;
         }
 
         public void StartTransitions()

@@ -78,6 +78,17 @@
     border-bottom-right-radius: 8px;
 }
 
+.transition-drop-target #node-border {
+    border-left-color: rgb(0, 210, 255);
+    border-right-color: rgb(0, 210, 255);
+    border-top-color: rgb(0, 210, 255);
+    border-bottom-color: rgb(0, 210, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
 .node {
     min-width: 150px;
     margin-left: 0;

@@ -32,6 +32,8 @@ namespace Z3.NodeGraph.Editor
         {
             NgEdgeControl.Init(this);
 
+            this.AddManipulator(new TransitionDragManipulator());
+
             RegisterCallback<MouseEnterEvent>((e) => NgEdgeControl.MouseEvent(true));
             RegisterCallback<MouseLeaveEvent>((e) => NgEdgeControl.MouseEvent(false));
         }

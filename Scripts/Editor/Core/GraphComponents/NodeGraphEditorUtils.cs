@@ -14,14 +14,20 @@ namespace Z3.NodeGraph.Editor
 {
     public static class UndoRecorder // TODO: Improve and clean
     {
+        // TODO: Move all actions names to here, and make Prefix as private
+        public const string Prefix = "NodeGraph: ";
+        public const string MoveTransition = "Move Transition";
+        public const string PasteTask = "Paste Task";
+        public const string RenameAsset = "Rename Asset";
+
         public static void AddUndo(Object context, string action) // Make patterns
         {
-            Undo.RecordObject(context, $"NodeGraph: {action} {context.GetType().Name}");
+            Undo.RecordObject(context, Prefix + $"{action} {context.GetType().Name}");
         }
 
         public static void AddCreation(Object context, string action) // Make patterns
         {
-            Undo.RegisterCreatedObjectUndo(context, $"NodeGraph: {action} {context.GetType().Name}");
+            Undo.RegisterCreatedObjectUndo(context, Prefix + $"{action} {context.GetType().Name}");
         }
     }
 
@@ -222,6 +228,23 @@ namespace Z3.NodeGraph.Editor
             return name.Substring(0, lastBracketStart + 1) + newGuid + name.Substring(lastBracketEnd);
         }
 
+        /// <summary> "Parent [guid]/Type [guid]", children included </summary>
+        public static void UpdateSubAssetName(GraphSubAsset subAsset, GraphSubAsset parent)
+        {
+            UndoRecorder.AddUndo(subAsset, UndoRecorder.RenameAsset);
+
+            subAsset.SetGuid(subAsset.Guid, $"{parent.name}/");
+            EditorUtility.SetDirty(subAsset);
+
+            foreach (ISubAssetList subAssetList in ReflectionUtils.GetAllFieldValuesTypeOf<ISubAssetList>(subAsset).ToList())
+            {
+                foreach (GraphSubAsset child in subAssetList.OfType<GraphSubAsset>())
+                {
+                    UpdateSubAssetName(child, subAsset);
+                }
+            }
+        }
+
         public static void ReplaceParameterBinding(GraphSubAsset subAsset, Dictionary<string, string> guidVariables)
         {
             foreach (FieldInfo field in ReflectionUtils.GetAllFieldsTypeOf<IParameter>(subAsset))
@@ -235,30 +258,27 @@ namespace Z3.NodeGraph.Editor
             }
         }
 
-        public static void AddCopy<T>(GraphData graphData, IList<T> source, T clipboard) where T : GraphSubAsset
+        public static void AddCopy<T>(GraphData graphData, GraphSubAsset parent, IList<T> source, T clipboard) where T : GraphSubAsset
         {
             // It can be transitions and taks
             if (clipboard is not Task)
                 throw new NotImplementedException();
 
-            UndoRecorder.AddUndo(graphData, "Copy Asset susing Context");
+            UndoRecorder.AddUndo(graphData, UndoRecorder.PasteTask);
+            UndoRecorder.AddUndo(parent, UndoRecorder.PasteTask); // Owns source
 
             T cloneAsset = clipboard.CloneT();
-            string newAssetGuid = GUID.Generate().ToString();
-            string newName = ReplaceGuid(cloneAsset.name, newAssetGuid);
 
-            int parentLastIndex = newName.LastIndexOf('/');
-            string newParentName = newName.Substring(0, parentLastIndex + 1);
+            string newGuid = GUID.Generate().ToString();
+            cloneAsset.SetGuid(newGuid, $"{parent.name}/");
 
-
-            cloneAsset.SetGuid(newAssetGuid, newParentName);
             source.Add(cloneAsset);   //cloneAsset.Parse(clones); // Transition must to use Parse method
 
             graphData.AddSubAsset(cloneAsset);
             AssetDatabase.AddObjectToAsset(cloneAsset, graphData);
 
 
-            UndoRecorder.AddCreation(cloneAsset, "Copy Assets using Context");
+            UndoRecorder.AddCreation(cloneAsset, UndoRecorder.PasteTask);
             AssetDatabase.SaveAssetIfDirty(graphData);
         }
 

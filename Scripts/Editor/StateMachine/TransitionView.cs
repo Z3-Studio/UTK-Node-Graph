@@ -15,6 +15,10 @@ namespace Z3.NodeGraph.Editor
         [UIElement] private readonly VisualElement stateBorder;
         [UIElement] private readonly VisualElement selectionBorder;
 
+        public Transition Transition { get; }
+        public NodeGraphReferences References { get; }
+        private IOutputNode Owner { get; }
+
         private bool active;
         private float delayColor;
         private State lastState = State.Ready;
@@ -22,15 +26,11 @@ namespace Z3.NodeGraph.Editor
         private const float Delay = SMNodeView.Delay;
         private const float LabelOffset = -10f;
 
-        private Transition Transition { get; }
-        private IOutputNode Owner { get; }
-        public NodeGraphReferences References { get; }
-
         public GraphElement Self => throw new System.NotImplementedException();
         private StateMachineGraphModule Module => References.Module as StateMachineGraphModule;
         private static VisualTreeAsset SmTransitionLabel => NodeGraphResources.SmTransitionLabel;
 
-        public TransitionView(Transition transition, IOutputNode owner, NodeGraphReferences references) 
+        public TransitionView(Transition transition, IOutputNode owner, NodeGraphReferences references)
         {
             Transition = transition;
             Owner = owner;
@@ -42,6 +42,8 @@ namespace Z3.NodeGraph.Editor
             this.BindUIElements();
 
             SetLabelInfo();
+
+            selectionBorder.AddManipulator(new TransitionDragManipulator(this));
             selectionBorder.AddManipulator(new Clickable(() =>
             {
                 Module.Inspect(GetInspector());

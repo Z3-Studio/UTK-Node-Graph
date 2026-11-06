@@ -89,7 +89,7 @@ namespace Z3.NodeGraph.Editor
 
                 menu.AppendAction($"Paste as New", actionEvent =>
                 {
-                    NodeGraphEditorUtils.AddCopy(graphData, source, clipboard);
+                    NodeGraphEditorUtils.AddCopy(graphData, assetParent, source, clipboard);
                     customListView.Rebuild();
                     Validator.Refresh(graphData);
 
@@ -100,7 +100,9 @@ namespace Z3.NodeGraph.Editor
         private void OnAdd(string _, Type type) // TODO: Move it to NodeGraphModule
         {
             T newActionTask = ScriptableObject.CreateInstance(type) as T;
-            newActionTask.SetGuid(GUID.Generate().ToString(), $"{assetParent.name}/");
+
+            string newAssetGuid = GUID.Generate().ToString();
+            newActionTask.SetGuid(newAssetGuid, $"{assetParent.name}/");
 
             IEnumerable<FieldInfo> fields = ReflectionUtils.GetAllFieldsTypeOf<IParameter>(newActionTask);
 

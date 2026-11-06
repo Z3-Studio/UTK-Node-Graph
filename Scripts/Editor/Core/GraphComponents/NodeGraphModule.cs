@@ -13,6 +13,7 @@ namespace Z3.NodeGraph.Editor
 {
     /// <summary>
     /// Abstraction for creating new GraphData editors
+    /// <para> Owns the canvas: node views, creating nodes and connections, graph changes and menus. Elements delete their own data </para>
     /// </summary>
     public abstract class NodeGraphModule
     {
@@ -33,7 +34,7 @@ namespace Z3.NodeGraph.Editor
 
         public abstract void OnInitialize();
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Controller.graphViewChanged -= OnGraphViewChanged;
 

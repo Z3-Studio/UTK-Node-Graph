@@ -258,7 +258,7 @@ namespace Z3.NodeGraph.Editor
             }
         }
 
-        public static void AddCopy<T>(GraphData graphData, GraphSubAsset parent, IList<T> source, T clipboard) where T : GraphSubAsset
+        public static void AddCopy<T>(GraphData graphData, GraphSubAsset parent, IList<T> source, T clipboard, int index) where T : GraphSubAsset
         {
             // It can be transitions and taks
             if (clipboard is not Task)
@@ -272,7 +272,7 @@ namespace Z3.NodeGraph.Editor
             string newGuid = GUID.Generate().ToString();
             cloneAsset.SetGuid(newGuid, $"{parent.name}/");
 
-            source.Add(cloneAsset);   //cloneAsset.Parse(clones); // Transition must to use Parse method
+            source.Insert(index, cloneAsset);   //cloneAsset.Parse(clones); // Transition must to use Parse method
 
             graphData.AddSubAsset(cloneAsset);
             AssetDatabase.AddObjectToAsset(cloneAsset, graphData);

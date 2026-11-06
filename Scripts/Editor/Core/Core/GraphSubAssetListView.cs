@@ -26,20 +26,22 @@ namespace Z3.NodeGraph.Editor
         private readonly GraphData graphData;
         private readonly GraphSubAsset assetParent;
         private readonly IList<T> source;
+        private readonly bool supportCopy;
 
         // Visual Elements
         private readonly ListViewBuilder<T, LabelView> customListView;
         private readonly Label inspectorTitle;
         private InspectorElement inspector;
 
-        private static T clipboard;
+        private static T itemClipboard;
+        private static List<T> listClipboard = new();
 
-        public GraphSubAssetListView(GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig) : this(NodeGraphEditorUtils.GetGraphData(owner), owner, taskList, listConfig)
+        public GraphSubAssetListView(GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig, bool supportCopy) : this(NodeGraphEditorUtils.GetGraphData(owner), owner, taskList, listConfig, supportCopy)
         {
 
         }
 
-        public GraphSubAssetListView(GraphData graphData, GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig) // editable == remove and reorder
+        public GraphSubAssetListView(GraphData graphData, GraphSubAsset owner, IList<T> taskList, Z3ListViewConfig listConfig, bool supportCopy) // editable == remove and reorder
         {
             style.backgroundColor = Color.black.SetAlpha(0.15f); // TEMP: Create a way to define the draw order
 
@@ -47,6 +49,7 @@ namespace Z3.NodeGraph.Editor
             this.graphData = graphData;
             assetParent = owner;
             source = taskList;
+            this.supportCopy = supportCopy;
 
             if (listConfig.showAddBtn)
                 listConfig.addEvent = () => TypeSelectorPopup<T>.OpenWindow(OnAdd);
@@ -56,6 +59,34 @@ namespace Z3.NodeGraph.Editor
             customListView.onBind += OnBind;
 
             customListView.OnDelete += OnDeleteActionTask;
+
+            if (supportCopy)
+            {
+                customListView.AddManipulator(new ContextualMenuManipulator(evt =>
+                {
+                    if (evt.target is LabelView)
+                        return;
+
+                    DropdownMenu menu = evt.menu;
+                    menu.AppendAction($"{typeof(T).Name} List", null, DropdownMenuAction.Status.Disabled);
+                    menu.AppendSeparator();
+
+                    menu.AppendAction($"Copy All ({source.Count})",
+                        _ => 
+                        { 
+                            listClipboard = source.ToList(); 
+                            itemClipboard = null; 
+                        }, 
+                        GetStatus(source.Count > 0)
+                    );
+
+                    List<T> copiedTasks = listClipboard.Where(CanPaste).ToList();
+                    menu.AppendAction($"Paste All ({copiedTasks.Count})", _ => Paste(copiedTasks), GetStatus(copiedTasks.Count > 0));
+
+                    menu.AppendSeparator();
+                    menu.AppendAction("Paste as New", _ => Paste(new List<T> { itemClipboard }), GetStatus(CanPaste(itemClipboard)));
+                }));
+            }
 
             // Add Visual Elements
             Add(customListView);
@@ -74,6 +105,9 @@ namespace Z3.NodeGraph.Editor
 
         private void OnBind(LabelView view, T element, int i)
         {
+            if (!supportCopy)
+                return;
+
             view.AddManipulator(new ContextualMenuManipulator(evt =>
             {
                 DropdownMenu menu = evt.menu;
@@ -82,19 +116,32 @@ namespace Z3.NodeGraph.Editor
 
                 menu.AppendAction($"Copy", action =>
                 {
-                    clipboard = element;
+                    itemClipboard = element;
+                    listClipboard = new();
                 });
 
-                bool canPaste = clipboard && graphData.CanCopy(clipboard);
-
-                menu.AppendAction($"Paste as New", actionEvent =>
-                {
-                    NodeGraphEditorUtils.AddCopy(graphData, assetParent, source, clipboard);
-                    customListView.Rebuild();
-                    Validator.Refresh(graphData);
-
-                }, canPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+                menu.AppendAction($"Paste as New", _ => Paste(new List<T> { itemClipboard }), GetStatus(CanPaste(itemClipboard)));
+                menu.AppendAction("Duplicate", _ => Paste(new List<T> { element }, element));
             }));
+        }
+
+        private bool CanPaste(T item) => item && graphData.CanCopy(item);
+
+        private static DropdownMenuAction.Status GetStatus(bool enabled) => enabled ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+
+        // Inserts after anchor, or at the end when null
+        private void Paste(List<T> items, T anchor = null)
+        {
+            int index = anchor ? source.IndexOf(anchor) + 1 : source.Count;
+
+            foreach (T item in items)
+            {
+                NodeGraphEditorUtils.AddCopy(graphData, assetParent, source, item, index);
+                index++;
+            }
+
+            customListView.Rebuild();
+            Validator.Refresh(graphData);
         }
 
         private void OnAdd(string _, Type type) // TODO: Move it to NodeGraphModule

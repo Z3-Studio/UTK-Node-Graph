@@ -17,7 +17,7 @@ namespace Z3.NodeGraph.Editor
 
             // Build list
             Z3ListViewConfig listConfig = new Z3ListViewConfig(SerializedProperty.displayName);
-            return new GraphSubAssetListView<TTask>(assetParent, ResolvedValue, listConfig);
+            return new GraphSubAssetListView<TTask>(assetParent, ResolvedValue, listConfig, supportCopy: true);
         }
     }
 

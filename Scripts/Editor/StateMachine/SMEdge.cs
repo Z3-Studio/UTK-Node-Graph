@@ -67,7 +67,7 @@ namespace Z3.NodeGraph.Editor
                 showRemoveButton = false, // TODO: Review it
             };
 
-            GraphSubAssetListView<Transition> transitionListElement = new(References.Data, OutputNode, transitions, transition);
+            GraphSubAssetListView<Transition> transitionListElement = new(References.Data, OutputNode, transitions, transition, supportCopy: false);
             VisualElement transitionContainer = new();
             transitionListElement.Add(transitionContainer);
 

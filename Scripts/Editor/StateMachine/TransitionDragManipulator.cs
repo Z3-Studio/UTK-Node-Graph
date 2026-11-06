@@ -14,7 +14,7 @@ namespace Z3.NodeGraph.Editor
         private readonly TransitionView label; // Null on the edge
 
         private bool IsLabel => label != null;
-        private SMEdge Edge => target.GetFirstOfType<SMEdge>();
+        private SMEdge Edge => IsLabel ? label.Edge : (SMEdge)target;
 
         private bool pointerPressed;
         private bool canDrag;
@@ -72,12 +72,7 @@ namespace Z3.NodeGraph.Editor
 
         private void OnPointerDown(PointerDownEvent evt)
         {
-            // Labels have their own manipulator
-            pointerPressed = IsLabel || !IsOnLabel(evt.target as VisualElement);
-
-            if (!pointerPressed)
-                return;
-
+            pointerPressed = true;
             pointerId = evt.pointerId;
             pressPosition = evt.position;
 
@@ -92,9 +87,6 @@ namespace Z3.NodeGraph.Editor
 
         private void OnPointerMove(PointerMoveEvent evt)
         {
-            if (!IsLabel && IsOnLabel(evt.target as VisualElement))
-                return;
-
             // Disables GraphView's EdgeManipulator drag
             evt.StopImmediatePropagation();
 
@@ -360,17 +352,6 @@ namespace Z3.NodeGraph.Editor
             Edge.References.Graph.AddElement(ghost);
             ghost.output = moveTarget ? Edge.output : node.Output;
             ghost.input = moveTarget ? ((SMTransitableNodeView)node).Input : Edge.input;
-        }
-
-        private bool IsOnLabel(VisualElement element)
-        {
-            for (VisualElement current = element; current != null && current != target; current = current.parent)
-            {
-                if (current is TransitionView)
-                    return true;
-            }
-
-            return false;
         }
 
         /// <summary> Label half facing the destination </summary>

@@ -6,6 +6,7 @@ using Z3.NodeGraph.StateMachine;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Core;
 using Z3.UIBuilder.ExtensionMethods;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -17,6 +18,7 @@ namespace Z3.NodeGraph.Editor
 
         public Transition Transition { get; }
         public NodeGraphReferences References { get; }
+        internal SMEdge Edge { get; } // The label is in a layer above the nodes, outside the edge
         private IOutputNode Owner { get; }
 
         private bool active;
@@ -29,13 +31,17 @@ namespace Z3.NodeGraph.Editor
         public GraphElement Self => this;
         private static VisualTreeAsset SmTransitionLabel => NodeGraphResources.SmTransitionLabel;
 
-        public TransitionView(Transition transition, IOutputNode owner, NodeGraphReferences references)
+        public TransitionView(Transition transition, SMEdge edge)
         {
             Transition = transition;
-            Owner = owner;
-            References = references;
+            Edge = edge;
+            Owner = edge.OutputNode as IOutputNode;
+            References = edge.References;
 
             SmTransitionLabel.CloneTree(this);
+
+            style.SetMargin(0f);
+            style.SetPadding(0f);
 
             pickingMode = PickingMode.Ignore;
             this.BindUIElements();

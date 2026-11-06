@@ -322,5 +322,11 @@ namespace Z3.NodeGraph.Editor
 
             return start + new Vector2(x, y);
         }
+            public LabelGroup()
+            {
+                style.SetMargin(0f);
+                style.SetPadding(0f);
+            }
+        }
     }
 }

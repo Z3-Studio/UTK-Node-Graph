@@ -37,10 +37,11 @@ namespace Z3.NodeGraph.Editor
         private readonly Color UnselectedColor = new Color(0.7843138f, 0.7843138f, 0.7843138f);
         private readonly Vector2 PortOffset = new(7.5f, 15f);
 
-        private const float ArrowSingleTransitionSize = 15f;
-        private const float ArrowMultipleTransitionSize = 20f;
         private const float ArrowHoverScale = 1.6f;
-        private const float CircularConnectionOffset = 20f;
+
+        // Connection preview
+        private SMEdgeControl previewReverse;
+        private bool previewCircularOffset;
 
         private const float CapRadius = 4f;
         private const float InterceptWidth = 6f;
@@ -51,11 +52,7 @@ namespace Z3.NodeGraph.Editor
             interceptWidth = InterceptWidth;
 
             // Arrow
-            arrow = new VisualElement() { name = "arrow" };
-            arrow.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Contain);
-
-            arrow.style.position = Position.Absolute;
-            arrow.style.translate = new Translate(Length.Percent(-50f), Length.Percent(-50f));
+            arrow = SMEdgeUtils.CreateArrow();
             arrow.style.top = Length.Percent(50f);
             arrow.style.left = Length.Percent(50f);
 
@@ -94,6 +91,14 @@ namespace Z3.NodeGraph.Editor
         {
             this.smEdge = smEdge;
             smEdge.Add(container);
+
+            smEdge.RegisterCallback<DetachFromPanelEvent>(_ => SMEdgeUtils.SetPreviewOffset(ref previewReverse, null));
+        }
+
+        internal void SetPreviewCircularOffset(bool value)
+        {
+            previewCircularOffset = value;
+            smEdge.UpdateEdgeControl();
         }
 
         internal void Unselect() => SetArrowColor(UnselectedColor);
@@ -170,20 +175,37 @@ namespace Z3.NodeGraph.Editor
             SMTransitableNodeView input = smEdge.InputNodeView;
 
             List<Transition> transitions = OutputNode.GetTransitions().Where(t => t.Connection == InputNode).ToList();
-            bool circularConnection = InputNode.GetTransitionsSafe().Any(t => t.Connection == OutputNode);
+            bool circularConnection = previewCircularOffset ||InputNode.GetTransitionsSafe().Any(t => t.Connection == OutputNode);
+
+            if (smEdge.isGhostEdge)
+            {
+                // Hover look: visible over an existing edge between the same nodes
+                MouseEvent(true);
+
+                // The existing reverse edge also gets the offset
+                SMEdge reverseEdge = circularConnection ? SMEdgeUtils.FindEdge(smEdge.References.Module, InputNode, OutputNode) : null;
+                SMEdgeUtils.SetPreviewOffset(ref previewReverse, reverseEdge);
+            }
 
             if (circularConnection)
             {
-                ApplyCircularOffset();
+                // Apply Circular Offset, this prevents overlapping of the transition line when there is a circular connection
+                Vector2 offset = SMEdgeUtils.GetCircularOffset(from, to);
+                from += offset;
+                to += offset;
             }
 
             // Get rotation
             Vector2 direction = from - to;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-            angle = MathUtils.NormalizeAngle(angle);
+            float angle = SMEdgeUtils.GetAngle(from, to);
 
             UpdateContainer();
-            UpdateArrow(transitions, angle);
+
+            // Ghost: counts the transitions being added
+            int transitionCount = transitions.Count + (smEdge.isGhostEdge ? smEdge.GhostTransitionCount : 0);
+            SMEdgeUtils.SetArrowIcon(arrow, transitionCount > 1); // TODO: Use event
+            arrow.style.rotate = new Rotate(angle);
+
             UpdateLabelContainer(input, direction, angle);
             UpdateLabels(transitions, angle);
         }
@@ -206,27 +228,6 @@ namespace Z3.NodeGraph.Editor
             return smEdge.WorldToLocal(position) + PortOffset + nodeOffset;
         }
 
-        /// <summary> 
-        /// This prevents overlapping of the transition line when there is a circular connection, moving and separating the lines to ensure visibility in graph
-        /// </summary>
-        /// <remarks>
-        /// In other words, it will add a space when the Input is connected to the Output at the same time the Output is connected to the Input
-        /// </remarks>
-        private void ApplyCircularOffset()
-        {
-            Vector2 outputStart = from;
-            Vector2 outputEnd = to;
-
-            Vector2 offsetDirection = (outputEnd - outputStart).normalized * CircularConnectionOffset;
-            Vector2 perpendicular = new(offsetDirection.y, -offsetDirection.x);
-
-            outputStart += perpendicular;
-            outputEnd += perpendicular;
-
-            from = outputStart;
-            to = outputEnd;
-        }
-
         private void UpdateContainer()
         {
             Vector2 sizeC = (to - from).Abs();
@@ -243,28 +244,6 @@ namespace Z3.NodeGraph.Editor
         private void SetArrowColor(Color color)
         {
             arrow.style.unityBackgroundImageTintColor = color;
-        }
-
-        private void UpdateArrow(List<Transition> transition, float angle)
-        {
-            Texture2D icon;
-            float iconSize;
-            if (transition.Count > 1) // TODO: Use event
-            {
-                iconSize = ArrowMultipleTransitionSize;
-                icon = NodeGraphResources.MultipleArrowTransition;
-            }
-            else
-            {
-                iconSize = ArrowSingleTransitionSize;
-                icon = NodeGraphResources.ArrowTransition;
-            }
-
-            // Arrow Icon
-            arrow.style.height = iconSize;
-            arrow.style.width = iconSize;
-            arrow.style.backgroundImage = new StyleBackground(icon);
-            arrow.style.rotate = new Rotate(angle);
         }
 
         private void UpdateLabelContainer(SMTransitableNodeView input, Vector2 direction, float angle)

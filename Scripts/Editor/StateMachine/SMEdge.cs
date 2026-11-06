@@ -17,6 +17,9 @@ namespace Z3.NodeGraph.Editor
         internal SMTransitableNodeView InputNodeView => input.GetNodeView<SMTransitableNodeView>();
         internal SMNodeView OutputNodeView => output.GetNodeView<SMNodeView>();
 
+        /// <summary> Ghost only: transitions it adds between the nodes </summary>
+        internal int GhostTransitionCount { get; set; } = 1;
+
         private NodeGraphReferences references;
         internal NodeGraphReferences References
         {

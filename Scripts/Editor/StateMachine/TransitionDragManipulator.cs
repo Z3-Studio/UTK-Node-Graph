@@ -33,7 +33,6 @@ namespace Z3.NodeGraph.Editor
 
         // Label only
         private TransitionSideHandles sideHandles;
-        private VisualElement hoverRoot;
 
         private const float StartDragDistance = 10f;
         private const float DraggedOpacity = 0.35f;
@@ -52,9 +51,7 @@ namespace Z3.NodeGraph.Editor
             target.RegisterCallback<PointerUpEvent>(OnPointerUp, TrickleDown.TrickleDown);
             target.RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
             target.RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
-            target.RegisterCallback<PointerEnterEvent>(OnPointerEnter);
             target.RegisterCallback<PointerLeaveEvent>(OnPointerLeave);
-            target.RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
         }
 
         protected override void UnregisterCallbacksFromTarget()
@@ -64,10 +61,7 @@ namespace Z3.NodeGraph.Editor
             target.UnregisterCallback<PointerUpEvent>(OnPointerUp, TrickleDown.TrickleDown);
             target.UnregisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
             target.UnregisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
-            target.UnregisterCallback<PointerEnterEvent>(OnPointerEnter);
             target.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave);
-            target.UnregisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
-            StopHover();
         }
 
         private void OnPointerDown(PointerDownEvent evt)
@@ -97,7 +91,14 @@ namespace Z3.NodeGraph.Editor
                 pointerPressed = false;
             }
 
-            if (!pointerPressed || evt.pointerId != pointerId || !canDrag)
+            // Hover: the side that a press here would move
+            if (!pointerPressed)
+            {
+                UpdateSideHandles(evt.position);
+                return;
+            }
+
+            if (evt.pointerId != pointerId || !canDrag)
                 return;
 
             Vector2 position = evt.position;
@@ -162,48 +163,7 @@ namespace Z3.NodeGraph.Editor
             if (evt.target == target)
             {
                 HideSideHandles();
-                StopHover();
             }
-        }
-
-        private void OnPointerEnter(PointerEnterEvent evt)
-        {
-            if (!IsLabel || evt.target != target)
-                return;
-
-            // Hover moves don't always reach the label, the root always gets them
-            StopHover();
-            hoverRoot = target.panel.visualTree;
-            hoverRoot.RegisterCallback<PointerMoveEvent>(OnHoverMove, TrickleDown.TrickleDown);
-
-            UpdateSideHandles(evt.position);
-        }
-
-        private void OnHoverMove(PointerMoveEvent evt)
-        {
-            if (pointerPressed && evt.pressedButtons == 0)
-            {
-                // Released outside
-                StopDrag();
-                pointerPressed = false;
-            }
-
-            if (!pointerPressed)
-            {
-                UpdateSideHandles(evt.position);
-            }
-        }
-
-        private void OnDetachFromPanel(DetachFromPanelEvent evt)
-        {
-            // No leave event when rebuilt
-            StopHover();
-        }
-
-        private void StopHover()
-        {
-            hoverRoot?.UnregisterCallback<PointerMoveEvent>(OnHoverMove, TrickleDown.TrickleDown);
-            hoverRoot = null;
         }
 
         private void OnKeyDown(KeyDownEvent evt)

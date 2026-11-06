@@ -63,6 +63,9 @@ namespace Z3.NodeGraph.Editor
                     Controller.RemoveElement(existingEdge);
                 }
 
+                // Refresh circular offset removed with the ghost, before this transition existed
+                SMEdgeUtils.FindEdge(this, child.Node, parent.Node)?.UpdateEdgeControl();
+
                 // Add and remember
                 if (!Application.isPlaying)
                 {

@@ -328,47 +328,6 @@ namespace Z3.NodeGraph.Editor
             }
         }
 
-        /// <summary>
-        /// Returns a perimeter point from the angle
-        /// </summary>
-        public static Vector2 GetPointInPerimeter(Vector2 start, Vector2 end, Vector2 boxSize)
-        {
-            Vector2 direction = end - start;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-            float halfWidth = boxSize.x * 0.5f;
-            float halfHeight = boxSize.y * 0.5f;
-            float radians = angle * Mathf.Deg2Rad;
-            float cos = Mathf.Cos(radians);
-            float sin = Mathf.Sin(radians);
-
-            float x, y;
-            if (Mathf.Abs(cos) > Mathf.Abs(sin)) // use horizontal edge
-            {
-                x = halfWidth * Mathf.Sign(cos);
-                y = x * sin / cos;
-
-                if (Mathf.Abs(y) > halfHeight) // adjust if near vertical edge
-                {
-                    y = Mathf.Sign(y) * halfHeight;
-                    x = y * cos / sin;
-                }
-            }
-            else // use vertical edge
-            {
-                y = halfHeight * Mathf.Sign(sin);
-                x = y * cos / sin;
-
-                if (Mathf.Abs(x) > halfWidth) // adjust if near horizontal edge
-                {
-                    x = Mathf.Sign(x) * halfWidth;
-                    y = x * sin / cos;
-                }
-            }
-
-            return start + new Vector2(x, y);
-        }
-
         /// <summary> Holds the labels in a GraphView layer </summary>
         private class LabelGroup : GraphElement
         {

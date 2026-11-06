@@ -461,7 +461,7 @@ namespace Z3.NodeGraph.Editor
 
         private static void DrawBar(Painter2D painter, Rect border, Vector2 towards, bool active)
         {
-            Vector2 center = SMEdgeControl.GetPointInPerimeter(border.center, border.center + towards, border.size);
+            Vector2 center = SMEdgeUtils.GetPointInPerimeter(border.center, border.center + towards, border.size);
 
             // Outline
             painter.strokeColor = OutlineColor;

@@ -7,7 +7,6 @@ using Z3.NodeGraph.StateMachine;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Editor.ExtensionMethods;
 using Z3.Utils.ExtensionMethods;
-using Z3.Utils;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -20,6 +19,10 @@ namespace Z3.NodeGraph.Editor
         private readonly VisualElement arrow;
         private readonly VisualElement labelContainer;
         private SMEdge smEdge;
+
+        // Labels above the nodes: a GraphView layer only applies to elements added to the graph, not inside the edge
+        private readonly LabelGroup labelGroup;
+        private const int LabelLayer = 10;
 
         private readonly Dictionary<Transition, TransitionView> labels = new();
 
@@ -60,18 +63,20 @@ namespace Z3.NodeGraph.Editor
             labelContainer = new VisualElement() 
             { 
                 name = "transitions", 
-                pickingMode = PickingMode.Ignore 
+                pickingMode = PickingMode.Ignore,
+                style =
+                {
+                    position = Position.Absolute,
+                    unityTextAlign = TextAnchor.MiddleCenter,
+                    alignItems = Align.Center,
+                    justifyContent = Justify.SpaceAround,
+                    flexBasis = Length.Percent(100f),
+                    flexDirection = FlexDirection.ColumnReverse, // Display correct check order
+                    minWidth = 1f
+                }
             };
 
             labelContainer.style.SetPosition(Length.Percent(0f));
-            labelContainer.style.position = Position.Absolute;
-
-            labelContainer.style.unityTextAlign = TextAnchor.MiddleCenter;
-            labelContainer.style.alignItems = Align.Center;
-            labelContainer.style.justifyContent = Justify.SpaceAround;
-            labelContainer.style.flexBasis = Length.Percent(100f);
-            labelContainer.style.flexDirection = FlexDirection.ColumnReverse; // Display correct check order
-            labelContainer.style.minWidth = 1f;
 
             container = new VisualElement() 
             { 
@@ -80,7 +85,18 @@ namespace Z3.NodeGraph.Editor
             };
 
             container.Add(arrow);
-            container.Add(labelContainer);
+
+            labelGroup = new LabelGroup
+            {
+                pickingMode = PickingMode.Ignore,
+                layer = LabelLayer,
+                style =
+                {
+                    position = Position.Absolute
+                }
+            };
+
+            labelGroup.Add(labelContainer);
 
             SetArrowColor(UnselectedColor);
 
@@ -92,7 +108,11 @@ namespace Z3.NodeGraph.Editor
             this.smEdge = smEdge;
             smEdge.Add(container);
 
-            smEdge.RegisterCallback<DetachFromPanelEvent>(_ => SMEdgeUtils.SetPreviewOffset(ref previewReverse, null));
+            smEdge.RegisterCallback<DetachFromPanelEvent>(_ =>
+            {
+                SMEdgeUtils.SetPreviewOffset(ref previewReverse, null);
+                labelGroup.RemoveFromHierarchy();
+            });
         }
 
         internal void SetPreviewCircularOffset(bool value)
@@ -206,6 +226,11 @@ namespace Z3.NodeGraph.Editor
             SMEdgeUtils.SetArrowIcon(arrow, transitionCount > 1); // TODO: Use event
             arrow.style.rotate = new Rotate(angle);
 
+            // Ghost: the existing edge already shows the labels
+            if (smEdge.isGhostEdge)
+                return;
+
+            UpdateLabelGroup();
             UpdateLabelContainer(input, direction, angle);
             UpdateLabels(transitions, angle);
         }
@@ -239,6 +264,27 @@ namespace Z3.NodeGraph.Editor
             Vector2 position = from + (to - from - sizeC) * 0.5f;
             container.style.left = position.x;
             container.style.top = position.y;
+        }
+
+        /// <summary> Same box as the container, in the label layer </summary>
+        private void UpdateLabelGroup()
+        {
+            if (labelGroup.parent == null)
+            {
+                smEdge.References.Graph.AddElement(labelGroup);
+            }
+
+            Vector2 size = (to - from).Abs();
+            Vector2 position = from + (to - from - size) * 0.5f;
+            // Layers sit at the content origin. The content already has a layout when the layer is new
+            Vector2 layerPosition = smEdge.References.Graph.contentViewContainer.WorldToLocal(smEdge.LocalToWorld(position));
+
+            labelGroup.style.minWidth = size.x;
+            labelGroup.style.minHeight = size.y;
+            labelGroup.style.maxWidth = size.x;
+            labelGroup.style.maxHeight = size.y;
+            labelGroup.style.left = layerPosition.x;
+            labelGroup.style.top = layerPosition.y;
         }
 
         private void SetArrowColor(Color color)
@@ -276,7 +322,7 @@ namespace Z3.NodeGraph.Editor
                     continue;
                 }
 
-                TransitionView transitionView = new TransitionView(transition, OutputNode as IOutputNode, smEdge.References);
+                TransitionView transitionView = new TransitionView(transition, smEdge);
                 labelContainer.Add(transitionView);
                 labels.Add(transition, transitionView);
             }
@@ -322,6 +368,10 @@ namespace Z3.NodeGraph.Editor
 
             return start + new Vector2(x, y);
         }
+
+        /// <summary> Holds the labels in a GraphView layer </summary>
+        private class LabelGroup : GraphElement
+        {
             public LabelGroup()
             {
                 style.SetMargin(0f);

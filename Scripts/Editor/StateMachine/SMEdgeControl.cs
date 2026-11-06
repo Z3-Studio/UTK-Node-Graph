@@ -60,7 +60,7 @@ namespace Z3.NodeGraph.Editor
             arrow.style.left = Length.Percent(50f);
 
             // Label
-            labelContainer = new VisualElement() 
+            labelContainer = new() 
             { 
                 name = "transitions", 
                 pickingMode = PickingMode.Ignore,
@@ -78,7 +78,7 @@ namespace Z3.NodeGraph.Editor
 
             labelContainer.style.SetPosition(Length.Percent(0f));
 
-            container = new VisualElement() 
+            container = new() 
             { 
                 name = "container", 
                 pickingMode = PickingMode.Ignore 
@@ -86,7 +86,7 @@ namespace Z3.NodeGraph.Editor
 
             container.Add(arrow);
 
-            labelGroup = new LabelGroup
+            labelGroup = new()
             {
                 pickingMode = PickingMode.Ignore,
                 layer = LabelLayer,
@@ -178,6 +178,9 @@ namespace Z3.NodeGraph.Editor
         {
             // TODO: Instead use update, you could use events
             base.UpdateLayout();
+
+            if (smEdge.panel == null)
+                return;
 
             if (OutputPort != null)
             {

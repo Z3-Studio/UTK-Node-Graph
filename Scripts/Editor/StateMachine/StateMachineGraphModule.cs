@@ -53,6 +53,16 @@ namespace Z3.NodeGraph.Editor
                 UndoRecorder.AddUndo(parent.Node, "Add Transition");
                 CurrentGraph.AddTransition(parent.Node, newTransition);
 
+                // If an edge visual element already exists, delete the old
+                SMEdge existingEdge = SMEdgeUtils.FindEdge(this, parent.Node, child.Node);
+
+                if (existingEdge != null)
+                {
+                    existingEdge.input.Disconnect(existingEdge);
+                    existingEdge.output.Disconnect(existingEdge);
+                    Controller.RemoveElement(existingEdge);
+                }
+
                 // Add and remember
                 if (!Application.isPlaying)
                 {

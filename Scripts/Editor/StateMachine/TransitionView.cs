@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using Z3.NodeGraph.StateMachine;
 using Z3.NodeGraph.Core;
@@ -8,8 +9,7 @@ using Z3.UIBuilder.ExtensionMethods;
 
 namespace Z3.NodeGraph.Editor
 {
-    // TODO: inherit from GraphElement
-    public class TransitionView : VisualElement, INodeGraphElement
+    public class TransitionView : GraphElement, INodeGraphElement
     {
         [UIElement] private readonly Label label;
         [UIElement] private readonly VisualElement stateBorder;
@@ -26,8 +26,7 @@ namespace Z3.NodeGraph.Editor
         private const float Delay = SMNodeView.Delay;
         private const float LabelOffset = -10f;
 
-        public GraphElement Self => throw new System.NotImplementedException();
-        private StateMachineGraphModule Module => References.Module as StateMachineGraphModule;
+        public GraphElement Self => this;
         private static VisualTreeAsset SmTransitionLabel => NodeGraphResources.SmTransitionLabel;
 
         public TransitionView(Transition transition, IOutputNode owner, NodeGraphReferences references)
@@ -43,11 +42,28 @@ namespace Z3.NodeGraph.Editor
 
             SetLabelInfo();
 
+            // Not movable: the selection dragger would move it
+            capabilities = Capabilities.Selectable | Capabilities.Deletable;
+
             selectionBorder.AddManipulator(new TransitionDragManipulator(this));
             selectionBorder.AddManipulator(new Clickable(() =>
             {
-                Module.Inspect(GetInspector());
+                // The click doesn't reach the ClickSelector
+                References.Graph.ClearSelection();
+                References.Graph.AddToSelection(this);
             }));
+        }
+
+        public override void OnSelected()
+        {
+            base.OnSelected();
+            References.InvokeUpdateSelection(this);
+        }
+
+        public override void OnUnselected()
+        {
+            base.OnUnselected();
+            References.InvokeUpdateSelection(null);
         }
 
         private void SetLabelInfo()
@@ -104,9 +120,12 @@ namespace Z3.NodeGraph.Editor
 
         public void DeleteElement()
         {
-            throw new System.NotImplementedException("Test it");
-            //Owner.Transitions.SubAssets.Remove(Transition); // Review it
-            //NodeGraphUtils.DeleteAsset(References.Data, Transition);
+            UndoRecorder.AddUndo(Owner as Object, "Delete Transition");
+            Owner.Transitions.Get().Remove(Transition);
+            NodeGraphEditorUtils.DeleteAsset(References.Data, Transition);
+
+            // The edge may have no transition left, or a different arrow
+            EditorApplication.delayCall += References.Refresh;
         }
 
         public VisualElement GetInspector() => Transition.CreateNgInspector();

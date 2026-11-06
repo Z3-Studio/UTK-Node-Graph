@@ -52,6 +52,7 @@ namespace Z3.NodeGraph.Editor
         {
             base.OnUnselected();
             NgEdgeControl.Unselect();
+            References.InvokeUpdateSelection(null);
         }
 
         public override VisualElement GetInspector()

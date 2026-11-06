@@ -144,15 +144,14 @@ namespace Z3.NodeGraph.Editor
             };
 
             // TODO: Move Transition Check type to inside the Transition Tab
-            GraphSubAssetListView<Transition> transitionListElement = new(References.Data, Node, transitions, transitionConfig);
+            GraphSubAssetListView<Transition> transitionListElement = new(References.Data, Node, transitions, transitionConfig, supportCopy: false);
             tabTransitions.Add(transitionListElement);
 
             VisualElement transitionContainer = new();
             transitionListElement.Add(transitionContainer);
 
-            // TODO: Check if need disconnect when delete
-            // TODO: Select node again
-            transitionListElement.onDelete += (t) => References.ForceRedraw();
+            // The list skips graphViewChanged. Delayed: the list may remove the item after this event
+            transitionListElement.onDelete += t => transitionListElement.onDelete += _ => UnityEditor.EditorApplication.delayCall += References.Refresh;
 
             return tabView;
         }

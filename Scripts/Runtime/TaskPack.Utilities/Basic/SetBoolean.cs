@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;

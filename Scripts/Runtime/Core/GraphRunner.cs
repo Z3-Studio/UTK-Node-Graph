@@ -110,6 +110,9 @@ namespace Z3.NodeGraph.Core
 
         public void ManualActivation()
         {
+            if (Active)
+                return;
+
             Active = true;
             OwnerActivationTime = Time.time;
             RootController.StartGraph();
@@ -117,6 +120,9 @@ namespace Z3.NodeGraph.Core
 
         public void ManualDeactivation()
         {
+            if (!Active)
+                return;
+
             Active = false;
             RootController.StopGraph();
         }
@@ -133,9 +139,14 @@ namespace Z3.NodeGraph.Core
             DeltaTime = delta;
             State result = RootController.OnUpdate();
 
-            if (!autoRepeat && result != State.Running)
+            if (result != State.Running)
             {
                 ManualDeactivation();
+
+                if (autoRepeat)
+                {
+                    ManualActivation();
+                }
             }
         }
     }

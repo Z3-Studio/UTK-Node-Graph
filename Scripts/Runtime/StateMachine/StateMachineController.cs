@@ -20,6 +20,8 @@ namespace Z3.NodeGraph.StateMachine
         private State state = State.Ready;
         public bool ChangedStateThisFrame { get; private set; } // Used to avoid multiple any state transite
 
+        private bool stopped;
+
         public StateMachineController(IGraphRunner runner, StateMachineData data) : base(runner, data)
         {
             nodes = GraphData.SubAssets.OfType<StateMachineNode>().ToList();
@@ -53,22 +55,13 @@ namespace Z3.NodeGraph.StateMachine
             DoInAll(n => n.StartGraph());
 
             state = State.Running;
+            stopped = false;
 
             CurrentState = GraphData.StartNode as TransitableStateNode;
             CurrentState.StartState();
         }
 
-        public override void StopGraph()
-        {
-            if (CurrentState != null && CurrentState.Active)
-            {
-                CurrentState.StopState();
-            }
-
-            ExecuteParallel(exitStates);
-
-            DoInAll(n => n.StopGraph());
-        }
+        public override void StopGraph() => StopStates();
 
         public void SetNextState(TransitableStateNode nextState)
         {
@@ -79,9 +72,9 @@ namespace Z3.NodeGraph.StateMachine
             CurrentState.StartState();
         }
 
-        public void ExecutionEnd(bool success)
+        public void ExecutionEnd(State newState) // Should be Success or Failure
         {
-            state = success ? State.Success : State.Failure;
+            state = newState;
         }
 
         public override State OnUpdate()
@@ -101,11 +94,26 @@ namespace Z3.NodeGraph.StateMachine
             }
             else
             {
-                CurrentState.StopState();
-                CurrentState = null;
+                StopStates();
             }
 
             return state;
+        }
+
+        private void StopStates()
+        {
+            if (stopped)
+                return;
+
+            stopped = true;
+
+            if (CurrentState.Active)
+            {
+                CurrentState.StopState();
+            }
+
+            ExecuteParallel(exitStates);
+            DoInAll(n => n.StopGraph());
         }
 
         private void ExecuteParallel(List<IParallelState> parallelNodes)

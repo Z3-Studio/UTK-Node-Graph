@@ -139,7 +139,7 @@ namespace Z3.NodeGraph.Core
             DeltaTime = delta;
             State result = RootController.OnUpdate();
 
-            if (result != State.Running)
+            if (result != State.Running && Active)
             {
                 ManualDeactivation();
 

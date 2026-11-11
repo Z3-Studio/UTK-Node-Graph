@@ -12,7 +12,7 @@ using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace Z3.NodeGraph.Core
 {
-    public class Converter 
+    public class Converter
     {
         public string Description { get; set; }
         public ConvertionType type { get; set; }
@@ -167,7 +167,7 @@ namespace Z3.NodeGraph.Core
         public static void SetUserTypes(List<string> namespaces)
         {
             Dictionary<string, List<Type>> types = new Dictionary<string, List<Type>>();
-            
+
 
             // Get all assemblies loaded in the current AppDomain
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -194,7 +194,7 @@ namespace Z3.NodeGraph.Core
 
                 if (assemblyTypes.Count == 0)
                     continue;
-                
+
                 // Check if the path exist, and add types
                 if (types.TryGetValue(matchName, out List<Type> items))
                 {
@@ -258,7 +258,7 @@ namespace Z3.NodeGraph.Core
             {
                 return () => converter.Method(v.Value);
             }
-            
+
             return null;
         }
 
@@ -293,7 +293,7 @@ namespace Z3.NodeGraph.Core
 
             return null;
         }
-        
+
         public static bool TryGetConverter(Type typeOut, Type typeIn, out Converter converter)
         {
             converter = GetConverter(typeOut, typeIn);
@@ -308,7 +308,7 @@ namespace Z3.NodeGraph.Core
             (Type, Type) key = (typeOut, typeIn);
             if (converters.TryGetValue(key, out Converter converter))
                 return converter;
-            
+
             // Next time it will be finded by dictionary
             Dictionary<(Type, Type), Converter> clone = new(converters);
             foreach (((Type keyOut, Type keyIn), Converter converterValue) in clone)
@@ -316,7 +316,7 @@ namespace Z3.NodeGraph.Core
                 if (keyOut.IsAssignableFrom(typeOut) && keyIn.IsAssignableFrom(typeIn))
                 {
                     // Found valid convertion
-                    converters[key] = converterValue; 
+                    converters[key] = converterValue;
                     return converterValue;
                 }
             }

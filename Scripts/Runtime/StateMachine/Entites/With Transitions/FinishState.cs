@@ -12,9 +12,16 @@ namespace Z3.NodeGraph.StateMachine
 
         public override string SubInfo => $"Return {success}";
 
+        public override void StartState()
+        {
+            base.StartState();
+            State = State.Ready;
+        }
+
         public override void UpdateState()
         {
-            GraphController.ExecutionEnd(success.Value);
+            State = success.Value ? State.Success : State.Failure;
+            GraphController.ExecutionEnd(State);
         }
     }
 }

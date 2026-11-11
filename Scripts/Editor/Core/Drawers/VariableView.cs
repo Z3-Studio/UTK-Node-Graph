@@ -24,6 +24,7 @@ namespace Z3.NodeGraph.Editor
 
         public event Action OnChangeName;
         public event Action<Variable> OnDelete;
+        public event Action<Variable> OnShowDependencies;
         public event Action<Variable> OnChangeVariable;
         public event Action<Variable> OnDuplicateVariable;
 
@@ -212,6 +213,11 @@ namespace Z3.NodeGraph.Editor
                 {
                     List<(string, Type)> types = TypeResolver.CachedVariables;
                     SelectorPopup<Type>.OpenWindow("Select New Type", types, SetType, actionsButton.contentRect.position);
+                });
+
+                menu.AddItem(new("Show Dependencies"), false, () =>
+                {
+                    OnShowDependencies.Invoke(Variable);
                 });
 
                 menu.AddItem(new("Delete"), false, () =>

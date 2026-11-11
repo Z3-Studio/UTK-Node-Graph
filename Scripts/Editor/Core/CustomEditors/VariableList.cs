@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEditor;
 using Z3.NodeGraph.Core;
 using Z3.UIBuilder.Editor;
-using System.Linq;
-using UnityEditor;
-using UnityEngine;
 
 namespace Z3.NodeGraph.Editor
 {
@@ -73,6 +73,7 @@ namespace Z3.NodeGraph.Editor
         {
             VariableView visualElement = new();
             visualElement.OnDelete += OnDeleteVariable;
+            visualElement.OnShowDependencies += OnShowDependencies;
             visualElement.OnDuplicateVariable += OnDuplicateVariable;
             visualElement.OnChangeVariable += OnChangeVariable;
             visualElement.OnChangeName += OnValidateNames;
@@ -104,33 +105,23 @@ namespace Z3.NodeGraph.Editor
             customListView.Rebuild();
         }
 
+        private void OnShowDependencies(Variable variable)
+        {
+            bool isReferenceVariable = target is GraphVariables;
+            VariableDependenciesWindow.ShowDependencies(variable, isReferenceVariable);
+        }
         private void OnDeleteVariable(Variable variable)
         {
             if (variable.OriginalType != typeof(Title))
             {
-                Dictionary<GraphData, Dictionary<GraphSubAsset, List<IParameter>>> allParameters = NodeGraphEditorUtils.GetAllParameters();
-                Dictionary<GraphData, Dictionary<GraphSubAsset, List<IParameter>>> graphDependencies = new();
-
-                int dependenciesCount = 0;
-                foreach ((GraphData data, Dictionary<GraphSubAsset, List<IParameter>> subAssets) in allParameters)
-                {
-                    Dictionary<GraphSubAsset, List<IParameter>> subAssetDependencies = new();
-
-                    foreach ((GraphSubAsset subAsset, List<IParameter> parameter) in subAssets)
-                    {
-                        List<IParameter> parametersWithDependencies = parameter.Where(p => p.Guid == variable.Guid).ToList();
-                        if (parametersWithDependencies.Count == 0)
-                            continue;
-
-                        subAssetDependencies[subAsset] = parametersWithDependencies;
-                        dependenciesCount += parametersWithDependencies.Count;
-                    }
-
-                    if (subAssetDependencies.Count == 0)
-                        continue;
-
-                    graphDependencies[data] = subAssetDependencies;
-                }
+                // A duplicated graph keeps the same variable Guid, so match the object too
+                // TODO: When copying GraphData or GraphVariables, we should generate new Guid for variables to avoid this issue.
+                //       Will be necessary a manual command to link old Guid to new Guid for parameters using parameter name.
+                //       This also will optimize the search here.
+                int dependenciesCount = NodeGraphEditorUtils.GetAllParameters()
+                    .Where(g => g.Key.GetVariables().Contains(variable))
+                    .SelectMany(g => g.Value.Values)
+                    .Sum(parameters => parameters.Count(p => p.Guid == variable.Guid));
 
                 if (dependenciesCount > 0)
                 {
@@ -140,18 +131,11 @@ namespace Z3.NodeGraph.Editor
 
                     if (result == 2)
                     {
-                        EditorUtility.DisplayDialog("Not implemented", "TODO: Display all dependency of the local list and reference list. HOWEVER, check the console log", "ok");
-
-                        foreach ((GraphData data, Dictionary<GraphSubAsset, List<IParameter>> subAssets) in graphDependencies)
-                        {
-                            foreach ((GraphSubAsset subAsset, List<IParameter> parameter) in subAssets)
-                            {
-                                Debug.Log($"GraphSubAsset {subAsset}, Dependencies = {parameter.Count}", subAsset);
-                            }
-                        }
-
+                        VariableDependenciesWindow.ShowDependencies(variable, target is GraphVariables);
                         return;
                     }
+
+                    // TODO: Unbind all parameters using this variable
                 }
             }
 

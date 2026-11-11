@@ -19,6 +19,7 @@ MonoBehaviour:
   validatorLogVT: {fileID: 9197481963319205126, guid: 831d9d6eebf2e444bb850c828bb0395b, type: 3}
   popupVT: {fileID: 9197481963319205126, guid: 30534a504cef4a54c9f1448c7ae209da, type: 3}
   nodeGraphVT: {fileID: 9197481963319205126, guid: 84b74240952552f4cbe44378f19e6fe2, type: 3}
+  variableDependenciesWindowVT: {fileID: 9197481963319205126, guid: 4c0910fc79492b242a8484be2fd6d5bd, type: 3}
   variableVT: {fileID: 9197481963319205126, guid: 7e4d91cdd12e6044dbeb3be4fdae7f0d, type: 3}
   overrideVariableVT: {fileID: 9197481963319205126, guid: 8d784b7f05e6e244d919d849b1278e1b, type: 3}
   parameterVT: {fileID: 9197481963319205126, guid: a2e3439156d39504d91fe6576912507d, type: 3}

@@ -1,0 +1,29 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <engine:VisualElement style="padding-right: 6px; padding-left: 6px; background-color: rgb(37, 37, 37); padding-bottom: 6px; padding-top: 6px;">
+        <engine:VisualElement style="flex-direction: row; font-size: 18px; margin-bottom: 4px;">
+            <engine:Label text="Name: " style="-unity-font-style: bold;" />
+            <engine:Label text="Variable Name" name="variable-label" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Type: " style="-unity-font-style: bold;" />
+            <engine:Label text="Type" name="type-label" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Scope: " style="-unity-font-style: bold;" />
+            <engine:Label text="Scope" name="scope-label" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Guid: " style="-unity-font-style: bold;" />
+            <engine:Label text="Guid" name="guid-label" selectable="true" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Graphs: " style="-unity-font-style: bold;" />
+            <engine:Label text="0" name="graphs-label" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-direction: row;">
+            <engine:Label text="Dependencies: " style="-unity-font-style: bold;" />
+            <engine:Label text="0" name="dependencies-label" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+    <engine:VisualElement name="entries-container" style="flex-grow: 1;" />
+</engine:UXML>

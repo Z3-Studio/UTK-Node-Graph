@@ -15,6 +15,7 @@ namespace Z3.NodeGraph.Editor
         [SerializeField] private VisualTreeAsset validatorLogVT;
         [SerializeField] private VisualTreeAsset popupVT;
         [SerializeField] private VisualTreeAsset nodeGraphVT;
+        [SerializeField] private VisualTreeAsset variableDependenciesWindowVT;
         [SerializeField] private VisualTreeAsset variableVT;
         [SerializeField] private VisualTreeAsset overrideVariableVT;
         [SerializeField] private VisualTreeAsset parameterVT;
@@ -56,6 +57,7 @@ namespace Z3.NodeGraph.Editor
         public static VisualTreeAsset AnalizerSubAssetInfoVT => Instance.analizerSubAssetInfoVT;
         public static VisualTreeAsset ValidatorWindowVT => Instance.validatorWindowVT;
         public static VisualTreeAsset ValidatorLogVT => Instance.validatorLogVT;
+        public static VisualTreeAsset VariableDependenciesWindowVT => Instance.variableDependenciesWindowVT;
         public static VisualTreeAsset VariableVT => Instance.variableVT;
         public static VisualTreeAsset OverrideVariableVT => Instance.overrideVariableVT;
         public static VisualTreeAsset ParameterVT => Instance.parameterVT;

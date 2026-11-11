@@ -109,7 +109,10 @@ namespace Z3.NodeGraph.StateMachine
                 }
             }
 
-            onUpdate();
+            if (state == State.Running)
+            {
+                onUpdate();
+            }
         }
 
         public bool TryTransitionNew(StateMachineController graphController, out Transition transitionUsed)

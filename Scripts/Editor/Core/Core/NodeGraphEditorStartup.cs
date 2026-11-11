@@ -15,9 +15,9 @@ namespace Z3.NodeGraph.Editor
 
         static NodeGraphEditorStartup()
         {
+            NodeGraphStartup.Init(); // Run TypeResolver
             NodeGraphResources.Init();
             UserPreferences.Init();
-            NodeGraphStartup.Init(); // TypeResolver
             Validator.Init();
 
             WelcomeWindow.Init();

@@ -8,6 +8,7 @@ namespace Z3.NodeGraph.Core
     public static class NodeGraphStartup
     {
 #if !UNITY_EDITOR
+        // Note: This is called in editor by NodeGraphEditorStartup, but in runtime is by this attribute
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
 #endif
         public static void Init()

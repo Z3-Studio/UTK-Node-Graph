@@ -20,6 +20,7 @@ namespace Z3.NodeGraph.StateMachine
         {
             base.StartState();
             transitions.StartTransition();
+            State = State.Success;
         }
 
         public override void UpdateState()

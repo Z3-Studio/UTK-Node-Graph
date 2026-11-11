@@ -1,0 +1,201 @@
+﻿using System;
+using UnityEngine;
+using Z3.UIBuilder.Core;
+using Z3.Utils.ExtensionMethods;
+using Object = UnityEngine.Object;
+
+namespace Z3.NodeGraph.Core
+{
+    [Obsolete("Is not working")]
+    public class GenericParameter : GenericParameter<object> { }
+    [Obsolete("Is not working")]
+    public class GenericParameter<T> : IParameter<T>
+    {
+        [SerializeField] private string guid; // TODO: rename to variableGuid
+        [AssetOnly]
+        [SerializeField] private T value;
+
+        public bool NullValue => Value.ObjectNullCheck();
+
+        // Editor
+        public bool IsDefined => Variable != null;
+        public bool IsBinding => !string.IsNullOrEmpty(guid);
+        public bool IsVariableBinding => IsBinding && !IsSelfBinding;
+        public bool IsSelfBinding => guid == SelfBinding;
+        public Variable Variable { get; private set; }
+
+        // Runtime
+        string IParameter.Guid => guid;
+        object IParameter.Value { get => Value; set => Value = (T)value; }
+        public Type GenericType => typeof(T);
+
+        //public T Value // TODO: Use it, inside of BuildBind you can set to skip the null check
+        //{
+        //    get => (T)Get();    // Get = () => value;
+        //    set => Set(value);  // Set = newValue => value = (T)newValue;
+        //}
+        public T Value
+        {
+            get
+            {
+                if (Get == null)
+                {
+                    return value;
+                }
+                return (T)Get();
+            }
+            set
+            {
+                if (Set == null)
+                {
+                    this.value = value;
+                    return;
+                }
+                Set(value);
+            }
+        }
+
+        private Func<object> Get { get; set; }
+        private Action<object> Set { get; set; }
+
+        public const string ValueField = nameof(value);
+        public const string SelfBinding = "SelfBinding";
+
+        void IParameter.SetupDependencies(GraphController graphController)
+        {
+            // TODO: Include editor directives
+            BuildBind(graphController);
+        }
+
+        void IParameter.SelfBind()
+        {
+            guid = SelfBinding;
+            Variable = null;
+        }
+
+        void IParameter.Bind(Variable variable)
+        {
+            guid = variable.guid;
+            Variable = variable;
+
+            if (variable.OriginalType == null)
+            {
+                Debug.LogError(guid);
+            }
+        }
+
+        void IParameter.Unbind()
+        {
+            guid = string.Empty;
+            Variable = null;
+        }
+
+        void IParameter.Invalid()
+        {
+            Variable = null;
+        }
+
+        private void EditorBind(IParameter parameter)
+        {
+            // TODO: Reevaluate the guid and booleans
+        }
+
+        private void BuildBind(GraphController graphController)
+        {
+            if (IsSelfBinding)
+            {
+                Get = graphController.Runner.CachedComponents.CreateGetter(GenericType);
+                Set = (newValue) => throw new InvalidOperationException("You cannot set a component using SelfBind, is only get. Consider using GameObject.AddComponent<T>() or Destroy()");
+                return;
+            }
+
+            if (!IsBinding)
+                return;
+
+            if (graphController.LocalVariables.TryGetValue(guid, out VariableInstance localVariable))
+            {
+                BindVariable(localVariable);
+            }
+            else if (graphController.ReferenceVariables.TryGetValue(guid, out VariableInstance referenceVariable))
+            {
+                BindVariable(referenceVariable);
+            }
+        }
+
+        private void BindVariable(IVariable variable)
+        {
+            Get = TypeResolver.CreateGet(this, variable);
+            Set = TypeResolver.CreateSet(this, variable);
+        }
+
+        public void SetBinding(string newGuid)
+        {
+            guid = newGuid;
+        }
+
+        public void CopyParameter(IParameter otherParameter)
+        {
+            if (otherParameter.IsSelfBinding)
+            {
+                guid = otherParameter.Guid;
+                Variable = null;
+            }
+            else if (otherParameter.IsBinding)
+            {
+                guid = otherParameter.Guid;
+                Variable = otherParameter.Variable;
+            }
+            else
+            {
+                value = (T)otherParameter.Value;
+                guid = string.Empty;
+                Variable = null;
+            }
+        }
+
+        public override string ToString()
+        {
+            if (IsBinding)
+            {
+                if (IsSelfBinding)
+                    return "Self".ToBold();
+
+                if (IsDefined)
+                    return '$' + Variable.name.ToBold();
+
+                return "'Missing'".AddRichTextColor(Color.red);
+            }
+
+            // TODO: Draw a good name for collections
+            if (NullValue)
+                return "Null".ToBold();
+
+            if (Value is Object obj)
+                return obj.name.ToBold();
+
+            return Value.ToString().ToBold();
+        }
+
+        //public static Parameter<T> MakeSelfBinding() => new Parameter<T>() { guid = SelfBinding };
+
+        ///// <summary> Used to define the default value </summary>
+        //public static implicit operator Parameter<T>(T value)
+        //{
+        //    return new Parameter<T> { value = value };
+        //}
+
+        ///// <summary> Used to get Value </summary>
+        //public static implicit operator T(Parameter<T> parameter)
+        //{
+        //    return parameter.Value;
+        //}
+
+        ///// <summary> Used to set Value </summary>
+        ///// <remarks> It's not intuitive, but it simplifies the set </remarks>
+        //public static Parameter<T> operator &(Parameter<T> a, T b)
+        //{
+        //    a.Value = b;
+        //    return a;
+        //}
+    }
+}

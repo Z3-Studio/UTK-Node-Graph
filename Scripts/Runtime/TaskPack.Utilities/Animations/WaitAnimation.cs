@@ -7,7 +7,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Animations)]
     [NodeDescription("Wait animator match state")]
-    public class WaitAnimatorState : ActionTask
+    public class WaitAnimation : ActionTask
     {
         [ParameterDefinition(AutoBindType.FindSimilarVariable)]
         [SerializeField] private Parameter<Animator> animator;

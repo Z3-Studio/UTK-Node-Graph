@@ -1,6 +1,4 @@
-﻿using UnityEngine; // Using inside of directive
-
-namespace Z3.NodeGraph.Core
+﻿namespace Z3.NodeGraph.Core
 {
     /// <summary>
     /// Initialize depedencies in runtime
@@ -9,7 +7,7 @@ namespace Z3.NodeGraph.Core
     {
 #if !UNITY_EDITOR
         // Note: This is called in editor by NodeGraphEditorStartup, but in runtime is by this attribute
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.BeforeSplashScreen)]
 #endif
         public static void Init()
         {

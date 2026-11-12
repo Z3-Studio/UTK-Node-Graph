@@ -3,14 +3,6 @@ using Z3.NodeGraph.Core;
 
 namespace Z3.NodeGraph.Tasks
 {
-    public abstract class ActionTask<T> : ActionTask
-    {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] protected Parameter<T> data;
-
-        protected T Agent => data.Value;
-    }
-
     public abstract class ActionTask : Task
     {
         public State State { get; protected set; } = State.Ready;

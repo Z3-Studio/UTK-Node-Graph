@@ -1,17 +1,8 @@
 ﻿using UnityEngine;
-using Z3.NodeGraph.Core;
 using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.Tasks
 {
-    public abstract class ConditionTask<T> : ConditionTask where T : class
-    {
-        [ParameterDefinition(AutoBindType.SelfBind)]
-        [SerializeField] protected Parameter<T> data;
-
-        protected T Agent => data.Value;
-    }
-
     public abstract class ConditionTask : Task
     {
         [SerializeField] private bool invertCondition;

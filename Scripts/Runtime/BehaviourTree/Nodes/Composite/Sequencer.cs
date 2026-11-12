@@ -14,14 +14,17 @@ namespace Z3.NodeGraph.BehaviourTree
 
         protected override State UpdateNode()
         {
-            State state = children[currentChild].Update();
+            while (currentChild < children.Count)
+            {
+                State state = children[currentChild].Update();
 
-            if (state != State.Success)
-                return state;
+                if (state != State.Success)
+                    return state;
 
-            currentChild++;
+                currentChild++;
+            }
 
-            return currentChild >= children.Count ? State.Success : State.Running;
+            return State.Success;
         }
     }
 }

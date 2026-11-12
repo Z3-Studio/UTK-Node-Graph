@@ -25,7 +25,7 @@ namespace Z3.NodeGraph.Tasks
             return conditionMet != invertCondition;
         }
 
-        public virtual void StartCondition() { }
+        public virtual void StartCondition() { } // TODO: Review it, using SM it run before the ActionTask, even in situations like OnlyWhenFinished and AfterUpdate
         public abstract bool CheckCondition();
         public virtual void StopCondition() { }
     }

@@ -86,7 +86,8 @@ namespace Z3.NodeGraph.StateMachine
             ExecuteParallel(enterStates);
             ExecuteParallel(beforeUpdateState);
 
-            CurrentState.UpdateState();
+            //CurrentState.UpdateState();
+            UpdateCurrentState(); // EXPERIMENTAL
 
             if (state == State.Running)
             {
@@ -98,6 +99,20 @@ namespace Z3.NodeGraph.StateMachine
             }
 
             return state;
+        }
+
+        private void UpdateCurrentState()
+        {
+            const int MaxStateUpdatesPerTick = 10;
+
+            for (int i = 0; i < MaxStateUpdatesPerTick; i++) // Note: A -> B -> A would never end
+            {
+                TransitableStateNode updated = CurrentState;
+                updated.UpdateState();
+
+                if (CurrentState == updated || state != State.Running)
+                    return;
+            }
         }
 
         private void StopStates()

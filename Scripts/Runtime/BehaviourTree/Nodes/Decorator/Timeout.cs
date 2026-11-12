@@ -16,10 +16,11 @@ namespace Z3.NodeGraph.BehaviourTree
         {
             time = 0f;
         }
+
         protected override State UpdateNode()
         {
             time += DeltaTime;
-            if (time >= NodeRunningTime)
+            if (time >= timeout.Value)
             {
                 child.Interrupt();
                 return State.Failure;

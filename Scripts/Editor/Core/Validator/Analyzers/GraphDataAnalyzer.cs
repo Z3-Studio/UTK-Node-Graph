@@ -105,8 +105,9 @@ namespace Z3.NodeGraph.Editor // TODO: It should be editor class
                     if (p.IsSelfBinding)
                         return;
 
+                    // TODO: Remove variable if variable.OriginalType is null
                     // Check if the variable exist and the type matches
-                    if (variables.TryGetValue(parameterGuid, out Variable variable) && TypeResolver.CanConvert(p, variable))
+                    if (variables.TryGetValue(parameterGuid, out Variable variable) && variable.OriginalType != null && TypeResolver.CanConvert(p, variable))
                     {
                         p.Bind(variable);
                     }

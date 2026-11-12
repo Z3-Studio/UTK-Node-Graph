@@ -71,7 +71,7 @@ namespace Z3.NodeGraph.StateMachine
 
         public void TryTransition(StateMachineController graphController)
         {
-            TryTransition(graphController, delegate { }, State.Success);
+            TryTransition(graphController, State.Success);
         }
 
         // TODO: Improve the arguments
@@ -80,24 +80,28 @@ namespace Z3.NodeGraph.StateMachine
             State state = getState();
             if (transitionCheckType == TransitionCheckType.BeforeUpdate)
             {
-                TryTransition(graphController, onUpdate, state);
+                bool transitioned = TryTransition(graphController, state);
+                if (!transitioned && state == State.Running)
+                {
+                    onUpdate();
+                }
+
                 return;
             }
 
             if (state == State.Running)
             {
                 onUpdate();
+                state = getState();
             }
 
-            state = getState();
             if (transitionCheckType == TransitionCheckType.OnlyWhenFinished && state == State.Running)
                 return;
 
-            TryTransition(graphController, delegate { }, state);
+            TryTransition(graphController, state);
         }
 
-        /// <param name="onUpdate"> Called only if transition fail </param>
-        private void TryTransition(StateMachineController graphController, Action onUpdate, State state)
+        private bool TryTransition(StateMachineController graphController, State state)
         {
             foreach (Transition transition in transitions)
             {
@@ -105,14 +109,11 @@ namespace Z3.NodeGraph.StateMachine
                 if (success)
                 {
                     graphController.SetNextState(transition.Connection);
-                    return;
+                    return true;
                 }
             }
 
-            if (state == State.Running)
-            {
-                onUpdate();
-            }
+            return false;
         }
 
         public bool TryTransitionNew(StateMachineController graphController, out Transition transitionUsed)

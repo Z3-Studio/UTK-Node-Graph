@@ -16,9 +16,7 @@ namespace Z3.NodeGraph.Tasks
     {
         private Func<State> onUpdate = () => State.Success;
 
-        public override void StartTaskList() => StartTaskList(default);
-
-        public void StartTaskList(ExecutionPolicy executionPolicy)
+        public void StartActions(ExecutionPolicy executionPolicy)
         {
             if (executionPolicy == ExecutionPolicy.Sequential)
             {
@@ -41,7 +39,7 @@ namespace Z3.NodeGraph.Tasks
 
         public State Update() => onUpdate();
 
-        public override void StopTaskList()
+        public void StopActions()
         {
             foreach (ActionTask task in taskList)
             {
@@ -83,7 +81,7 @@ namespace Z3.NodeGraph.Tasks
                     taskList.Remove(task);
 
                     // Stop others
-                    StopTaskList();
+                    StopActions();
 
                     return State.Failure;
                 }

@@ -33,11 +33,6 @@ namespace Z3.NodeGraph.Tasks
             set => taskList[index] = value;
         }
 
-        // TaskList implementation
-        public virtual void StartTaskList() { }
-
-        public virtual void StopTaskList() { }
-
         public string GetInfo()
         {
             if (taskList.Count == 0)

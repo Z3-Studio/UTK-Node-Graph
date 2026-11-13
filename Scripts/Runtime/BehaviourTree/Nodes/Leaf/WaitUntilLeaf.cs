@@ -15,7 +15,7 @@ namespace Z3.NodeGraph.BehaviourTree
 
         protected sealed override void StartNode()
         {
-            conditions.StartTaskList();
+            conditions.StartConditions();
         }
 
         protected sealed override State UpdateNode()
@@ -26,7 +26,7 @@ namespace Z3.NodeGraph.BehaviourTree
 
         protected sealed override void StopNode()
         {
-            conditions.StopTaskList();
+            conditions.StopConditions();
         }
     }
 }

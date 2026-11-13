@@ -30,7 +30,7 @@ namespace Z3.NodeGraph.StateMachine
             State = State.Running;
             transitions.StartTransitionProcessor(GraphController, transitionCheck, () => State, () => State = taskList.Update(), repeat ? RestartTasks : null);
 
-            taskList.StartTaskList(executionPolicy);
+            taskList.StartActions(executionPolicy);
         }
 
         public override void UpdateState()
@@ -41,7 +41,7 @@ namespace Z3.NodeGraph.StateMachine
         private void RestartTasks()
         {
             State = State.Running;
-            taskList.StartTaskList(executionPolicy);
+            taskList.StartActions(executionPolicy);
         }
 
         public override void StopState()
@@ -49,7 +49,7 @@ namespace Z3.NodeGraph.StateMachine
             base.StopState();
             if (State == State.Running)
             {
-                taskList.StopTaskList();
+                taskList.StopActions();
                 State = State.Resting;
             }
             transitions.StopTransitions();

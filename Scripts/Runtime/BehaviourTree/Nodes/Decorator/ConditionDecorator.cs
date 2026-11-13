@@ -25,7 +25,7 @@ namespace Z3.NodeGraph.BehaviourTree
         protected override void StartNode()
         {
             running = false;
-            conditions.StartTaskList();
+            conditions.StartConditions();
         }
 
         protected override State UpdateNode()
@@ -46,7 +46,7 @@ namespace Z3.NodeGraph.BehaviourTree
 
         protected override void StopNode()
         {
-            conditions.StopTaskList();
+            conditions.StopConditions();
         }
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> subAssets)

@@ -15,7 +15,7 @@ namespace Z3.NodeGraph.BehaviourTree
 
         protected sealed override void StartNode()
         {
-            taskList.StartTaskList(executionPolicy);
+            taskList.StartActions(executionPolicy);
         }
         
         protected sealed override State UpdateNode()
@@ -25,7 +25,7 @@ namespace Z3.NodeGraph.BehaviourTree
 
         protected override void StopNode()
         {
-            taskList.StopTaskList();
+            taskList.StopActions();
         }
     }
 }

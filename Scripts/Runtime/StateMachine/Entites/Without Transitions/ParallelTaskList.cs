@@ -19,7 +19,7 @@ namespace Z3.NodeGraph.StateMachine
         public override void StartGraph()
         {
             State = State.Running;
-            taskList.StartTaskList(executionPolicy);
+            taskList.StartActions(executionPolicy);
         }
 
         public abstract void UpdateParallel();
@@ -28,7 +28,7 @@ namespace Z3.NodeGraph.StateMachine
         {
             if (State == State.Running)
             {
-                taskList.StopTaskList();
+                taskList.StopActions();
             }
 
             State = State.Resting;

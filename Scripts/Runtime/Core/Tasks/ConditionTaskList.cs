@@ -7,7 +7,7 @@ namespace Z3.NodeGraph.Tasks
     [Serializable]
     public class ConditionTaskList : TaskList<ConditionTask>
     {
-        public override void StartTaskList()
+        public void StartConditions()
         {
             foreach (ConditionTask task in taskList)
             {
@@ -27,7 +27,7 @@ namespace Z3.NodeGraph.Tasks
             return true;
         }
 
-        public override void StopTaskList()
+        public void StopConditions()
         {
             foreach (ConditionTask task in taskList)
             {

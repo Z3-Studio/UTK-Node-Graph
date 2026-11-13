@@ -34,7 +34,7 @@ namespace Z3.NodeGraph.StateMachine
 
         public void StartTransitions()
         {
-            conditions.StartTaskList(); 
+            conditions.StartConditions(); 
             State = State.Running;
         }
 
@@ -70,7 +70,7 @@ namespace Z3.NodeGraph.StateMachine
         public void StopTransitions()
         {
             State = State.Resting;
-            conditions.StopTaskList();
+            conditions.StopConditions();
         }
 
         protected override void SetupDependencies(Dictionary<string, GraphSubAsset> instances)

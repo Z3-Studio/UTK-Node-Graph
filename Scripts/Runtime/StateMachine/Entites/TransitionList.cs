@@ -48,6 +48,8 @@ namespace Z3.NodeGraph.StateMachine
 
         public List<Transition> Get() => transitions;
 
+        private Action onProcessTransitions;
+
         public void StartTransition()
         {
             Active = true;
@@ -56,6 +58,26 @@ namespace Z3.NodeGraph.StateMachine
             foreach (Transition transition in transitions)
             {
                 transition.StartTransitions();
+            }
+        }
+
+        public void StartTransitionProcessor(StateMachineController graphController, TransitionCheckType checkType, Func<State> getState, Action runningCallback, Action afterFinish)
+        {
+            StartTransition();
+
+            switch (checkType)
+            {
+                case TransitionCheckType.BeforeUpdate:
+                    onProcessTransitions = () => CheckBeforeUpdate(graphController, getState, runningCallback, afterFinish);
+                    break;
+
+                case TransitionCheckType.AfterUpdate:
+                    onProcessTransitions = () => CheckAfterUpdate(graphController, getState, runningCallback, afterFinish);
+                    break;
+
+                case TransitionCheckType.OnlyWhenFinished:
+                    onProcessTransitions = () => CheckOnlyWhenFinished(graphController, getState, runningCallback, afterFinish);
+                    break;
             }
         }
 
@@ -74,31 +96,59 @@ namespace Z3.NodeGraph.StateMachine
             TryTransition(graphController, State.Success);
         }
 
-        // TODO: Improve the arguments
-        public void TryTransition(StateMachineController graphController, TransitionCheckType transitionCheckType, Func<State> getState, Action onUpdate)
+        public void ProcessTransitions() => onProcessTransitions();
+
+        private void CheckBeforeUpdate(StateMachineController graphController, Func<State> getState, Action runningCallback, Action afterFinish)
         {
             State state = getState();
-            if (transitionCheckType == TransitionCheckType.BeforeUpdate)
-            {
-                bool transitioned = TryTransition(graphController, state);
-                if (!transitioned && state == State.Running)
-                {
-                    onUpdate();
-                }
-
+            if (TryTransition(graphController, state))
                 return;
+
+            if (state != State.Running)
+            {
+                afterFinish?.Invoke();
+                state = getState();
+
+                if (state != State.Running)
+                    return;
             }
 
+            runningCallback();
+        }
+
+        private void CheckAfterUpdate(StateMachineController graphController, Func<State> getState, Action runningCallback, Action afterFinish)
+        {
+            State state = getState();
             if (state == State.Running)
             {
-                onUpdate();
+                runningCallback();
                 state = getState();
             }
 
-            if (transitionCheckType == TransitionCheckType.OnlyWhenFinished && state == State.Running)
+            if (TryTransition(graphController, state))
                 return;
 
-            TryTransition(graphController, state);
+            if (state != State.Running)
+            {
+                afterFinish?.Invoke();
+            }
+        }
+
+        private void CheckOnlyWhenFinished(StateMachineController graphController, Func<State> getState, Action runningCallback, Action afterFinish)
+        {
+            State state = getState();
+            if (state == State.Running)
+            {
+                runningCallback();
+                state = getState();
+                if (state == State.Running)
+                    return;
+            }
+
+            if (TryTransition(graphController, state))
+                return;
+
+            afterFinish?.Invoke();
         }
 
         private bool TryTransition(StateMachineController graphController, State state)

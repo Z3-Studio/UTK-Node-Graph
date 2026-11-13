@@ -28,14 +28,20 @@ namespace Z3.NodeGraph.StateMachine
         {
             base.StartState();
             State = State.Running;
-            transitions.StartTransition();
+            transitions.StartTransitionProcessor(GraphController, transitionCheck, () => State, () => State = taskList.Update(), repeat ? RestartTasks : null);
 
             taskList.StartTaskList(executionPolicy);
         }
 
         public override void UpdateState()
         {
-            transitions.TryTransition(GraphController, transitionCheck, () => State, () => State = taskList.Update());
+            transitions.ProcessTransitions();
+        }
+
+        private void RestartTasks()
+        {
+            State = State.Running;
+            taskList.StartTaskList(executionPolicy);
         }
 
         public override void StopState()

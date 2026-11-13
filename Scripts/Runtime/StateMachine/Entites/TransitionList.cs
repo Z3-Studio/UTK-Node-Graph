@@ -61,34 +61,37 @@ namespace Z3.NodeGraph.StateMachine
             }
         }
 
-        public void StartTransitionProcessor(StateMachineController graphController, TransitionCheckType checkType, Func<State> getState, Action runningCallback, Action afterFinish)
+        public void StartTransitionProcessor(StateMachineController graphController, TransitionCheckType checkType, Func<State> getState, Action runningCallback, bool repeat, Action repeatCallback)
         {
-            StartTransition();
-
             switch (checkType)
             {
                 case TransitionCheckType.BeforeUpdate:
-                    onProcessTransitions = () => CheckBeforeUpdate(graphController, getState, runningCallback, afterFinish);
+                    StartTransition();
+                    onProcessTransitions = () => CheckBeforeUpdate(graphController, getState, runningCallback, repeat, repeatCallback);
                     break;
 
                 case TransitionCheckType.AfterUpdate:
-                    onProcessTransitions = () => CheckAfterUpdate(graphController, getState, runningCallback, afterFinish);
+                    StartTransition();
+                    onProcessTransitions = () => CheckAfterUpdate(graphController, getState, runningCallback, repeat, repeatCallback);
                     break;
 
                 case TransitionCheckType.OnlyWhenFinished:
-                    onProcessTransitions = () => CheckOnlyWhenFinished(graphController, getState, runningCallback, afterFinish);
+                    onProcessTransitions = () => CheckOnlyWhenFinished(graphController, getState, runningCallback, repeat, repeatCallback);
                     break;
             }
         }
 
         public void StopTransitions()
         {
+            if (!Active)
+                return;
+
+            Active = false;
+
             foreach (Transition transition in transitions)
             {
                 transition.StopTransitions();
             }
-
-            Active = false;
         }
 
         public void TryTransition(StateMachineController graphController)
@@ -98,7 +101,7 @@ namespace Z3.NodeGraph.StateMachine
 
         public void ProcessTransitions() => onProcessTransitions();
 
-        private void CheckBeforeUpdate(StateMachineController graphController, Func<State> getState, Action runningCallback, Action afterFinish)
+        private void CheckBeforeUpdate(StateMachineController graphController, Func<State> getState, Action runningCallback, bool repeat, Action repeatCallback)
         {
             State state = getState();
             if (TryTransition(graphController, state))
@@ -106,17 +109,17 @@ namespace Z3.NodeGraph.StateMachine
 
             if (state != State.Running)
             {
-                afterFinish?.Invoke();
-                state = getState();
-
-                if (state != State.Running)
+                if (!repeat)
                     return;
+
+                repeatCallback();
+                // Note: Should I read the state again after the repeat callback?
             }
 
             runningCallback();
         }
 
-        private void CheckAfterUpdate(StateMachineController graphController, Func<State> getState, Action runningCallback, Action afterFinish)
+        private void CheckAfterUpdate(StateMachineController graphController, Func<State> getState, Action runningCallback, bool repeat, Action repeatCallback)
         {
             State state = getState();
             if (state == State.Running)
@@ -128,13 +131,13 @@ namespace Z3.NodeGraph.StateMachine
             if (TryTransition(graphController, state))
                 return;
 
-            if (state != State.Running)
+            if (repeat && state != State.Running)
             {
-                afterFinish?.Invoke();
+                repeatCallback();
             }
         }
 
-        private void CheckOnlyWhenFinished(StateMachineController graphController, Func<State> getState, Action runningCallback, Action afterFinish)
+        private void CheckOnlyWhenFinished(StateMachineController graphController, Func<State> getState, Action runningCallback, bool repeat, Action repeatCallback)
         {
             State state = getState();
             if (state == State.Running)
@@ -145,10 +148,19 @@ namespace Z3.NodeGraph.StateMachine
                     return;
             }
 
-            if (TryTransition(graphController, state))
-                return;
+            if (!Active)
+            {
+                StartTransition();
+            }
 
-            afterFinish?.Invoke();
+            bool transitioned = TryTransition(graphController, state);
+
+            if (repeat && !transitioned)
+            {
+                // Closes after a single try
+                StopTransitions();
+                repeatCallback();
+            }
         }
 
         private bool TryTransition(StateMachineController graphController, State state)

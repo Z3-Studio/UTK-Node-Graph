@@ -28,7 +28,7 @@ namespace Z3.NodeGraph.StateMachine
         {
             base.StartState();
             State = State.Running;
-            transitions.StartTransitionProcessor(GraphController, transitionCheck, () => State, () => State = taskList.Update(), repeat ? RestartTasks : null);
+            transitions.StartTransitionProcessor(GraphController, transitionCheck, () => State, () => State = taskList.Update(), repeat, RestartTasks);
 
             taskList.StartActions(executionPolicy);
         }

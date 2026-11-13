@@ -24,6 +24,7 @@ namespace Z3.NodeGraph.StateMachine
 
         public TransitableStateNode Connection => connection;
         public State State { get; private set; }
+        public float LastSuccessTime { get; private set; } = float.NegativeInfinity; // Editor only
 
         public override string Info => !string.IsNullOrEmpty(title) ? title : conditions.GetLabel();
 
@@ -62,6 +63,8 @@ namespace Z3.NodeGraph.StateMachine
 
             #if UNITY_EDITOR
             State = result ? State.Success : State.Failure;
+            if (result)
+                LastSuccessTime = Time.time;
             #endif
 
             return result;

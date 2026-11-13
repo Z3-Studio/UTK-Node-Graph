@@ -44,7 +44,7 @@ namespace Z3.NodeGraph.StateMachine
 
             State = State.Running;
 
-            transitions.StartTransitionProcessor(GraphController, transitionCheck, () => State, () => State = subController.OnUpdate(), repeat ? RestartSubGraph : null);
+            transitions.StartTransitionProcessor(GraphController, transitionCheck, () => State, () => State = subController.OnUpdate(), repeat, RestartSubGraph);
 
             subController ??= GraphController.BuildSubGraph(subGraph);
             subController.StartGraph();

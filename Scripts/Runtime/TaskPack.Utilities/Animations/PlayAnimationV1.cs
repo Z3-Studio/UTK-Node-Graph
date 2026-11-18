@@ -8,7 +8,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Animations)]
     [NodeDescription("Play animation by state name")]
-    public class PlayAnimation : ActionTask
+    public class PlayAnimationV1 : ActionTask
     {
         [ParameterDefinition(AutoBindType.AnyWithSameType)]
         [SerializeField] private Parameter<Animator> animator;

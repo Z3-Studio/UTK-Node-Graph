@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
 using Z3.Utils.ExtensionMethods;
@@ -26,7 +25,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 if (!waitUntil.IsBinding && waitUntil.Value == EAnimationPlayEnd.DontWait)
                     return $"► Play All {stateName}";
 
-                return $"► Play All {stateName} until {waitUntil}{AnimationStateWatch.LayerLabel(waitLayer)}";
+                return $"► Play All {stateName} until {waitUntil}{PlayAnimation.LayerLabel(waitLayer)}";
             }
         }
 

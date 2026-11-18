@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
@@ -25,7 +24,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             get
             {
                 string names = stateNames.IsBinding ? stateNames.ToString() : $"<b>Count = {stateNames.Value?.Count ?? 0}</b>";
-                string layerText = AnimationStateWatch.LayerLabel(layer);
+                string layerText = PlayAnimation.LayerLabel(layer);
                 if (!waitUntil.IsBinding && waitUntil.Value == EAnimationPlayEnd.DontWait)
                     return $"► Play Random {names}{layerText}";
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
@@ -18,7 +19,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
 
         private readonly AnimationStateWatch watch = new();
 
-        public override string InfoC => $"{stateName} {check}{AnimationStateWatch.LayerLabel(layer)}";
+        public override string InfoC => $"{stateName} {check}{PlayAnimation.LayerLabel(layer)}";
 
         public override void StartCondition()
         {

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Z3.NodeGraph.Core;
 using Z3.NodeGraph.Tasks;
@@ -23,7 +22,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         {
             get
             {
-                string layerText = AnimationStateWatch.LayerLabel(layer);
+                string layerText = LayerLabel(layer);
                 if (!waitUntil.IsBinding && waitUntil.Value == EAnimationPlayEnd.DontWait)
                     return $"► Play {stateName}{layerText}";
 
@@ -53,6 +52,11 @@ namespace Z3.NodeGraph.TaskPack.Utilities
             {
                 EndAction();
             }
+        }
+
+        public static string LayerLabel(Parameter<int> layer)
+        {
+            return layer.IsBinding || layer.Value != 0 ? $" [L {layer.ToStringBold()}]" : string.Empty;
         }
     }
 }

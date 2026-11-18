@@ -26,6 +26,15 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         ExitEnd = 5,
     }
 
+    public enum EAnimationPlayEnd
+    {
+        DontWait = 0,
+        EnterEnd = 1,
+        ClipEnd = 2,
+        ExitStart = 3,
+        ExitEnd = 4,
+    }
+
     /// <summary> Reads one state on one layer, as the Animator is now </summary>
     public sealed class AnimationStateWatch
     {
@@ -43,6 +52,20 @@ namespace Z3.NodeGraph.TaskPack.Utilities
         private EAnimationCheck check;
         private bool requireEnter;
         private bool entered;
+
+        public void Begin(Animator animator, string stateName, int layer, EAnimationPlayEnd end, bool requireEnter)
+        {
+            EAnimationCheck check = end switch
+            {
+                EAnimationPlayEnd.EnterEnd => EAnimationCheck.EnterEnd,
+                EAnimationPlayEnd.ClipEnd => EAnimationCheck.ClipEnd,
+                EAnimationPlayEnd.ExitStart => EAnimationCheck.ExitStart,
+                EAnimationPlayEnd.ExitEnd => EAnimationCheck.ExitEnd,
+                _ => throw new ArgumentOutOfRangeException(nameof(end), end, null),
+            };
+
+            Begin(animator, stateName, layer, check, requireEnter);
+        }
 
         public void Begin(Animator animator, string stateName, int layer, EAnimationCheck check, bool requireEnter)
         {

@@ -46,7 +46,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 return;
             }
 
-            watch.Begin(target, stateName.Value, waitLayer.Value, ToCheck(end), false);
+            watch.Begin(target, stateName.Value, waitLayer.Value, end, false);
         }
 
         protected override void UpdateAction()
@@ -56,14 +56,5 @@ namespace Z3.NodeGraph.TaskPack.Utilities
                 EndAction();
             }
         }
-
-        private static EAnimationCheck ToCheck(EAnimationPlayEnd end) => end switch
-        {
-            EAnimationPlayEnd.EnterEnd => EAnimationCheck.EnterEnd,
-            EAnimationPlayEnd.ClipEnd => EAnimationCheck.ClipEnd,
-            EAnimationPlayEnd.ExitStart => EAnimationCheck.ExitStart,
-            EAnimationPlayEnd.ExitEnd => EAnimationCheck.ExitEnd,
-            _ => throw new ArgumentOutOfRangeException(nameof(end), end, null),
-        };
     }
 }

@@ -27,7 +27,7 @@ namespace Z3.NodeGraph.TaskPack.Utilities
     }
 
     /// <summary> Reads one state on one layer, as the Animator is now </summary>
-    internal sealed class AnimationStateWatch
+    public sealed class AnimationStateWatch
     {
         private enum Phase 
         {

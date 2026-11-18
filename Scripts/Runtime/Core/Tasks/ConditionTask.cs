@@ -45,5 +45,12 @@ namespace Z3.NodeGraph.Tasks
         protected abstract void Subscribe();
         protected abstract void Unsubscribe();
         protected void EndEventCondition() => actionCalled = true;
+
+        // Solution A: DeltaTime is stable only with FixedUpdate. Another solution maybe is using NodeRunningTime like in ActionTask
+        //public sealed override bool CheckCondition() => buffer >= Time.time;
+        //protected void EndEventCondition() => buffer = Time.time + DeltaTime;
+        // Solution B
+        //public sealed override bool CheckCondition() => eventTick >= GraphRunner.Tick - 1;
+        //protected void EndEventCondition() => eventTick = GraphRunner.Tick;
     }
 }

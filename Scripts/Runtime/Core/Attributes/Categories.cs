@@ -17,6 +17,7 @@
         public const string Collections = Utilities + "/Collections";
         public const string Components = Utilities + "/Components";
         public const string Events = Utilities + "/Events";
+        public const string Inputs = Utilities + "/Inputs";
         public const string Math = Utilities + "/Math";
         public const string Movement = Utilities + "/Movement";
         public const string Physics = Utilities + "/Physics";

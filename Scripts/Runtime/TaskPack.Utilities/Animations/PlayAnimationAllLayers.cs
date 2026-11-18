@@ -1,63 +1,69 @@
-﻿using Z3.NodeGraph.Core;
-using Z3.NodeGraph.Tasks;
+﻿using System;
 using UnityEngine;
+using Z3.NodeGraph.Core;
+using Z3.NodeGraph.Tasks;
+using Z3.Utils.ExtensionMethods;
 
 namespace Z3.NodeGraph.TaskPack.Utilities
 {
     [NodeCategory(Categories.Animations)]
-    [NodeDescription("Play animation by state name in all layers")]
+    [NodeDescription("Play an animator state by name in all layers")]
     public class PlayAnimationAllLayers : ActionTask
     {
-        [ParameterDefinition(AutoBindType.FindSimilarVariable)]
+        [ParameterDefinition(AutoBindType.AnyWithSameType)]
         [SerializeField] private Parameter<Animator> animator;
         [SerializeField] private Parameter<string> stateName;
-        //[Range(0, 1)]
-        [SerializeField] private Parameter<float> transition = 0.25f;
-
-        [SerializeField] private Parameter<bool> waitUntilFinish;
-        //[ShowIf(nameof(waitUntilFinish), 1)]
+        [SerializeField] private Parameter<float> transition = 0.1f;
+        [SerializeField] private Parameter<EAnimationPlayEnd> waitUntil;
         [SerializeField] private Parameter<int> waitLayer;
 
-        public override string Info => !waitUntilFinish.IsBinding && waitUntilFinish.Value ?
-            $"► Playing All {stateName}" :
-            $"► Play All {stateName}";
+        private readonly AnimationStateWatch watch = new();
 
-        private AnimatorStateInfo stateInfo;
-        private bool played;
+        public override string Info
+        {
+            get
+            {
+                if (!waitUntil.IsBinding && waitUntil.Value == EAnimationPlayEnd.DontWait)
+                    return $"► Play All {stateName}";
+
+                return $"► Play All {stateName} until {waitUntil}{AnimationStateWatch.LayerLabel(waitLayer)}";
+            }
+        }
 
         protected override void StartAction()
         {
-            played = false;
-
-            for (int i = 0; i <= animator.Value.layerCount; i++)
+            Animator target = animator.Value;
+            for (int i = 0; i < target.layerCount; i++)
             {
-                AnimatorStateInfo current = animator.Value.GetCurrentAnimatorStateInfo(i);
-                animator.Value.CrossFade(stateName.Value, transition.Value / current.length, i);
+                target.PlayOrResetState(stateName.Value, transition.Value, i);
             }
+            target.Update(0f);
 
-            if (!waitUntilFinish.Value)
+            EAnimationPlayEnd end = waitUntil.Value;
+            if (end == EAnimationPlayEnd.DontWait)
             {
                 EndAction();
+                return;
             }
+
+            watch.Begin(target, stateName.Value, waitLayer.Value, ToCheck(end), false);
         }
 
         protected override void UpdateAction()
         {
-            stateInfo = animator.Value.GetCurrentAnimatorStateInfo(waitLayer.Value);
-
-            if (stateInfo.IsName(stateName.Value))
-            {
-
-                played = true;
-                if (NodeRunningTime >= (stateInfo.length / animator.Value.speed))
-                {
-                    EndAction();
-                }
-            }
-            else if (played)
+            if (watch.IsMet())
             {
                 EndAction();
             }
         }
+
+        private static EAnimationCheck ToCheck(EAnimationPlayEnd end) => end switch
+        {
+            EAnimationPlayEnd.EnterEnd => EAnimationCheck.EnterEnd,
+            EAnimationPlayEnd.ClipEnd => EAnimationCheck.ClipEnd,
+            EAnimationPlayEnd.ExitStart => EAnimationCheck.ExitStart,
+            EAnimationPlayEnd.ExitEnd => EAnimationCheck.ExitEnd,
+            _ => throw new ArgumentOutOfRangeException(nameof(end), end, null),
+        };
     }
 }
